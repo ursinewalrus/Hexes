@@ -12,10 +12,16 @@ namespace Hexes
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         HexGrid HexMap;
-        
+        int GameHeight;
+        int GameWidth;
+
+        bool HasBeenResized = false;
+        bool RedrawAll = false;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+
             Content.RootDirectory = "Content";
         }
 
@@ -40,6 +46,15 @@ namespace Hexes
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            GameWidth = GraphicsDevice.DisplayMode.Width / 4;
+            graphics.PreferredBackBufferWidth = GameWidth;
+
+            GameHeight = GraphicsDevice.DisplayMode.Height / 4;
+            graphics.PreferredBackBufferHeight = GameHeight;
+
+            //graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
 
             // TODO: use this.Content to load your game content here
         }
