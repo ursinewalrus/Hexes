@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hexes.Geometry;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,14 +11,16 @@ namespace Hexes
     {
         public int Rows;
         public int Cols;
-        public Hex[] HexArray;
+        public int GameWidth;
 
         public Hex[,] HexStorage;
+        //Axial coordinate rectangle
+        //https://www.redblobgames.com/grids/hexagons/#map-storage
         public HexGrid(int r, int q)
         {
-            this.Rows = r;
-            this.Cols = q;
-
+            Rows = r;
+            Cols = q;
+            Hex.gameWidth = GameWidth;
             HexStorage = new Hex[Rows, Cols];
             FillGrid();
             ;

@@ -1,6 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Hexes.Geometry;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Hexes
 {
@@ -34,7 +36,6 @@ namespace Hexes
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            HexMap = new HexGrid(7, 7);
             base.Initialize();
         }
 
@@ -53,6 +54,12 @@ namespace Hexes
             GameHeight = GraphicsDevice.DisplayMode.Height / 4;
             graphics.PreferredBackBufferHeight = GameHeight;
 
+            //Line.Sb = spriteBatch;
+            //Hex.gameWidth = GameWidth;
+
+            //HexMap = new HexGrid(7, 7);
+            //var t = HexMap.HexStorage[0, 0];
+            //t.DrawEdges();
             //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
@@ -90,7 +97,19 @@ namespace Hexes
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            Line.Sb = spriteBatch;
+            Hex.gameWidth = GameWidth;
 
+            HexMap = new HexGrid(7, 7);
+            //for(var i=0; i<7; i++)
+            //{
+
+            //    HexMap.HexStorage[i, 0].DrawEdges();
+            //}
+            foreach(var h in HexMap.HexStorage)
+            {
+                h.DrawEdges();
+            }
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
