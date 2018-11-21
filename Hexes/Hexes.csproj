@@ -42,8 +42,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="IDrawable.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="Geometry\FloatPoint.cs" />
     <Compile Include="Geometry\Line.cs" />
+    <Compile Include="HandleMouse.cs" />
     <Compile Include="HexGrid\Hex.cs" />
     <Compile Include="HexGrid\HexGrid.cs" />
     <Compile Include="Program.cs" />

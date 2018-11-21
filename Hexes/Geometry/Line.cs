@@ -12,14 +12,14 @@ namespace Hexes.Geometry
     {
         public static SpriteBatch Sb { get; set; }
         private Color LineColor; 
-        private int WidthMultiplier;
+        private float WidthMultiplier;
 
         private Vector2 StartV;
         private Vector2 EndV;
 
         Texture2D texture;
 
-        public Line(int startX, int startY, int endX, int endY, int wM, Color color)
+        public Line(float startX, float startY, float endX, float endY, float wM, Color color)
         {
             WidthMultiplier = wM;
 

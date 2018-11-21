@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Hexes
 {
-    public class HexGrid
+    public class HexGrid : IDrawable
     {
         public int Rows;
         public int Cols;

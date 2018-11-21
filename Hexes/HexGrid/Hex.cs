@@ -9,30 +9,42 @@ using System.Threading.Tasks;
 
 namespace Hexes
 {
-    public class Hex
+    public class Hex : IDrawable
     {
         private int R;
         private int Q;
         private int S;
-        public List<Point> HexCorners;
-        public static int Size = 20;
+        public List<FloatPoint> HexCorners;
+        public static int Size = 30;
         private int BaseXOffSet = 100;
         private int BaseYOffSet = 100;
-
+        FloatPoint Center;
+        public static double[] HexOrientation { get; set; }
 
         public static int gameWidth { get; set; }
 
-        public static readonly double[] Corners = {
-                3.0 / 2.0, 0.0, //f0
+        public static readonly double[] PointyCorners = {
+                Math.Sqrt(3.0), //f0
                 Math.Sqrt(3.0) / 2.0, //f1
-                Math.Sqrt(3.0), //f2
-                2.0 / 3.0, //f3
-                0.0, //b0
+                0.0, //f2
+                3.0 / 2.0, //f3
+                Math.Sqrt(3.0) / 3.0, //b0
                 -1.0 / 3.0, //b1
-                Math.Sqrt(3.0) / 3.0, //b2
-                0.0 //b3
+                0.0, //b2
+                2.0 / 3.0, //b3
+                0.5 //start angle
             };
-
+        public static readonly double[] FlatCorners = {
+                3.0 / 2.0, //f0
+                0.0, //f1
+                Math.Sqrt(3.0) / 2.0, //f2
+                Math.Sqrt(3.0), //f3
+                2.0 / 3.0, //b0
+                0.0, //b1
+                -1.0 / 3.0, //b2
+                Math.Sqrt(3.0) / 3.0, //b3
+                0.0 //start angle
+            };
         public Hex(int r, int q)
         {
             R = r;
@@ -72,9 +84,10 @@ namespace Hexes
         //odd-q
         public void GetCorners()
         {
-            var corners = new List<Point>();
+            var corners = new List<FloatPoint>();
 
-            Point center = HexToPixel();
+            FloatPoint center = HexToPixel();
+            Center = center;
             //var t = new Texture2D(Sb.GraphicsDevice, 10, 10);
 
             //Sb.Begin();
@@ -88,12 +101,18 @@ namespace Hexes
                 Point offset = HexCornerOffset(i);
                 ;
                 corners.Add(
-                        new Point(
+                        new FloatPoint(
                             offset.X + center.X + BaseXOffSet, //+ (Q * Size), //center x
                             offset.Y + center.Y + BaseYOffSet //+ ((R * -Size) + (Q % 2 == 0? R : -R))//center y
                         )
                     );
             }
+            corners.Add(
+                new FloatPoint(
+                    BaseXOffSet + center.X,
+                    BaseYOffSet + center.Y
+                    )
+                );
             HexCorners = corners;
             //int xCor = multiplier * (3 / 2 * Q);
             //int YCor = (int)(multiplier * (Math.Sqrt(3) / 2 * Q + (Math.Sqrt(3) * R)));
@@ -101,27 +120,28 @@ namespace Hexes
 
         public Point HexCornerOffset(int corner)
         {
-            double angle = 2.0 * Math.PI * (0.0 + corner) / 6;
+            double angle = 2.0 * Math.PI * (HexOrientation[8]+ corner) / 6;
             return new Point((int)(Size * Math.Cos(angle)),(int) (Size * Math.Sin(angle)));
         }
 
-        public Point HexToPixel()
+        public FloatPoint HexToPixel()
         {
-            int x = (int)((Corners[0] + Q) + (Corners[1] * R)) * Size;
-            int y = (int)((Corners[2] + Q) + (Corners[3] * R)) * Size;
-            return new Point(x, y);
+            float x = (float)(HexOrientation[0] * Q + HexOrientation[1] * R) * Size;
+            float y = (float)(HexOrientation[2] * Q + HexOrientation[3] * R) * Size;
+            return new FloatPoint(x, y);
 
         }
 
         public void DrawEdges()
         {
             var lastPoint = HexCorners[0];
-            for (var i=1; i<6; i++)
+            for (var i = 1; i < 6; i++)
             {
-                new Line(lastPoint.X, lastPoint.Y, HexCorners[i].X, HexCorners[i].Y, 2, Color.Black);
+                new Line(lastPoint.X, lastPoint.Y, HexCorners[i].X, HexCorners[i].Y, 1, Color.Black);
                 lastPoint = HexCorners[i];
             }
-            var line = new Line(HexCorners[0].X, HexCorners[0].Y, HexCorners[5].X, HexCorners[5].Y, 2, Color.Black);
+            var line = new Line(HexCorners[0].X, HexCorners[0].Y, HexCorners[5].X, HexCorners[5].Y, 1, Color.Black);
+            var dot = new Line(HexCorners[6].X, HexCorners[6].Y, HexCorners[6].X+1, HexCorners[6].Y+1, 1, Color.Black);
 
         }
         //public List<Hex> GetNeighbors()

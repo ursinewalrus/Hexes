@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 
 namespace Hexes
 {
@@ -36,6 +37,7 @@ namespace Hexes
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            this.IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -47,11 +49,10 @@ namespace Hexes
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            GameWidth = GraphicsDevice.DisplayMode.Width / 4;
+            GameWidth = GraphicsDevice.DisplayMode.Width / 3;
             graphics.PreferredBackBufferWidth = GameWidth;
 
-            GameHeight = GraphicsDevice.DisplayMode.Height / 4;
+            GameHeight = GraphicsDevice.DisplayMode.Height / 3;
             graphics.PreferredBackBufferHeight = GameHeight;
 
             //Line.Sb = spriteBatch;
@@ -96,20 +97,33 @@ namespace Hexes
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
+            var mouseState = Mouse.GetState();
             GraphicsDevice.Clear(Color.CornflowerBlue);
             Line.Sb = spriteBatch;
             Hex.gameWidth = GameWidth;
+            Hex.HexOrientation = Hex.PointyCorners;
 
             HexMap = new HexGrid(7, 7);
-            //for(var i=0; i<7; i++)
-            //{
-
-            //    HexMap.HexStorage[i, 0].DrawEdges();
-            //}
+            int amtDraw = gameTime.TotalGameTime.Seconds;
+            int drawn = 0;
+            var h_drawn = new List<Hex>();
             foreach(var h in HexMap.HexStorage)
             {
+                //if (drawn >= amtDraw && amtDraw < 2)
+                //{
+                //    var xView = GraphicsDevice.Viewport.X;
+                //    var yView = GraphicsDevice.Viewport.Y;
+                //    var wView = GraphicsDevice.Viewport.Width;
+                //    var hView = GraphicsDevice.Viewport.Height;
+
+                //    GraphicsDevice.Viewport = new Viewport(xView-1,yView-1,wView+1,hView+1);
+                    
+                //}
                 h.DrawEdges();
+                h_drawn.Add(h);
+                drawn++;
             }
+            HandleMouse.HandleMouseAction(this, Mouse.GetState());
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
