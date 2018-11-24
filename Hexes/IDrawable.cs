@@ -8,5 +8,6 @@ namespace Hexes
 {
     interface IDrawable
     {
+        void Draw();
     }
 }

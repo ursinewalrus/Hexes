@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Hexes.Geometry
 {
-    public class Line
+    public class Line: IDrawable
     {
-        public static SpriteBatch Sb { get; set; }
+        public readonly static SpriteBatch Sb = Game1.SpriteBatch;
         private Color LineColor; 
         private float WidthMultiplier;
 
@@ -30,14 +30,11 @@ namespace Hexes.Geometry
             LineColor = color;
             texture.SetData<Color>(new Color[] { LineColor });
 
-            Sb.Begin();
-            DrawLine();
-            Sb.End();
         }
 
         //https://gamedev.stackexchange.com/questions/44015/how-can-i-draw-a-simple-2d-line-in-xna-without-using-3d-primitives-and-shders
         //https://gamedev.stackexchange.com/questions/26013/drawing-a-texture-line-between-two-vectors-in-xna-wp7
-        private void DrawLine()
+        public void Draw()
         {
             Vector2 edge = EndV - StartV;
             float angle = (float)Math.Atan2(edge.Y, edge.X);

@@ -42,12 +42,14 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Camera.cs" />
+    <Compile Include="CardinalDirections.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Geometry\FloatPoint.cs" />
     <Compile Include="Geometry\Line.cs" />
     <Compile Include="HandleMouse.cs" />
-    <Compile Include="HexGrid\Hex.cs" />
+    <Compile Include="Geometry\Hex.cs" />
     <Compile Include="HexGrid\HexGrid.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -113,6 +115,15 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Content Include="Content\badhex.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\singlehexagonaltile.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Settings\GlobalConfig.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

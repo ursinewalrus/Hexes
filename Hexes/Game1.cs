@@ -4,22 +4,29 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Hexes
 {
     /// <summary>
     /// This is the main type for your game.
     /// </summary>
+    /// //http://emptykeys.com/ui_library
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        public static SpriteBatch SpriteBatch;
         HexGrid HexMap;
         int GameHeight;
         int GameWidth;
+        public Camera GameCamera;
+        bool MapDrawn = false;
 
         bool HasBeenResized = false;
         bool RedrawAll = false;
+
+        public List<Texture2D> TileTextures = new List<Texture2D>();
+
 
         public Game1()
         {
@@ -37,6 +44,15 @@ namespace Hexes
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
+            GameCamera = new Camera(GraphicsDevice.Viewport);
+
+            GameWidth = GraphicsDevice.DisplayMode.Width;
+            graphics.PreferredBackBufferWidth = GameWidth / 2;
+
+            GameHeight = GraphicsDevice.DisplayMode.Height;
+            graphics.PreferredBackBufferHeight = GameHeight / 2;
+
             this.IsMouseVisible = true;
             base.Initialize();
         }
@@ -47,24 +63,13 @@ namespace Hexes
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            GameWidth = GraphicsDevice.DisplayMode.Width / 3;
-            graphics.PreferredBackBufferWidth = GameWidth;
+            FileStream fs = new FileStream(@"Content/badhex.png", FileMode.Open);
+            Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);
+            fs.Dispose();
+            TileTextures.Add(background1);
 
-            GameHeight = GraphicsDevice.DisplayMode.Height / 3;
-            graphics.PreferredBackBufferHeight = GameHeight;
-
-            //Line.Sb = spriteBatch;
-            //Hex.gameWidth = GameWidth;
-
-            //HexMap = new HexGrid(7, 7);
-            //var t = HexMap.HexStorage[0, 0];
-            //t.DrawEdges();
-            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
-            // TODO: use this.Content to load your game content here
         }
 
         /// <summary>
@@ -97,34 +102,27 @@ namespace Hexes
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            var mouseState = Mouse.GetState();
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            Line.Sb = spriteBatch;
+
+            //so on begin looks like pass in a transform matrix
+            //spriteBatch.Begin(transformMatrix: viewMatrix);
+            var mouseInfo = new HandleMouse(this);
+
+            var mouseLoc = mouseInfo.RelativeMouseLocation;
+
+            GameCamera.UpdateCamera(this.GraphicsDevice.Viewport, mouseLoc);
+            GraphicsDevice.Clear(Color.LawnGreen);
+            //is slow because spritebatch used bad
+
             Hex.gameWidth = GameWidth;
             Hex.HexOrientation = Hex.PointyCorners;
+            
+            HexMap = new HexGrid(13, 13, TileTextures[0]);
 
-            HexMap = new HexGrid(7, 7);
-            int amtDraw = gameTime.TotalGameTime.Seconds;
-            int drawn = 0;
-            var h_drawn = new List<Hex>();
-            foreach(var h in HexMap.HexStorage)
-            {
-                //if (drawn >= amtDraw && amtDraw < 2)
-                //{
-                //    var xView = GraphicsDevice.Viewport.X;
-                //    var yView = GraphicsDevice.Viewport.Y;
-                //    var wView = GraphicsDevice.Viewport.Width;
-                //    var hView = GraphicsDevice.Viewport.Height;
+            SpriteBatch.Begin(transformMatrix: GameCamera.Transform);
 
-                //    GraphicsDevice.Viewport = new Viewport(xView-1,yView-1,wView+1,hView+1);
-                    
-                //}
-                h.DrawEdges();
-                h_drawn.Add(h);
-                drawn++;
-            }
-            HandleMouse.HandleMouseAction(this, Mouse.GetState());
-            // TODO: Add your drawing code here
+            HexMap.Draw();
+
+            SpriteBatch.End();
 
             base.Draw(gameTime);
         }

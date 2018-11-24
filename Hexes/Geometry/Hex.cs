@@ -15,10 +15,40 @@ namespace Hexes
         private int Q;
         private int S;
         public List<FloatPoint> HexCorners;
-        public static int Size = 30;
-        private int BaseXOffSet = 100;
-        private int BaseYOffSet = 100;
+        public static float Size = 50;
+        private static float _sizeW;
+        private static float SizeW
+        {
+            set
+            {
+                SizeW = (float)Math.Sqrt(3) * Size;
+            }
+            get
+            {
+                return _sizeW;
+            }
+        }
+
+        private static float _sizeH;
+        private static float SizeH
+        {
+            set
+            {
+                SizeH = 2.0f * Size;
+            }
+            get
+            {
+                return _sizeH;
+            }
+        }
+        private int BaseXOffSet;
+        private int BaseYOffSet;
         FloatPoint Center;
+        private List<Line> Edges = new List<Line>();
+        private Texture2D Texture;
+        public readonly static SpriteBatch Sb = Game1.SpriteBatch;
+        FloatPoint TopLeftOfSprite;
+
         public static double[] HexOrientation { get; set; }
 
         public static int gameWidth { get; set; }
@@ -45,16 +75,20 @@ namespace Hexes
                 Math.Sqrt(3.0) / 3.0, //b3
                 0.0 //start angle
             };
-        public Hex(int r, int q)
+        public Hex(int r, int q, Texture2D texture = null, int baseXOffset = 0, int baseYOffset = 0)
         {
             R = r;
             Q = q;
             S = -Q - R;
+            Texture = texture;
             if (R + Q + S != 0)
             {
                 throw new ArgumentException(String.Format("Invalid Hex Cordinates {0} {1} {2}", Q, R, S), "original");
             }
+            BaseXOffSet = baseXOffset;
+            BaseYOffSet = baseYOffset;
             GetCorners();
+            MakeEdges();
         }
 
 
@@ -86,31 +120,25 @@ namespace Hexes
         {
             var corners = new List<FloatPoint>();
 
-            FloatPoint center = HexToPixel();
-            Center = center;
-            //var t = new Texture2D(Sb.GraphicsDevice, 10, 10);
-
-            //Sb.Begin();
-            //Sb.Draw(t, new Vector2(center.X, center.Y), Color.Black);
-            //Sb.End();
+            Center = CenterHexToPixel();
+            TopLeftOfSprite = TopLeftRectangleHexToPicture();
 
             //https://www.redblobgames.com/grids/hexagons/implementation.html#hex-geometry
-            //2.3Drawing a hex
             for (var i = 0; i < 6; i++)
             {
                 Point offset = HexCornerOffset(i);
                 ;
                 corners.Add(
                         new FloatPoint(
-                            offset.X + center.X + BaseXOffSet, //+ (Q * Size), //center x
-                            offset.Y + center.Y + BaseYOffSet //+ ((R * -Size) + (Q % 2 == 0? R : -R))//center y
+                            offset.X + Center.X + BaseXOffSet, //+ (Q * Size), //center x
+                            offset.Y + Center.Y + BaseYOffSet //+ ((R * -Size) + (Q % 2 == 0? R : -R))//center y
                         )
                     );
             }
             corners.Add(
                 new FloatPoint(
-                    BaseXOffSet + center.X,
-                    BaseYOffSet + center.Y
+                    BaseXOffSet + Center.X,
+                    BaseYOffSet + Center.Y
                     )
                 );
             HexCorners = corners;
@@ -124,7 +152,15 @@ namespace Hexes
             return new Point((int)(Size * Math.Cos(angle)),(int) (Size * Math.Sin(angle)));
         }
 
-        public FloatPoint HexToPixel()
+        public FloatPoint TopLeftRectangleHexToPicture()
+        {
+            var topLeft = Center;
+            topLeft.Y -= Size;
+            topLeft.X -= _sizeW / 2;
+            return topLeft;
+        }
+
+        public FloatPoint CenterHexToPixel()
         {
             float x = (float)(HexOrientation[0] * Q + HexOrientation[1] * R) * Size;
             float y = (float)(HexOrientation[2] * Q + HexOrientation[3] * R) * Size;
@@ -132,16 +168,34 @@ namespace Hexes
 
         }
 
-        public void DrawEdges()
+        public void MakeEdges()
         {
             var lastPoint = HexCorners[0];
             for (var i = 1; i < 6; i++)
             {
-                new Line(lastPoint.X, lastPoint.Y, HexCorners[i].X, HexCorners[i].Y, 1, Color.Black);
+                Edges.Add(new Line(lastPoint.X, lastPoint.Y, HexCorners[i].X, HexCorners[i].Y, 1, Color.Black));
                 lastPoint = HexCorners[i];
             }
             var line = new Line(HexCorners[0].X, HexCorners[0].Y, HexCorners[5].X, HexCorners[5].Y, 1, Color.Black);
+            Edges.Add(line);
+
             var dot = new Line(HexCorners[6].X, HexCorners[6].Y, HexCorners[6].X+1, HexCorners[6].Y+1, 1, Color.Black);
+        }
+
+        public void Draw()
+        {
+            //https://www.codeproject.com/Articles/1119973/Part-I-Creating-a-Digital-Hexagonal-Tile-Map
+            //public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth);
+
+            Sb.Draw(Texture,
+                    new Rectangle((int)TopLeftOfSprite.X, (int)TopLeftOfSprite.Y,(int)Size*2,(int)(Size  * 1.5)),
+                    new Rectangle(0, 0, 50, 50),
+                    Color.White
+                    );
+            //foreach (Line line in Edges)
+            //{
+            //    line.Draw();
+            //}
 
         }
         //public List<Hex> GetNeighbors()

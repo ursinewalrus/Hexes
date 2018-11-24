@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -8,23 +9,69 @@ using System.Threading.Tasks;
 
 namespace Hexes
 {
-    public static class HandleMouse
+    public class HandleMouse
     {
-        public static void HandleMouseAction(Game game, MouseState mousestate)
+        public CardinalDirections.Direction RelativeMouseLocation;
+        public HandleMouse(Game1 game)
         {
-            if(mousestate.LeftButton == ButtonState.Pressed)
-            {
-                var xCor = mousestate.X;
-                var ycor = mousestate.Y;
-                var w = game.GraphicsDevice.Viewport.Width;
-                var h = game.GraphicsDevice.Viewport.Height;
-                if(Math.Abs(xCor - w) < 50)
-                {
-                    //http://community.monogame.net/t/simple-2d-camera/9135
-                }
-                ;
-            }
+            RelativeMouseLocation = GetMouseCardinalDirection(game);
         }
 
+
+        private CardinalDirections.Direction GetMouseCardinalDirection(Game1 game)
+        {
+            var mouseState = Mouse.GetState();
+            int mouseX = mouseState.X;
+            int mouseY = mouseState.Y;
+
+            int width = game.GraphicsDevice.Viewport.Width;
+            int height = game.GraphicsDevice.Viewport.Height;
+
+            var xScrollTrigger = width / 5;
+            var yScrollTrigger = height / 5;
+
+            float XDistance = width - mouseX;
+            float YDistance = height - mouseY;
+
+            if (Mouse.GetState().LeftButton != ButtonState.Pressed)
+            {
+                return CardinalDirections.Direction.Centered;
+            }
+
+            if (XDistance < xScrollTrigger)
+            {
+                if(YDistance < yScrollTrigger)
+                {
+                    return CardinalDirections.Direction.SouthEast;
+                }
+                else if(height - yScrollTrigger < YDistance)
+                {
+                    return CardinalDirections.Direction.NorthEast;
+                }
+                return CardinalDirections.Direction.East;
+            }
+            else if( width - xScrollTrigger < XDistance)
+            {
+                if (YDistance < yScrollTrigger)
+                {
+                    return CardinalDirections.Direction.SouthWest;
+                }
+                else if (height - yScrollTrigger < YDistance)
+                {
+                    return CardinalDirections.Direction.NorthWest;
+                }
+                return CardinalDirections.Direction.West;
+            }
+            else if(YDistance < yScrollTrigger)
+            {
+                return CardinalDirections.Direction.South;
+            }
+            else if( height - yScrollTrigger < YDistance)
+            {
+                return CardinalDirections.Direction.North;
+            }
+            return CardinalDirections.Direction.Centered;
+
+        }
     }
 }
