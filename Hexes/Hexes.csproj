@@ -51,9 +51,11 @@
     <Compile Include="HandleMouse.cs" />
     <Compile Include="Geometry\Hex.cs" />
     <Compile Include="HexGrid\HexGrid.cs" />
+    <Compile Include="ModuleHandling\LoadModules.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="HexGrid\RenderHexGrid.cs" />
+    <Compile Include="WorldObjects\ObjectTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -61,13 +63,14 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
     <EmbeddedResource Include="Icon.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <MonoGameContentReference Include="Content\Content.mgcb" />
+    <MonoGameContentReference Include="Modules\MainModule\Content\Content.mgcb" />
     <None Include="$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\x86\SDL2.dll">
       <Link>x86\SDL2.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -113,40 +116,46 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="app.manifest" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Content\badhex.png">
+    <Content Include="Modules\MainModule\Content\Backgrounds\bluehex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\bluehex.png">
+    <Content Include="Modules\MainModule\Content\Backgrounds\grayhex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\equalateralhexagon.png">
+    <Content Include="Modules\MainModule\Content\Backgrounds\greenhex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\grayhex.png">
+    <Content Include="Modules\MainModule\Content\Backgrounds\pinkhex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\greenhex.png">
+    <Content Include="Modules\MainModule\Content\badhex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\hexagon100.png">
+    <Content Include="Modules\MainModule\Content\equalateralhexagon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\hexagon50.png">
+    <Content Include="Modules\MainModule\Content\hexagon100.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\pinkhex.png">
+    <Content Include="Modules\MainModule\Content\hexagon50.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\pixel.png">
+    <Content Include="Modules\MainModule\Content\pixel.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\singlehexagonaltile.png">
+    <Content Include="Modules\MainModule\Content\singlehexagonaltile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Settings\GlobalConfig.xml" />
+    <Content Include="Modules\MainModule\BackgroundTiles\Backgrounds.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Maps\Maps.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

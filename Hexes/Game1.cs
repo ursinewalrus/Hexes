@@ -63,6 +63,7 @@ namespace Hexes
         /// </summary>
         protected override void LoadContent()
         {
+            LoadModules.GetModules();
             FileStream fs = new FileStream(@"Content/greenhex.png", FileMode.Open);
             Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);
             fs.Dispose();

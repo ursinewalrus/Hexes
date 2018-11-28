@@ -45,3 +45,15 @@ C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\pinkhex.png
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\bluehex.png
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\grayhex.png
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\greenhex.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\Backgrounds\bluehex.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\Backgrounds\grayhex.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\Backgrounds\greenhex.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\Backgrounds\pinkhex.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\badhex.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\equalateralhexagon.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\hexagon100.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\hexagon50.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\pixel.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\singlehexagonaltile.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\BackgroundTiles\Backgrounds.xml
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Maps\Maps.xml

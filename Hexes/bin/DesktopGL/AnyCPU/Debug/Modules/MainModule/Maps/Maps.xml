@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Maps>
+
+  <!--store type and RQ cordinates for everythign for specificPlacments, probs would need a generator-->
+  <Map name="level1">
+    <MapAttributes
+        xSize="7"
+        ySize="7"
+        tileTypes="water
+                 ,grass
+                 ,boulder"
+         edges="water"
+         defaultTile="grass"
+         sspecificPlacments=""
+     />
+  </Map>
+      
+       
+  
+</Maps>
