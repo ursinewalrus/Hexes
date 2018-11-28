@@ -45,13 +45,13 @@ namespace Hexes
         {
             // TODO: Add your initialization logic here
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-            GameCamera = new Camera(GraphicsDevice.Viewport);
 
             GameWidth = GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferWidth = GameWidth / 2;
 
             GameHeight = GraphicsDevice.DisplayMode.Height;
             graphics.PreferredBackBufferHeight = GameHeight / 2;
+            GameCamera = new Camera(GraphicsDevice.Viewport);
 
             this.IsMouseVisible = true;
             base.Initialize();
@@ -63,11 +63,14 @@ namespace Hexes
         /// </summary>
         protected override void LoadContent()
         {
-            FileStream fs = new FileStream(@"Content/badhex.png", FileMode.Open);
+            FileStream fs = new FileStream(@"Content/greenhex.png", FileMode.Open);
             Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);
             fs.Dispose();
             TileTextures.Add(background1);
-
+            Hex.gameWidth = GameWidth;
+            Hex.HexOrientation = Hex.PointyCorners;
+            //get sizes from sprite or scale it
+            HexMap = new HexGrid(2, 2, 100, 100, TileTextures[0]);
             graphics.ApplyChanges();
 
         }
@@ -92,7 +95,7 @@ namespace Hexes
                 Exit();
 
             // TODO: Add your update logic here
-
+           
             base.Update(gameTime);
         }
 
@@ -106,25 +109,23 @@ namespace Hexes
             //so on begin looks like pass in a transform matrix
             //spriteBatch.Begin(transformMatrix: viewMatrix);
             var mouseInfo = new HandleMouse(this);
-
             var mouseLoc = mouseInfo.RelativeMouseLocation;
-
             GameCamera.UpdateCamera(this.GraphicsDevice.Viewport, mouseLoc);
-            GraphicsDevice.Clear(Color.LawnGreen);
-            //is slow because spritebatch used bad
 
-            Hex.gameWidth = GameWidth;
-            Hex.HexOrientation = Hex.PointyCorners;
-            
-            HexMap = new HexGrid(13, 13, TileTextures[0]);
+            if (mouseInfo.MouseState.LeftButton == ButtonState.Pressed)
+            {
+                var conv = Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(GameCamera.Transform));
+                HexMap.SelectedHex(conv);
+            }
 
-            SpriteBatch.Begin(transformMatrix: GameCamera.Transform);
+            SpriteBatch.Begin(transformMatrix: GameCamera.Transform, sortMode: SpriteSortMode.Deferred);
 
             HexMap.Draw();
+            GraphicsDevice.Clear(Color.LawnGreen);
 
             SpriteBatch.End();
-
-            base.Draw(gameTime);
+           // base.Draw(gameTime);
         }
+
     }
 }

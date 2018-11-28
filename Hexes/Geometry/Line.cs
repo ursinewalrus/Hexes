@@ -16,6 +16,7 @@ namespace Hexes.Geometry
 
         private Vector2 StartV;
         private Vector2 EndV;
+        private double Length;
 
         Texture2D texture;
 
@@ -30,6 +31,7 @@ namespace Hexes.Geometry
             LineColor = color;
             texture.SetData<Color>(new Color[] { LineColor });
 
+            Length = Math.Sqrt(Math.Pow(EndV.X - StartV.X, 2) + Math.Pow(EndV.Y - StartV.Y, 2));
         }
 
         //https://gamedev.stackexchange.com/questions/44015/how-can-i-draw-a-simple-2d-line-in-xna-without-using-3d-primitives-and-shders

@@ -11,18 +11,22 @@ namespace Hexes
 {
     public class HandleMouse
     {
+        public Vector2 MouseCords;
         public CardinalDirections.Direction RelativeMouseLocation;
+        public MouseState MouseState;
         public HandleMouse(Game1 game)
         {
+            MouseState = Mouse.GetState();
+            MouseCords.X = MouseState.X;
+            MouseCords.Y = MouseState.Y;
             RelativeMouseLocation = GetMouseCardinalDirection(game);
         }
 
 
         private CardinalDirections.Direction GetMouseCardinalDirection(Game1 game)
         {
-            var mouseState = Mouse.GetState();
-            int mouseX = mouseState.X;
-            int mouseY = mouseState.Y;
+            float mouseX = MouseCords.X;
+            float mouseY = MouseCords.Y;
 
             int width = game.GraphicsDevice.Viewport.Width;
             int height = game.GraphicsDevice.Viewport.Height;
@@ -33,10 +37,6 @@ namespace Hexes
             float XDistance = width - mouseX;
             float YDistance = height - mouseY;
 
-            if (Mouse.GetState().LeftButton != ButtonState.Pressed)
-            {
-                return CardinalDirections.Direction.Centered;
-            }
 
             if (XDistance < xScrollTrigger)
             {

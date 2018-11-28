@@ -37,3 +37,11 @@ C:\Users\kk\Desktop\Hexes\Hexes\obj\Debug\Hexes.exe
 C:\Users\kk\Desktop\Hexes\Hexes\obj\Debug\Hexes.pdb
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\badhex.png
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\singlehexagonaltile.png
+C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\equalateralhexagon.png
+C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\hexagon100.png
+C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\hexagon50.png
+C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\pixel.png
+C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\pinkhex.png
+C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\bluehex.png
+C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\grayhex.png
+C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\greenhex.png

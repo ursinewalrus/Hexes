@@ -40,7 +40,7 @@ namespace Hexes
             Transform = Matrix.CreateTranslation(
                                                 new Vector3(-Position.X, -Position.Y, 0))
                                                 * Matrix.CreateScale(Zoom)
-                                                * Matrix.CreateTranslation(new Vector3(Bounds.Width, Bounds.Height, 0)
+                                                * Matrix.CreateTranslation(new Vector3(Bounds.Width * .25f, Bounds.Height * .25f, 0)
                                             ); 
         }
 
@@ -69,7 +69,7 @@ namespace Hexes
             Bounds = viewport.Bounds;
             UpdateMatrix();
             Vector2 cameraMovement = Vector2.Zero;
-            float scrollSpeed = Math.Max(Zoom * 25, 5);
+            float scrollSpeed = Math.Max(Zoom * 10, 5);
 
             switch(scrollDirection)
             {
