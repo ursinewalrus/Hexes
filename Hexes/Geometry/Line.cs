@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Hexes.Geometry
 {
-    public class Line: IDrawable
+    public class Line: Drawable
     {
         public readonly static SpriteBatch Sb = Game1.SpriteBatch;
         private Color LineColor; 

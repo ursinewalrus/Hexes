@@ -2,16 +2,19 @@
 <Maps>
 
   <!--store type and RQ cordinates for everythign for specificPlacments, probs would need a generator-->
+  <!--or maybe speicify general areas of sub rooms? general, flexible structs-->
+  <!-- odds for types make no sense and might not be desirable even atm-->
+  <!-- do we care about edges? maybe for smaller structs-->
   <Map name="level1">
     <MapAttributes
         xSize="7"
         ySize="7"
-        tileTypes="water
-                 ,grass
-                 ,boulder"
+        tileTypes="water:1
+                 ,grass:1
+                 ,boulder:0"
          edges="water"
          defaultTile="grass"
-         sspecificPlacments=""
+         specificPlacements="(4,4,boulder),(1,1,boulder)"
      />
   </Map>
       

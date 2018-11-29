@@ -8,25 +8,15 @@ using System.Xml.Linq;
 
 namespace Hexes
 {
-    class LoadModules
+    public class LoadModule
     {
-        private static string ModulesDir = Environment.CurrentDirectory + @"\Modules\";
-        private static List<string> ModuleFiles = new List<string>();
+        public Dictionary<string, Dictionary<string, string>> LoadedBackgroundTiles = new Dictionary<string, Dictionary<string, string>>();
+        public Dictionary<string, Dictionary<string, string>> LoadedMaps = new Dictionary<string, Dictionary<string, string>>();
+        private List<string> ModuleFiles = new List<string>();
+        public string ModuleName;
+       
 
-        public static void GetModules()
-        {
-            DirectoryInfo dirInfo = new DirectoryInfo(ModulesDir);
-            List<DirectoryInfo> modules =  dirInfo.GetDirectories().ToList();
-
-            foreach(var module in modules)
-            {
-                var moduleFullPathName = ModulesDir + module.Name;
-                LoadModule(moduleFullPathName);
-            }
-            ;
-        }
-
-        public static void GetDirContents(string dirName, string extension)
+        public void GetDirContents(string dirName, string extension)
         {
             foreach (string dir in Directory.GetDirectories(dirName))
             {
@@ -41,12 +31,9 @@ namespace Hexes
             }
         }
 
-        public static void LoadModule(string moduleName)
+        public LoadModule(string moduleName)
         {
-
-            Dictionary<string, Dictionary<string, string>> loadedBackgroundTiles = new Dictionary<string, Dictionary<string, string>>();
-            Dictionary<string, Dictionary<string, string>> loadedMaps = new Dictionary<string, Dictionary<string, string>>();
-
+            ModuleName = moduleName.Split('\\').Last();
             GetDirContents(moduleName, ".xml");
             //now have all xml files in a module
             foreach(var moduleFile in ModuleFiles)
@@ -55,29 +42,28 @@ namespace Hexes
                 switch (rootNode.Name.ToString())
                 {
                     case "BackgroundTiles":
-                        //loadedBackgroundTiles = LoadBackground(rootNode);
-                        GetElementsAttributes(rootNode).ToList().ForEach(k => loadedBackgroundTiles[k.Key] = k.Value);
+                        GetElementsAttributes(rootNode).ToList().ForEach(k => LoadedBackgroundTiles[k.Key] = k.Value);
                         break;
                     case "Maps":
-                        GetElementsAttributes(rootNode).ToList().ForEach(k => loadedMaps[k.Key] = k.Value);
+                        GetElementsAttributes(rootNode).ToList().ForEach(k => LoadedMaps[k.Key] = k.Value);
                         break;
                 }
             }
         }
 
-        public static Dictionary<string, Dictionary<string, string>> GetElementsAttributes(XElement rootNode)
+        public Dictionary<string, Dictionary<string, string>> GetElementsAttributes(XElement rootNode)
         {
             Dictionary<string, Dictionary<string, string>> tileAttributes = new Dictionary<string, Dictionary<string, string>>();
             var tiles =  rootNode.Elements();
             //only goes down one level from root...
             foreach(XElement tile in tiles)
             {
-                tileAttributes[tile.FirstAttribute.ToString()] = LoadNodeAttributes(tile);
+                tileAttributes[tile.FirstAttribute.Value] = LoadNodeAttributes(tile);
             }
             return tileAttributes;
         }
 
-        public static Dictionary<string, string> LoadNodeAttributes(XElement node)
+        public Dictionary<string, string> LoadNodeAttributes(XElement node)
         {
             var nodeAttributes = new Dictionary<string, string>();
             //only goes down one level from node...

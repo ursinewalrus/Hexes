@@ -2,17 +2,17 @@
 <BackgroundTiles>
   
   <BackgroundTile name="grass">
-    <Sprite texture="Content\Backgrounds\greenhex.png" leftY="0" leftX="-1" rightY="100" rightX="104" />
+    <Sprite texture="Content\Backgrounds\greenhex.png" topLeftY="0" topLeftX="0" bottomrightY="100" bottomrightX="100" />
     <BackgroundOptions blocksMovment="false" blocksVision="false" />
   </BackgroundTile>
 
   <BackgroundTile name="boulder">
-    <Sprite texture="Content\Backgrounds\greyhex.png" leftY="0" leftX="-1" rightY="100" rightX="104" />
+    <Sprite texture="Content\Backgrounds\grayhex.png" topLeftY="0" topLeftX="0" bottomrightY="100" bottomrightX="100" />
     <BackgroundOptions blocksMovment="true" blocksVision="true" />
   </BackgroundTile>
 
   <BackgroundTile name="water">
-    <Sprite texture="Content\Backgrounds\bluehex.png" leftY="0" leftX="-1" rightY="100" rightX="104" />
+    <Sprite texture="Content\Backgrounds\bluehex.png" topLeftY="0" topLeftX="0" bottomrightY="100" bottomrightX="100" />
     <BackgroundOptions blocksMovment="true" blocksVision="false" />
   </BackgroundTile>
   

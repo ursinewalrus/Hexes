@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Hexes
 {
@@ -15,18 +16,15 @@ namespace Hexes
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
+        //in drawable?
         public static SpriteBatch SpriteBatch;
         HexGrid HexMap;
         int GameHeight;
         int GameWidth;
         public Camera GameCamera;
-        bool MapDrawn = false;
+        public List<LoadModule> Modules = new List<LoadModule>();
 
-        bool HasBeenResized = false;
-        bool RedrawAll = false;
-
-        public List<Texture2D> TileTextures = new List<Texture2D>();
-
+        //bool HasBeenResized = false;
 
         public Game1()
         {
@@ -45,6 +43,9 @@ namespace Hexes
         {
             // TODO: Add your initialization logic here
             SpriteBatch = new SpriteBatch(GraphicsDevice);
+            //
+            Drawable.GraphicsDevice = GraphicsDevice;
+
 
             GameWidth = GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferWidth = GameWidth / 2;
@@ -54,6 +55,7 @@ namespace Hexes
             GameCamera = new Camera(GraphicsDevice.Viewport);
 
             this.IsMouseVisible = true;
+
             base.Initialize();
         }
 
@@ -63,15 +65,24 @@ namespace Hexes
         /// </summary>
         protected override void LoadContent()
         {
-            LoadModules.GetModules();
-            FileStream fs = new FileStream(@"Content/greenhex.png", FileMode.Open);
-            Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);
-            fs.Dispose();
-            TileTextures.Add(background1);
-            Hex.gameWidth = GameWidth;
-            Hex.HexOrientation = Hex.PointyCorners;
+            string ModulesDir = Environment.CurrentDirectory + @"\Modules\";
+            DirectoryInfo dirInfo = new DirectoryInfo(ModulesDir);
+            List<DirectoryInfo> modules = dirInfo.GetDirectories().ToList();
+            foreach (var module in modules)
+            {
+                var moduleFullPathName = ModulesDir + module.Name;
+                var loadedModule = new LoadModule(moduleFullPathName);
+                Modules.Add(loadedModule);
+            }
+            var usedModule = Modules[0];
+            HexMap = new HexGrid(usedModule.LoadedMaps, usedModule.LoadedBackgroundTiles, usedModule.ModuleName);
+
+            //FileStream fs = new FileStream(@"Content/greenhex.png", FileMode.Open);
+            //Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);
+            //fs.Dispose();
+
             //get sizes from sprite or scale it
-            HexMap = new HexGrid(2, 2, 100, 100, TileTextures[0]);
+            //HexMap = new HexGrid(2, 2, 100, 100, TileTextures[0]);
             graphics.ApplyChanges();
 
         }

@@ -3,24 +3,45 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Hexes
 {
-    public class Hex : IDrawable
+    public class Hex : Drawable
     {
+        #region properties
+        public string Name;
+
         private int R;
         private int Q;
         private int S;
+
+        bool BlocksMovment;
+        bool BlocksVision;
+
         public List<FloatPoint> HexCorners;
-        public static float SizeX;
-        public static float SizeY;
+        public static float SizeX = 100;
+        public static float SizeY = 100;
+        //y tho -> should not need these
+        public int ResizeLeft;
+        public int ResizeRight;
+        public int ResizeTop;
+        public int ResizeBottom;
+
+        //set from game1 perhaps
+        private int BaseXOffSet;
+        private int BaseYOffSet;
+
+        public FloatPoint Center;
+        private List<Line> Edges = new List<Line>();
+        private Texture2D Texture;
+        public readonly static SpriteBatch Sb = Game1.SpriteBatch;
+        FloatPoint TopLeftOfSprite;
+
         private static float _sizeW;
-        //y tho
-        public static int resizeleft = -1;
-        public static int resizeright = 4;
         private static float SizeW
         {
             set
@@ -45,17 +66,9 @@ namespace Hexes
                 return _sizeH;
             }
         }
-        private int BaseXOffSet;
-        private int BaseYOffSet;
-        public FloatPoint Center;
-        private List<Line> Edges = new List<Line>();
-        private Texture2D Texture;
-        public readonly static SpriteBatch Sb = Game1.SpriteBatch;
-        FloatPoint TopLeftOfSprite;
 
         public static double[] HexOrientation { get; set; }
 
-        public static int gameWidth { get; set; }
 
         public static readonly double[] PointyCorners = {
                 Math.Sqrt(3.0), //f0
@@ -79,46 +92,41 @@ namespace Hexes
                 Math.Sqrt(3.0) / 3.0, //b3
                 0.0 //start angle
             };
-        public Hex(int r, int q, float sizeX = 0, float sizeY = 0, Texture2D texture = null, int baseXOffset = 0, int baseYOffset = 0)
+        //lazy, move
+        string ModuleName;
+        #endregion
+        //public Hex(int r, int q, float sizeX = 0, float sizeY = 0, Texture2D texture = null, int baseXOffset = 0, int baseYOffset = 0)
+        public Hex(int r, int q, string name, Dictionary<string, string> hexData, string moduleName)
         {
+            HexOrientation = PointyCorners;
+            Name = name;
+            ModuleName = moduleName;
             R = r;
             Q = q;
             S = -Q - R;
-            SizeX = sizeX;
-            SizeY = sizeY;
-            Texture = texture;
             if (R + Q + S != 0)
             {
                 throw new ArgumentException(String.Format("Invalid Hex Cordinates {0} {1} {2}", Q, R, S), "original");
             }
-            BaseXOffSet = baseXOffset;
-            BaseYOffSet = baseYOffset;
+            AsignTileData(hexData);
             GetCorners();
             MakeEdges();
         }
 
-        //probs move these into hexgrid
-        public bool IsSameHex(Hex hex)
+        private void AsignTileData(Dictionary<string, string> hexData)
         {
-            return hex.Q == Q && hex.R == R && hex.S == S;
+            ResizeLeft = Convert.ToInt32(hexData["topLeftX"].Trim());
+            ResizeRight = Convert.ToInt32(hexData["bottomrightX"].Trim());
+            ResizeTop = Convert.ToInt32(hexData["topLeftY"].Trim());
+            ResizeBottom = Convert.ToInt32(hexData["bottomrightY"].Trim());
+            BlocksMovment = Convert.ToBoolean(hexData["blocksMovment"].Trim());
+            BlocksVision = Convert.ToBoolean(hexData["blocksVision"].Trim());
+            //bump this up maybe, so only need to load once for each indev sprite
+            string assetPath = @"Modules\" + ModuleName + @"\" + hexData["texture"];
+            FileStream fs = new FileStream(assetPath, FileMode.Open);
+            Texture = Texture2D.FromStream(GraphicsDevice, fs);
+            fs.Dispose();
         }
-
-        public Hex AddHex(Hex hex)
-        {
-            return new Hex(Q + hex.Q, R + hex.R);
-        }
-
-        public Hex SubtractHex(Hex hex)
-        {
-            return new Hex(Q - hex.Q, R + hex.R);
-        }
-
-        public int HexDistance(Hex hex)
-        {
-            Hex subtractedHex = SubtractHex(hex);
-            return (Math.Abs(hex.Q) + Math.Abs(hex.R) + Math.Abs(hex.S)) / 2;
-        }
-
         //https://www.redblobgames.com/grids/hexagons/#hex-to-pixel
         //https://www.redblobgames.com/grids/hexagons/#coordinates
         //odd-q
@@ -158,6 +166,7 @@ namespace Hexes
             return new FloatPoint((float)(SizeX * Math.Cos(angle)),(float)(SizeY * Math.Sin(angle)));
         }
 
+        //there is definitally some extra stuff around this
         public FloatPoint TopLeftRectangleHexToPicture()
         {
             FloatPoint topLeft = new FloatPoint(Center.X, Center.Y);
@@ -187,14 +196,14 @@ namespace Hexes
 
         }
 
-        public void Draw()
+        public override void Draw()
         {
             //https://www.codeproject.com/Articles/1119973/Part-I-Creating-a-Digital-Hexagonal-Tile-Map
             //public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth);
 
             Sb.Draw(texture: Texture,
                     destinationRectangle: new Rectangle((int)TopLeftOfSprite.X - (int)SizeX, (int)TopLeftOfSprite.Y, (int)SizeX * 2, (int)SizeY * 2),
-                    sourceRectangle: new Rectangle(0 - resizeleft, 0, (int)SizeX  - resizeright, (int)SizeY),
+                    sourceRectangle: new Rectangle(ResizeLeft, 0,ResizeRight, (int)SizeY),
                     color: Color.White
                     //scale: new Vector2(9000,0.5f),
                     //effects: SpriteEffects.None,
