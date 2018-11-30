@@ -14,7 +14,7 @@
                  ,boulder:0"
          edges="water"
          defaultTile="grass"
-         specificPlacements="(4,4,boulder),(1,1,boulder)"
+         specificTilePlacements="(4,4,boulder),(1,1,boulder)"
      />
   </Map>
       

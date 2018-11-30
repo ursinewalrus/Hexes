@@ -10,14 +10,12 @@ using System.Threading.Tasks;
 
 namespace Hexes
 {
-    public class Hex : Drawable
+    public class Hex : Drawable, IDrawable
     {
         #region properties
         public string Name;
 
-        private int R;
-        private int Q;
-        private int S;
+        HexPoint HexPoint;
 
         bool BlocksMovment;
         bool BlocksVision;
@@ -31,44 +29,13 @@ namespace Hexes
         public int ResizeTop;
         public int ResizeBottom;
 
-        //set from game1 perhaps
-        private int BaseXOffSet;
-        private int BaseYOffSet;
-
         public FloatPoint Center;
         private List<Line> Edges = new List<Line>();
         private Texture2D Texture;
         public readonly static SpriteBatch Sb = Game1.SpriteBatch;
         FloatPoint TopLeftOfSprite;
 
-        private static float _sizeW;
-        private static float SizeW
-        {
-            set
-            {
-                SizeW = (float)Math.Sqrt(3) * SizeX;
-            }
-            get
-            {
-                return _sizeW;
-            }
-        }
-
-        private static float _sizeH;
-        private static float SizeH
-        {
-            set
-            {
-                SizeH = 2.0f * SizeY;
-            }
-            get
-            {
-                return _sizeH;
-            }
-        }
-
         public static double[] HexOrientation { get; set; }
-
 
         public static readonly double[] PointyCorners = {
                 Math.Sqrt(3.0), //f0
@@ -81,33 +48,19 @@ namespace Hexes
                 2.0 / 3.0, //b3
                 0.5 //start angle
             };
-        public static readonly double[] FlatCorners = {
-                3.0 / 2.0, //f0
-                0.0, //f1
-                Math.Sqrt(3.0) / 2.0, //f2
-                Math.Sqrt(3.0), //f3
-                2.0 / 3.0, //b0
-                0.0, //b1
-                -1.0 / 3.0, //b2
-                Math.Sqrt(3.0) / 3.0, //b3
-                0.0 //start angle
-            };
+       
         //lazy, move
         string ModuleName;
         #endregion
-        //public Hex(int r, int q, float sizeX = 0, float sizeY = 0, Texture2D texture = null, int baseXOffset = 0, int baseYOffset = 0)
-        public Hex(int r, int q, string name, Dictionary<string, string> hexData, string moduleName)
+
+        #region set up hex properties
+        public Hex(HexPoint hexPoint, string name, Dictionary<string, string> hexData, string moduleName)
         {
             HexOrientation = PointyCorners;
             Name = name;
             ModuleName = moduleName;
-            R = r;
-            Q = q;
-            S = -Q - R;
-            if (R + Q + S != 0)
-            {
-                throw new ArgumentException(String.Format("Invalid Hex Cordinates {0} {1} {2}", Q, R, S), "original");
-            }
+            //make these use HexPoint for consistency
+            HexPoint = hexPoint;
             AsignTileData(hexData);
             GetCorners();
             MakeEdges();
@@ -127,6 +80,9 @@ namespace Hexes
             Texture = Texture2D.FromStream(GraphicsDevice, fs);
             fs.Dispose();
         }
+        #endregion 
+
+        #region create hex geometry
         //https://www.redblobgames.com/grids/hexagons/#hex-to-pixel
         //https://www.redblobgames.com/grids/hexagons/#coordinates
         //odd-q
@@ -135,7 +91,7 @@ namespace Hexes
             var corners = new List<FloatPoint>();
 
             Center = CenterHexToPixel();
-            TopLeftOfSprite = TopLeftRectangleHexToPicture();
+            TopLeftOfSprite = new FloatPoint(Center.X, Center.Y - SizeY);
 
             //https://www.redblobgames.com/grids/hexagons/implementation.html#hex-geometry
             for (var i = 0; i < 6; i++)
@@ -144,8 +100,8 @@ namespace Hexes
                 ;
                 corners.Add(
                         new FloatPoint(
-                            offset.X + Center.X + BaseXOffSet, //+ (Q * Size), //center x
-                            offset.Y + Center.Y + BaseYOffSet //+ ((R * -Size) + (Q % 2 == 0? R : -R))//center y
+                            offset.X + Center.X, 
+                            offset.Y + Center.Y 
                         )
                     );
             }
@@ -156,8 +112,6 @@ namespace Hexes
             //        )
             //    );
             HexCorners = corners;
-            //int xCor = multiplier * (3 / 2 * Q);
-            //int YCor = (int)(multiplier * (Math.Sqrt(3) / 2 * Q + (Math.Sqrt(3) * R)));
         }
 
         public FloatPoint HexCornerOffset(int corner)
@@ -166,19 +120,10 @@ namespace Hexes
             return new FloatPoint((float)(SizeX * Math.Cos(angle)),(float)(SizeY * Math.Sin(angle)));
         }
 
-        //there is definitally some extra stuff around this
-        public FloatPoint TopLeftRectangleHexToPicture()
-        {
-            FloatPoint topLeft = new FloatPoint(Center.X, Center.Y);
-            topLeft.Y -= SizeY;
-            topLeft.X -= (_sizeW / 2);
-            return topLeft;
-        }
-
         public FloatPoint CenterHexToPixel()
         {
-            float x = (float)(HexOrientation[0] * Q + HexOrientation[1] * R) * SizeX;
-            float y = (float)(HexOrientation[2] * Q + HexOrientation[3] * R) * SizeY;
+            float x = (float)(HexOrientation[0] * HexPoint.Q + HexOrientation[1] * HexPoint.R) * SizeX;
+            float y = (float)(HexOrientation[2] * HexPoint.Q + HexOrientation[3] * HexPoint.R) * SizeY;
             return new FloatPoint(x, y);
 
         }
@@ -195,8 +140,10 @@ namespace Hexes
             Edges.Add(line);
 
         }
+        #endregion
 
-        public override void Draw()
+        #region draw hex texture+geometry
+        public void Draw()
         {
             //https://www.codeproject.com/Articles/1119973/Part-I-Creating-a-Digital-Hexagonal-Tile-Map
             //public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth);
@@ -215,9 +162,6 @@ namespace Hexes
             }
 
         }
-        //public List<Hex> GetNeighbors()
-        //{
-
-        //}
+        #endregion  
     }
 }

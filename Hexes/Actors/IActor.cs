@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hexes.WorldObjects
+namespace Hexes.Actors
 {
-    public enum WorldObjectTypes
+    interface IActor
     {
-        Tile,
-        PC,
-        NPC
+        void LoadAttributes(Dictionary<string, Dictionary<string, string>> attributes); 
     }
-
 }

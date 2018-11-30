@@ -12,13 +12,9 @@ namespace Hexes
         void Draw();
     }
 
-    public abstract class Drawable : IDrawable
+    public abstract class Drawable 
     {
         public static GraphicsDevice GraphicsDevice { get; set; }
 
-        public virtual void Draw()
-        {
-
-        }
     }
 }

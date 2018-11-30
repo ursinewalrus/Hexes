@@ -42,20 +42,25 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Camera.cs" />
-    <Compile Include="CardinalDirections.cs" />
+    <Compile Include="Actors\BasicHumanoid.cs" />
+    <Compile Include="Actors\IActor.cs" />
+    <Compile Include="Control\Camera.cs" />
+    <Compile Include="Control\CardinalDirections.cs" />
+    <Compile Include="Actors\AbstractActor.cs" />
+    <Compile Include="Actors\IMovable.cs" />
+    <Compile Include="Geometry\HexPoint.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Geometry\FloatPoint.cs" />
     <Compile Include="Geometry\Line.cs" />
-    <Compile Include="HandleMouse.cs" />
+    <Compile Include="Control\HandleMouse.cs" />
     <Compile Include="Geometry\Hex.cs" />
     <Compile Include="HexGrid\HexGrid.cs" />
-    <Compile Include="ModuleHandling\LoadModules.cs" />
+    <Compile Include="ModuleHandling\LoadModules.cs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="HexGrid\RenderHexGrid.cs" />
-    <Compile Include="WorldObjects\ObjectTypes.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -120,6 +125,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Modules\MainModule\Actors\Actors.xml" />
     <Content Include="Modules\MainModule\Content\Backgrounds\bluehex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -1,4 +1,5 @@
-﻿using Hexes.Geometry;
+﻿using Hexes.Actors;
+using Hexes.Geometry;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -11,12 +12,13 @@ namespace Hexes
 {
     public class HexGrid : IDrawable
     {
+        #region properties
         public string MapName;
 
         //tile: {datakey:dataval}
         private Dictionary<string, Dictionary<string, string>> TileData = new Dictionary<string, Dictionary<string, string>>();
         //x-y: {tile}
-        private Dictionary<string, string> SpecificPlacements = new Dictionary<string, string>();
+        private Dictionary<string, string> SpecificTilePlacements = new Dictionary<string, string>();
         //{tile: odds}
         //private Dictionary<string, int> TileOdds = new Dictionary<string, int>();
         //private int TotalTileOdds = 0;
@@ -28,30 +30,17 @@ namespace Hexes
        
 
         public Hex[,] HexStorage;
+        public Dictionary<HexPoint,AbstractActor> ActorStorage;
+        #endregion
         //Axial coordinate rectangle
         //https://www.redblobgames.com/grids/hexagons/#map-storage
-       // public HexGrid(int r, int q, float hexXSize, float hexYSize, Texture2D texture = null, int baseXOffset = 0 , int baseYOffset = 0)
         public HexGrid(Dictionary<string, Dictionary<string, string>> mapData, Dictionary<string, Dictionary<string, string>> tileData, string moduleName)
         {
-            //FileStream fs = new FileStream(@"Content/greenhex.png", FileMode.Open);
-            //Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);
-            //fs.Dispose();
-
             TileData = tileData;
             MapName = mapData.First().Key;
 
             AsignMapData(mapData[MapName]);
             FillGrid(tileData, moduleName);
-
-            //AsignTileData();
-            //Rows = r;
-            //Cols = q;
-            //HexXSize = hexXSize;
-            //HexYSize = hexYSize;
-            //HexStorage = new Hex[Rows, Cols];
-            //Texture = texture;
-            //BaseXOffset = baseXOffset;
-            //BaseYOffset = baseYOffset;
             ;
         }
 
@@ -69,13 +58,13 @@ namespace Hexes
             //    TileOdds[tileType] = odds;
             //});
             //set specific placements for tiles
-            mapData["specificPlacements"].Split(new string[] { "),(" }, StringSplitOptions.None).ToList().ForEach( (t) =>
+            mapData["specificTilePlacements"].Split(new string[] { "),(" }, StringSplitOptions.None).ToList().ForEach( (t) =>
             {
                 List<string> placementParams = t.Split(',').ToList();
                 string x = placementParams[0].Trim(new[] { ' ', ')', '(' });
                 string y = placementParams[1].Trim();
                 string type = placementParams[2].Trim(new[] { ' ', ')', '(' });
-                SpecificPlacements[x + '-' + y] = type;
+                SpecificTilePlacements[x + '-' + y] = type;
             });
             DefaultTile = mapData["defaultTile"];
 
@@ -90,18 +79,16 @@ namespace Hexes
                     int hexR = r;
                     int hexQ = q - (r / 2);
                     string placementKey = hexR.ToString() + '-' + hexQ.ToString();
-                    if (SpecificPlacements.ContainsKey(placementKey))
+                    if (SpecificTilePlacements.ContainsKey(placementKey))
                     {
-                        Hex hex = new Hex(hexR, hexQ, placementKey, TileData[SpecificPlacements[placementKey]],moduleName);
+                        Hex hex = new Hex(new HexPoint(hexR,hexQ), placementKey, TileData[SpecificTilePlacements[placementKey]],moduleName);
                         HexStorage[hexR, hexQ - -1 * (hexR / 2)] = hex;
                     }
                     else
                     {
-                        Hex hex = new Hex(hexR, hexQ, DefaultTile, TileData[DefaultTile], moduleName);
+                        Hex hex = new Hex(new HexPoint(hexR, hexQ), DefaultTile, TileData[DefaultTile], moduleName);
                         HexStorage[hexR, hexQ - -1 * (hexR / 2)] = hex;
                     }
-                    //Hex hex = new Hex(hexR, hexQ, HexXSize, HexYSize, Texture);
-                    //HexStorage[hexR, hexQ - -1*(hexR / 2)] = hex;
                 }
             }
         }
@@ -124,5 +111,38 @@ namespace Hexes
             }
         }
 
+
+        public List<HexPoint> InRadiusOf(HexPoint hexPoint)
+        {
+            return new List<HexPoint>();
+        }
+
+        #region static methods
+        public static int HexDistance(HexPoint hex1, HexPoint hex2)
+        {
+            //https://www.redblobgames.com/grids/hexagons/#range
+            //get cube cord third value
+            int cubeValHex1 = -hex1.Q - hex1.R;
+            int cubeValHex2 = -hex2.Q - hex2.R;
+            //return max(abs(a.x - b.x), abs(a.y - b.y), abs(a.z - b.z))
+            return Math.Max(Math.Max(Math.Abs(hex1.Q - hex2.Q), Math.Abs(hex1.R - hex2.R)), Math.Abs(cubeValHex1 - cubeValHex2));
+        }
+        public static Point ConvertFromHexToGridCords(HexPoint hexPoint)
+        {
+            return new Point(hexPoint.R, hexPoint.Q - -1 * (hexPoint.R / 2));
+        }
+        #endregion
     }
 }
+/*
+ * function cube_to_axial(cube):
+    var q = cube.x
+    var r = cube.z
+    return Hex(q, r)
+
+function axial_to_cube(hex):
+    var x = hex.q
+    var z = hex.r
+    var y = -x-z
+    return Cube(x, y, z)
+    */

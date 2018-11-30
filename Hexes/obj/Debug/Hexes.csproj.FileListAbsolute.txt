@@ -57,3 +57,4 @@ C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\singlehexagonaltile.png
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\BackgroundTiles\Backgrounds.xml
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Maps\Maps.xml
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\ModuleHandling\LoadModules.cs
