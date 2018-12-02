@@ -15,7 +15,7 @@
          edges="water"
          defaultTile="grass"
          specificTilePlacements="(4,4,boulder),(1,1,boulder)"
-         specificActorPlacements="(0,0,Crabby,NPC),(3,5,Crabby,PC)"
+         specificActorPlacements="(0,0,scab,NPC,0),(1,0,scab,NPC,1),(2,0,scab,NPC,2)"
      />
   </Map>
       

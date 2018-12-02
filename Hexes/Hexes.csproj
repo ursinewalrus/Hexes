@@ -42,11 +42,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Actors\BasicHumanoid.cs" />
+    <Compile Include="Actors\BasicHumanoid1.cs" />
     <Compile Include="Actors\IActor.cs" />
     <Compile Include="Control\Camera.cs" />
     <Compile Include="Control\CardinalDirections.cs" />
-    <Compile Include="Actors\AbstractActor.cs" />
+    <Compile Include="Actors\BasicActor.cs" />
     <Compile Include="Actors\IMovable.cs" />
     <Compile Include="Geometry\HexPoint.cs" />
     <Compile Include="IDrawable.cs" />
@@ -125,7 +125,10 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Modules\MainModule\Actors\Actors.xml" />
+    <Content Include="Modules\MainModule\Actors\Actors.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Modules\MainModule\Content\Backgrounds\bluehex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -138,22 +141,7 @@
     <Content Include="Modules\MainModule\Content\Backgrounds\pinkhex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Modules\MainModule\Content\badhex.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Modules\MainModule\Content\equalateralhexagon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Modules\MainModule\Content\hexagon100.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Modules\MainModule\Content\hexagon50.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Modules\MainModule\Content\pixel.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Modules\MainModule\Content\singlehexagonaltile.png">
+    <Content Include="Modules\MainModule\Content\Actors\scab.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Modules\MainModule\BackgroundTiles\Backgrounds.xml">

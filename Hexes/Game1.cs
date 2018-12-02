@@ -75,7 +75,7 @@ namespace Hexes
                 Modules.Add(loadedModule);
             }
             var usedModule = Modules[0];
-            HexMap = new HexGrid(usedModule.LoadedMaps, usedModule.LoadedBackgroundTiles, usedModule.ModuleName);
+            HexMap = new HexGrid(usedModule.LoadedMaps, usedModule.LoadedBackgroundTiles, usedModule.LoadedActors, usedModule.ModuleName);
 
             //FileStream fs = new FileStream(@"Content/greenhex.png", FileMode.Open);
             //Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);

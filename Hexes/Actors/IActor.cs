@@ -8,6 +8,6 @@ namespace Hexes.Actors
 {
     interface IActor
     {
-        void LoadAttributes(Dictionary<string, Dictionary<string, string>> attributes); 
+        void AsignActorData(Dictionary<string, string> actorData); 
     }
 }

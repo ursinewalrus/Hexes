@@ -32,7 +32,6 @@ namespace Hexes
         public FloatPoint Center;
         private List<Line> Edges = new List<Line>();
         private Texture2D Texture;
-        public readonly static SpriteBatch Sb = Game1.SpriteBatch;
         FloatPoint TopLeftOfSprite;
 
         public static double[] HexOrientation { get; set; }
@@ -150,6 +149,7 @@ namespace Hexes
 
             Sb.Draw(texture: Texture,
                     destinationRectangle: new Rectangle((int)TopLeftOfSprite.X - (int)SizeX, (int)TopLeftOfSprite.Y, (int)SizeX * 2, (int)SizeY * 2),
+                    //this is inconsistent
                     sourceRectangle: new Rectangle(ResizeLeft, 0,ResizeRight, (int)SizeY),
                     color: Color.White
                     //scale: new Vector2(9000,0.5f),
@@ -162,6 +162,9 @@ namespace Hexes
             }
 
         }
-        #endregion  
-    }
+        public void Draw(FloatPoint center)
+        {
+        }
+            #endregion
+        }
 }

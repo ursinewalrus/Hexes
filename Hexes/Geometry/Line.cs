@@ -52,5 +52,9 @@ namespace Hexes.Geometry
                 0f
             );
         }
+
+        public void Draw(FloatPoint center)
+        {
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace Hexes
         public Camera(Viewport viewport)
         {
             Bounds = viewport.Bounds;
-            Zoom = 1f;
+            Zoom = .5f;
         }
 
         public void UpdateZoom(float zoomAdjust)

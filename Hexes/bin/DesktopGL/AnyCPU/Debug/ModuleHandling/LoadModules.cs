@@ -12,6 +12,8 @@ namespace Hexes
     {
         public Dictionary<string, Dictionary<string, string>> LoadedBackgroundTiles = new Dictionary<string, Dictionary<string, string>>();
         public Dictionary<string, Dictionary<string, string>> LoadedMaps = new Dictionary<string, Dictionary<string, string>>();
+        public Dictionary<string, Dictionary<string, string>> LoadedActors = new Dictionary<string, Dictionary<string, string>>();
+
         private List<string> ModuleFiles = new List<string>();
         public string ModuleName;
        
@@ -46,6 +48,9 @@ namespace Hexes
                         break;
                     case "Maps":
                         GetElementsAttributes(rootNode).ToList().ForEach(k => LoadedMaps[k.Key] = k.Value);
+                        break;
+                    case "Actors":
+                        GetElementsAttributes(rootNode).ToList().ForEach(k => LoadedActors[k.Key] = k.Value);
                         break;
                 }
             }
