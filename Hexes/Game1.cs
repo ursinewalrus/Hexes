@@ -45,7 +45,7 @@ namespace Hexes
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             //
             Drawable.GraphicsDevice = GraphicsDevice;
-
+            Drawable.Sb = SpriteBatch;
 
             GameWidth = GraphicsDevice.DisplayMode.Width;
             graphics.PreferredBackBufferWidth = GameWidth / 2;

@@ -1,0 +1,8 @@
+bin/*
+.exe
+.pdb
+*.lock
+.vs/
+Hexes/bin/DesktopGL/AnyCPU/Release/*
+Hexes/obj/Release/*
+packages/*

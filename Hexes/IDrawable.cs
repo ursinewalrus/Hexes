@@ -18,7 +18,7 @@ namespace Hexes
     public abstract class Drawable 
     {
         public static GraphicsDevice GraphicsDevice { get; set; }
-        public readonly static SpriteBatch Sb = Game1.SpriteBatch;
+        public static SpriteBatch Sb { get; set; }
 
-    }
+}
 }

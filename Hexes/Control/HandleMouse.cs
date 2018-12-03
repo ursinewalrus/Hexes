@@ -20,6 +20,7 @@ namespace Hexes
             MouseCords.X = MouseState.X;
             MouseCords.Y = MouseState.Y;
             RelativeMouseLocation = GetMouseCardinalDirection(game);
+
         }
 
 

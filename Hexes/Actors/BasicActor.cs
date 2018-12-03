@@ -40,6 +40,7 @@ namespace Hexes.Actors
             string assetPath = @"Modules\" + ModuleName + @"\" + actorData["texture"];
             FileStream fs = new FileStream(assetPath, FileMode.Open);
             Texture = Texture2D.FromStream(GraphicsDevice, fs);
+            fs.Dispose();
             SizeX = Convert.ToInt32(actorData["bottomrightX"]);
             SizeY = Convert.ToInt32(actorData["bottomrightY"]);
         }
@@ -67,10 +68,11 @@ namespace Hexes.Actors
         public void Draw(FloatPoint center)
         {
             Sb.Draw(texture: Texture,
-                    destinationRectangle: new Rectangle((int)center.X - (int)SizeX/2, (int)center.Y - (int)SizeY/2, (int)SizeX, (int)SizeY),
+                    destinationRectangle: new Rectangle((int)center.X, (int)center.Y, (int)SizeX, (int)SizeY),
                     sourceRectangle: new Rectangle(0, 0, (int)SizeX, (int)SizeY),
                     color: Color.White,
-                    rotation: Rotation*60-30
+                    rotation: (MathHelper.PiOver2 / 3.0f) + (MathHelper.PiOver2 / 1.5f ) * Rotation,
+                    origin: new Vector2(SizeX/2,SizeY/2)
                 );
         }
 

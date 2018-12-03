@@ -32,7 +32,6 @@ namespace Hexes
         public FloatPoint Center;
         private List<Line> Edges = new List<Line>();
         private Texture2D Texture;
-        FloatPoint TopLeftOfSprite;
 
         public static double[] HexOrientation { get; set; }
 
@@ -90,7 +89,6 @@ namespace Hexes
             var corners = new List<FloatPoint>();
 
             Center = CenterHexToPixel();
-            TopLeftOfSprite = new FloatPoint(Center.X, Center.Y - SizeY);
 
             //https://www.redblobgames.com/grids/hexagons/implementation.html#hex-geometry
             for (var i = 0; i < 6; i++)
@@ -148,10 +146,11 @@ namespace Hexes
             //public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth);
 
             Sb.Draw(texture: Texture,
-                    destinationRectangle: new Rectangle((int)TopLeftOfSprite.X - (int)SizeX, (int)TopLeftOfSprite.Y, (int)SizeX * 2, (int)SizeY * 2),
+                    destinationRectangle: new Rectangle((int)Center.X, (int)Center.Y, (int)SizeX * 2, (int)SizeY * 2),
                     //this is inconsistent
                     sourceRectangle: new Rectangle(ResizeLeft, 0,ResizeRight, (int)SizeY),
-                    color: Color.White
+                    color: Color.White,
+                    origin: new Vector2(SizeX / 2, SizeY / 2)
                     //scale: new Vector2(9000,0.5f),
                     //effects: SpriteEffects.None,
                     //layerDepth: 0.0f
