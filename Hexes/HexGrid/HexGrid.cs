@@ -28,9 +28,10 @@ namespace Hexes.HexGrid
         public int Cols;
         public float HexXSize = 100;
         public float HexYSize = 100;
+        private Color RadiusColor;
 
         public Dictionary<HexPoint, Hex> HexStorage = new  Dictionary<HexPoint, Hex>();
-        public Dictionary<HexPoint,BasicActor> ActorStorage = new Dictionary<HexPoint, BasicActor>();
+        public List <BasicActor> ActorStorage = new List<BasicActor>();
         #endregion
 
         #region  selectable properties
@@ -131,7 +132,7 @@ namespace Hexes.HexGrid
                         bool controllable = placementKey.Value.Split('-')[1] == "PC" ? true : false;
                         int rotation = Convert.ToInt32(placementKey.Value.Split('-')[2]);
                         BasicActor actor = new BasicActor(new HexPoint(hexR, hexQ), actorType, actorData[actorType], rotation, controllable, moduleName);
-                        ActorStorage[new HexPoint(hexR, hexQ)] = actor;
+                        ActorStorage.Add(actor);
                     }
                 }
             }
@@ -152,22 +153,32 @@ namespace Hexes.HexGrid
             {
                 HexStorage[hex].Draw();
             }
-            foreach(HexPoint hex in ActorStorage.Keys)
+            foreach (BasicActor actor in ActorStorage)
             {
-                var hexExists = HexStorage.Where(p => p.Key.R == hex.R && p.Key.Q == hex.Q).ToList();
-                if(hexExists.Any())
-                {
-                    var drawHex = hexExists[0];
-                    //send it the center of the hex it will be in to center it
-                    ActorStorage[hex].Draw(drawHex.Value.Center);
-                }
+                var onHex = HexStorage.Where(h => h.Key.Equals(new HexPoint(actor.Location.R, actor.Location.Q))).FirstOrDefault();
+                if(!onHex.Equals(null))
+                    actor.Draw(onHex.Value.Center);
             }
         }
 
 
-        public List<HexPoint> InRadiusOf(HexPoint hexPoint)
+        public List<Hex> InRadiusOf(HexPoint hexPoint, int radius)
         {
-            return new List<HexPoint>();
+            //probs exclude self
+            var inRadius = new List<Hex>();
+            var hexPointCubeThirdPoint = -hexPoint.R - hexPoint.Q;
+            //function cube_distance(a, b):
+            foreach (var storedHex in HexStorage)
+            {
+                HexPoint point = storedHex.Key;
+                var hexThirdPoint = -point.R - point.Q;
+                if ((Math.Abs(point.R - hexPoint.R) + Math.Abs(point.Q - hexPoint.Q) +
+                     Math.Abs(hexPointCubeThirdPoint - hexThirdPoint))/2 <= radius)
+                {
+                    inRadius.Add(storedHex.Value);
+                }
+            }
+            return inRadius;
         }
 
         #region static methods

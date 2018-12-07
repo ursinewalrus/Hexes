@@ -65,9 +65,10 @@ namespace Hexes.Actors
             return new List<HexPoint>();
         }
 
+        //maybe also a draw that just takes the R/Q cords?
         public void Draw(FloatPoint center)
         {
-            Sb.Draw(texture: Texture,
+            Sb.Draw(Texture,
                     destinationRectangle: new Rectangle((int)center.X, (int)center.Y, (int)SizeX, (int)SizeY),
                     sourceRectangle: new Rectangle(0, 0, (int)SizeX, (int)SizeY),
                     color: Color.White,
@@ -75,7 +76,11 @@ namespace Hexes.Actors
                     origin: new Vector2(SizeX/2,SizeY/2)
                 );
         }
-
+        public void DrawSelected(FloatPoint center)
+        {
+            //some kind of select thingy UI thingy
+             Draw(center);
+        }
         public void Draw()
         {
             throw new NotImplementedException();

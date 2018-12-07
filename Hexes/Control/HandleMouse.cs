@@ -32,8 +32,8 @@ namespace Hexes.Control
             int width = game.GraphicsDevice.Viewport.Width;
             int height = game.GraphicsDevice.Viewport.Height;
 
-            var xScrollTrigger = width / 5;
-            var yScrollTrigger = height / 5;
+            var xScrollTrigger = width / 8;
+            var yScrollTrigger = height / 8;
 
             float XDistance = width - mouseX;
             float YDistance = height - mouseY;

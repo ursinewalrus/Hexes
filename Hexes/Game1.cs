@@ -54,10 +54,10 @@ namespace Hexes
             Drawable.Sb = SpriteBatch;
 
             GameWidth = GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferWidth = GameWidth / 2;
+            graphics.PreferredBackBufferWidth = GameWidth / 4;
 
             GameHeight = GraphicsDevice.DisplayMode.Height;
-            graphics.PreferredBackBufferHeight = GameHeight / 2;
+            graphics.PreferredBackBufferHeight = GameHeight / 4;
             GameCamera = new Camera(GraphicsDevice.Viewport);
 
             this.IsMouseVisible = true;
@@ -138,27 +138,48 @@ namespace Hexes
             GraphicsDevice.Clear(Color.LawnGreen);
 #if DEBUG
             //should be moved somewhere else... :TODO
+            GridSelect(mouseInfo, HexMap);
+#endif
+            SpriteBatch.End();
+           // base.Draw(gameTime);
+        }
+
+        protected void GridSelect(HandleMouse mouseInfo, HexGrid.HexGrid hexMap)
+        {
             if (mouseInfo.MouseState.LeftButton == ButtonState.Pressed)
             {
                 var conv = Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(GameCamera.Transform));
                 var selHex = HexMap.SelectedHex(conv);
                 if (selHex != null)
                 {
-                    Debug.Log("Clicked Hex " + selHex.R + ", " + selHex.Q, mouseInfo.MouseCords);
-                    var hexKey = HexMap.HexStorage.Where(h => h.Key.R == selHex.R && h.Key.Q == selHex.Q).FirstOrDefault();
-                    if(hexKey.Key != null)
+                    Debug.Log("Clicked Hex " + selHex.R + ", " + selHex.Q);
+                    var hexKey =
+                        HexMap.HexStorage.Where(h => h.Key.R == selHex.R && h.Key.Q == selHex.Q).FirstOrDefault();
+                    var actorKey =
+                        HexMap.ActorStorage.Where(actor => actor.Location.Equals(selHex) ).FirstOrDefault();
+
+                    if (hexKey.Key != null)
                         HexMap.ActiveHex = HexMap.HexStorage[hexKey.Key];
 
-                    var actorKey = HexMap.ActorStorage.Where(h => h.Key.R == selHex.R && h.Key.Q == selHex.Q).FirstOrDefault();
-                    if (actorKey.Key != null)
-                        HexMap.ActiveActor = HexMap.ActorStorage[actorKey.Key];
-                    ;
+                    if (actorKey != null)
+                    {
+                        HexMap.ActiveActor = actorKey;
+                        var inMoveDistance = HexMap.InRadiusOf(HexMap.ActiveActor.Location, HexMap.ActiveActor.MoveDistance);
+                        inMoveDistance.ForEach(h => h.Color = Color.Red );
+                    }
+                    if (HexMap.ActiveActor != null)
+                        HexMap.ActiveActor.Location = selHex;
+                    if (HexMap.ActiveActor == null)
+                    {
+                        //HexMap.ActiveActor
+                    }
                 }
             }
-#endif
-            SpriteBatch.End();
-           // base.Draw(gameTime);
+            if (mouseInfo.MouseState.RightButton == ButtonState.Pressed)
+            {
+                HexMap.ActiveHex = null;
+                HexMap.ActiveActor = null;
+            }
         }
-
     }
 }

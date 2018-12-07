@@ -24,7 +24,9 @@ namespace Hexes.UI
         //dont actually be writing these to the screen, needs to be an object so it actually persists
         public void Log(string logMsg)
         {
-            Sb.DrawString(Font, logMsg, Vector2.Transform(new Vector2(5,5), CamLoc), Color.Black );
+            //Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(GameCamera.Transform));
+
+            Sb.DrawString(Font, logMsg, Vector2.Transform(new Vector2(5,5), Matrix.Invert(CamLoc)), Color.Black );
         }
         public void Log(string logMsg, Vector2 cord)
         {

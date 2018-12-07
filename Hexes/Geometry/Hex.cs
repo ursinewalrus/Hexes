@@ -19,6 +19,8 @@ namespace Hexes.Geometry
 
         bool BlocksMovment;
         bool BlocksVision;
+        public Color Color = Color.White;
+
 
         public List<FloatPoint> HexCorners;
         public static float SizeX = 100;
@@ -147,9 +149,9 @@ namespace Hexes.Geometry
 
             Sb.Draw(texture: Texture,
                     destinationRectangle: new Rectangle((int)Center.X, (int)Center.Y, (int)SizeX * 2, (int)SizeY * 2),
-                    //this is inconsistent
+                    //this is inconsistent -> maybe not anymore
                     sourceRectangle: new Rectangle(ResizeLeft, 0,ResizeRight, (int)SizeY),
-                    color: Color.White,
+                    color: Color,
                     origin: new Vector2(SizeX / 2, SizeY / 2)
                     //scale: new Vector2(9000,0.5f),
                     //effects: SpriteEffects.None,
@@ -159,11 +161,18 @@ namespace Hexes.Geometry
             {
                 line.Draw();
             }
-
         }
+
         public void Draw(FloatPoint center)
         {
         }
-            #endregion
+        #endregion
+
+        public static bool Equals(Hex a, Hex b)
+        {
+            if (a == null || b == null)
+                return false;
+            return a.HexPoint.R == b.HexPoint.R && a.HexPoint.Q == b.HexPoint.Q;
         }
+    }
 }
