@@ -6,6 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Hexes.Control;
+using Hexes.HexGrid;
+using Hexes.UI;
+
 
 namespace Hexes
 {
@@ -18,11 +22,13 @@ namespace Hexes
         GraphicsDeviceManager graphics;
         //in drawable?
         public static SpriteBatch SpriteBatch;
-        HexGrid HexMap;
+        HexGrid.HexGrid HexMap;
         int GameHeight;
         int GameWidth;
         public Camera GameCamera;
         public List<LoadModule> Modules = new List<LoadModule>();
+        public SpriteFont Font;
+        public Debugger Debug;
 
         //bool HasBeenResized = false;
 
@@ -55,7 +61,6 @@ namespace Hexes
             GameCamera = new Camera(GraphicsDevice.Viewport);
 
             this.IsMouseVisible = true;
-
             base.Initialize();
         }
 
@@ -65,6 +70,7 @@ namespace Hexes
         /// </summary>
         protected override void LoadContent()
         {
+            Font = Content.Load<SpriteFont>("General");
             string ModulesDir = Environment.CurrentDirectory + @"\Modules\";
             DirectoryInfo dirInfo = new DirectoryInfo(ModulesDir);
             List<DirectoryInfo> modules = dirInfo.GetDirectories().ToList();
@@ -75,7 +81,8 @@ namespace Hexes
                 Modules.Add(loadedModule);
             }
             var usedModule = Modules[0];
-            HexMap = new HexGrid(usedModule.LoadedMaps, usedModule.LoadedBackgroundTiles, usedModule.LoadedActors, usedModule.ModuleName);
+            HexMap = new HexGrid.HexGrid(usedModule.LoadedMaps, usedModule.LoadedBackgroundTiles, usedModule.LoadedActors, usedModule.ModuleName);
+            Debug = new Debugger(SpriteBatch, Font);
 
             //FileStream fs = new FileStream(@"Content/greenhex.png", FileMode.Open);
             //Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);
@@ -117,24 +124,38 @@ namespace Hexes
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-
-            //so on begin looks like pass in a transform matrix
-            //spriteBatch.Begin(transformMatrix: viewMatrix);
             var mouseInfo = new HandleMouse(this);
             var mouseLoc = mouseInfo.RelativeMouseLocation;
             GameCamera.UpdateCamera(this.GraphicsDevice.Viewport, mouseLoc);
 
-            if (mouseInfo.MouseState.LeftButton == ButtonState.Pressed)
-            {
-                var conv = Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(GameCamera.Transform));
-                HexMap.SelectedHex(conv);
-            }
-
             SpriteBatch.Begin(transformMatrix: GameCamera.Transform, sortMode: SpriteSortMode.Deferred);
+
+            //so on begin looks like pass in a transform matrix
+            //spriteBatch.Begin(transformMatrix: viewMatrix);
+            Debug.CamLoc = GameCamera.Transform;
 
             HexMap.Draw();
             GraphicsDevice.Clear(Color.LawnGreen);
+#if DEBUG
+            //should be moved somewhere else... :TODO
+            if (mouseInfo.MouseState.LeftButton == ButtonState.Pressed)
+            {
+                var conv = Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(GameCamera.Transform));
+                var selHex = HexMap.SelectedHex(conv);
+                if (selHex != null)
+                {
+                    Debug.Log("Clicked Hex " + selHex.R + ", " + selHex.Q, mouseInfo.MouseCords);
+                    var hexKey = HexMap.HexStorage.Where(h => h.Key.R == selHex.R && h.Key.Q == selHex.Q).FirstOrDefault();
+                    if(hexKey.Key != null)
+                        HexMap.ActiveHex = HexMap.HexStorage[hexKey.Key];
 
+                    var actorKey = HexMap.ActorStorage.Where(h => h.Key.R == selHex.R && h.Key.Q == selHex.Q).FirstOrDefault();
+                    if (actorKey.Key != null)
+                        HexMap.ActiveActor = HexMap.ActorStorage[actorKey.Key];
+                    ;
+                }
+            }
+#endif
             SpriteBatch.End();
            // base.Draw(gameTime);
         }

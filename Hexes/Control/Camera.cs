@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hexes
+namespace Hexes.Control
 {
     //https://gamedev.stackexchange.com/questions/59301/xna-2d-camera-scrolling-why-use-matrix-transform
     public class Camera
@@ -44,25 +44,25 @@ namespace Hexes
                                             ); 
         }
 
-        private Rectangle UpdateVisibleMatrixArea()
-        {
-            var inverseMatrix = Matrix.Invert(Transform);
-            var topLeft = Vector2.Transform(Vector2.Zero, inverseMatrix);
-            var topRight = Vector2.Transform(new Vector2(Bounds.X, 0), inverseMatrix);
-            var bottomLeft = Vector2.Transform(new Vector2(0, Bounds.Y), inverseMatrix);
-            var bottomRight = Vector2.Transform(new Vector2(Bounds.Width, Bounds.Height), inverseMatrix);
+        //private Rectangle UpdateVisibleMatrixArea()
+        //{
+        //    var inverseMatrix = Matrix.Invert(Transform);
+        //    var topLeft = Vector2.Transform(Vector2.Zero, inverseMatrix);
+        //    var topRight = Vector2.Transform(new Vector2(Bounds.X, 0), inverseMatrix);
+        //    var bottomLeft = Vector2.Transform(new Vector2(0, Bounds.Y), inverseMatrix);
+        //    var bottomRight = Vector2.Transform(new Vector2(Bounds.Width, Bounds.Height), inverseMatrix);
 
-            var min = new Vector2(
-            MathHelper.Min(topLeft.X, MathHelper.Min(topRight.X, MathHelper.Min(bottomLeft.X, bottomRight.X))),
-            MathHelper.Min(topLeft.Y, MathHelper.Min(topRight.Y, MathHelper.Min(bottomLeft.Y, bottomRight.Y))));
+        //    var min = new Vector2(
+        //    MathHelper.Min(topLeft.X, MathHelper.Min(topRight.X, MathHelper.Min(bottomLeft.X, bottomRight.X))),
+        //    MathHelper.Min(topLeft.Y, MathHelper.Min(topRight.Y, MathHelper.Min(bottomLeft.Y, bottomRight.Y))));
 
-            var max = new Vector2(
-                MathHelper.Max(topLeft.X, MathHelper.Max(topRight.X, MathHelper.Max(bottomLeft.X, bottomRight.X))),
-                MathHelper.Max(topLeft.Y, MathHelper.Max(topRight.Y, MathHelper.Max(bottomLeft.Y, bottomRight.Y))));
+        //    var max = new Vector2(
+        //        MathHelper.Max(topLeft.X, MathHelper.Max(topRight.X, MathHelper.Max(bottomLeft.X, bottomRight.X))),
+        //        MathHelper.Max(topLeft.Y, MathHelper.Max(topRight.Y, MathHelper.Max(bottomLeft.Y, bottomRight.Y))));
 
-            return new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
+        //    return new Rectangle((int)min.X, (int)min.Y, (int)(max.X - min.X), (int)(max.Y - min.Y));
 
-        }
+        //}
 
         public void UpdateCamera(Viewport viewport,CardinalDirections.Direction scrollDirection)
         {

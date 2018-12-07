@@ -12,7 +12,6 @@ C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\libopena
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Hexes.exe
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Hexes.pdb
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\MonoGame.Framework.dll
-C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\obj\Debug\Hexes.csprojResolveAssemblyReference.cache
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\obj\Debug\Hexes.csproj.CoreCompileInputs.cache
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\obj\Debug\Hexes.exe
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\obj\Debug\Hexes.pdb
@@ -39,12 +38,6 @@ C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\Backgrounds\grayhex.png
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\Backgrounds\greenhex.png
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\Backgrounds\pinkhex.png
-C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\badhex.png
-C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\equalateralhexagon.png
-C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\hexagon100.png
-C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\hexagon50.png
-C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\pixel.png
-C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\singlehexagonaltile.png
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\BackgroundTiles\Backgrounds.xml
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Maps\Maps.xml
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\ModuleHandling\LoadModules.cs
@@ -57,3 +50,7 @@ C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Ma
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\ModuleHandling\LoadModules.cs
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Actors\Actors.xml
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\Actors\scab.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Actors\Actors.xml
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\Actors\scab.png
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\General.xnb
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\obj\Debug\Hexes.csprojResolveAssemblyReference.cache

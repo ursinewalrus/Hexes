@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hexes
+namespace Hexes.HexGrid
 {
     public class HexGrid : IDrawable
     {
@@ -31,6 +31,13 @@ namespace Hexes
 
         public Dictionary<HexPoint, Hex> HexStorage = new  Dictionary<HexPoint, Hex>();
         public Dictionary<HexPoint,BasicActor> ActorStorage = new Dictionary<HexPoint, BasicActor>();
+        #endregion
+
+        #region  selectable properties
+
+        public Hex ActiveHex;
+        public BasicActor ActiveActor;
+
         #endregion
         //Axial coordinate rectangle
         //https://www.redblobgames.com/grids/hexagons/#map-storage
@@ -100,10 +107,10 @@ namespace Hexes
                     int hexQ = q - (r / 2);
                     //placing tiles into drawable storage
                     var tilePlacementKeyExists = SpecificTilePlacements.Where(p => p.Key.X == hexR && p.Key.Y == hexQ).ToList();
-                    if (tilePlacementKeyExists.Count()>0)
+                    if (tilePlacementKeyExists.Any())
                     {
                         var placementKey = tilePlacementKeyExists[0];
-                        Hex hex = new Hex(new HexPoint(hexR,hexQ), placementKey.Key.ToString(), TileData[SpecificTilePlacements[placementKey.Key]],moduleName);
+                        Hex hex = new Hex(new HexPoint(hexR,hexQ), SpecificTilePlacements[placementKey.Key], TileData[SpecificTilePlacements[placementKey.Key]],moduleName);
                         //HexStorage[hexR, hexQ - -1 * (hexR / 2)] = hex;
                         HexStorage[new HexPoint(hexR, hexQ)] = hex;
 
@@ -117,7 +124,7 @@ namespace Hexes
                     }
                     //placing actors into actor storage
                     var actorPlacementKeyExists = SpecificActorPlacements.Where(p => p.Key.X == hexR && p.Key.Y == hexQ).ToList();
-                    if (actorPlacementKeyExists.Count() > 0)
+                    if (actorPlacementKeyExists.Any())
                     {
                         var placementKey = actorPlacementKeyExists[0];
                         string actorType = placementKey.Value.Split('-')[0];
@@ -130,14 +137,13 @@ namespace Hexes
             }
         }
 
-        public void SelectedHex(Vector2 screenCordinates)
+        public HexPoint SelectedHex(Vector2 screenCordinates)
         {
-            var Q = Math.Round(((Math.Sqrt(3) / 3 * screenCordinates.X) - (1.0f/3.0f * screenCordinates.Y)) / HexXSize);
-            var R = Math.Round((2.0f/3.0f * screenCordinates.Y) / HexYSize);
-            //convert to cube cordinates
-            //return new Point(Q,R)
-
-            ;
+            var R = (int)Math.Round(((Math.Sqrt(3) / 3 * screenCordinates.X) - (1.0f/3.0f * screenCordinates.Y)) / HexXSize);
+            var Q = (int)Math.Round((2.0f/3.0f * screenCordinates.Y) / HexYSize);
+            if (!(R > 0 || R < Rows || (Q < Rows / 2 && Q > -1*(Rows / 2) )))
+                return null;
+            return new HexPoint(Q,R);
         }
 
         public void Draw()
@@ -149,7 +155,7 @@ namespace Hexes
             foreach(HexPoint hex in ActorStorage.Keys)
             {
                 var hexExists = HexStorage.Where(p => p.Key.R == hex.R && p.Key.Q == hex.Q).ToList();
-                if(hexExists.Count() > 0)
+                if(hexExists.Any())
                 {
                     var drawHex = hexExists[0];
                     //send it the center of the hex it will be in to center it

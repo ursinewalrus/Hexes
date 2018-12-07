@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hexes
+namespace Hexes.Geometry
 {
     public class Hex : Drawable, IDrawable
     {

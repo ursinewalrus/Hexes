@@ -4,5 +4,5 @@ bin/*
 *.lock
 .vs/
 Hexes/bin/DesktopGL/AnyCPU/Release/*
-Hexes/obj/Release/*
+Hexes/obj/*
 packages/*

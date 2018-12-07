@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hexes
+namespace Hexes.Control
 {
     public class HandleMouse
     {

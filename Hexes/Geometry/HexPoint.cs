@@ -17,13 +17,15 @@ namespace Hexes.Geometry
             Q = q;
         }
 
-        public bool Equals(HexPoint otherPoint)
-        {
-            if(otherPoint.Q == Q && otherPoint.R == R)
-            {
-                return true;
-            }
-            return false;
-        }
+        //public bool Equals(HexPoint otherPoint)
+        //{
+        //    if (otherPoint.Equals(null))
+        //        return false;
+        //    if(otherPoint.Q == Q && otherPoint.R == R)
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
     }
 }

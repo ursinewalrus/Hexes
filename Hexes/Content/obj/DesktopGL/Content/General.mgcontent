@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SourceFile>C:/Users/jkerxhalli/Desktop/golf/Hexes/Hexes/Content/File.spritefont</SourceFile>
+  <SourceTime>2018-12-06T14:11:21.4211535-06:00</SourceTime>
+  <DestFile>C:/Users/jkerxhalli/Desktop/golf/Hexes/Hexes/Content/bin/DesktopGL/Content/General.xnb</DestFile>
+  <DestTime>2018-12-06T14:11:32.7935562-06:00</DestTime>
+  <Importer>FontDescriptionImporter</Importer>
+  <ImporterTime>2018-10-28T13:53:14-05:00</ImporterTime>
+  <Processor>FontDescriptionProcessor</Processor>
+  <ProcessorTime>2018-10-28T13:53:14-05:00</ProcessorTime>
+  <Parameters>
+    <Key>PremultiplyAlpha</Key>
+    <Value>True</Value>
+  </Parameters>
+  <Parameters>
+    <Key>TextureFormat</Key>
+    <Value>Compressed</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>
