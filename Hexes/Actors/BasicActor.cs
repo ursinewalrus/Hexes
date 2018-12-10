@@ -76,10 +76,15 @@ namespace Hexes.Actors
                     origin: new Vector2(SizeX/2,SizeY/2)
                 );
         }
-        public void DrawSelected(FloatPoint center)
+        public void Draw(FloatPoint center, Vector2 size)
         {
-            //some kind of select thingy UI thingy
-             Draw(center);
+            Sb.Draw(Texture,
+                    destinationRectangle: new Rectangle((int)center.X, (int)center.Y, (int)size.X, (int)size.Y),
+                    sourceRectangle: new Rectangle(0, 0, (int)SizeX, (int)SizeY),
+                    color: Color.White,
+                    rotation: (MathHelper.PiOver2 / 3.0f) + (MathHelper.PiOver2 / 1.5f) * Rotation,
+                    origin: new Vector2(size.X / 2, size.Y / 2)
+                );
         }
         public void Draw()
         {

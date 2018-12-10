@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using Hexes.Control;
 using Hexes.HexGrid;
 using Hexes.UI;
-
 
 namespace Hexes
 {
@@ -29,6 +29,9 @@ namespace Hexes
         public List<LoadModule> Modules = new List<LoadModule>();
         public SpriteFont Font;
 
+        //private List<Type> UIElements;
+
+        //private EmptyKeys.UserInterface.Generated.ActorActions ActorActions;
 
         public Debugger Debug = new Debugger();
         //bool HasBeenResized = false;
@@ -36,6 +39,7 @@ namespace Hexes
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            //graphics.DeviceCreated += GraphicsDeviceCreated;
 
             Content.RootDirectory = "Content";
         }
@@ -55,15 +59,39 @@ namespace Hexes
             //Drawable.Sb = SpriteBatch;
 
             GameWidth = GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferWidth = GameWidth / 2;
+            graphics.PreferredBackBufferWidth = GameWidth / 4;
 
             GameHeight = GraphicsDevice.DisplayMode.Height;
-            graphics.PreferredBackBufferHeight = GameHeight / 2;
+            graphics.PreferredBackBufferHeight = GameHeight / 4;
             GameCamera = new Camera(GraphicsDevice.Viewport);
 
             this.IsMouseVisible = true;
+           // GetUIElements();
+
             base.Initialize();
         }
+
+        //void GraphicsDeviceCreated(object sender, System.EventArgs e)
+        //{
+        //    Engine engine = new MonoGameEngine(GraphicsDevice, GraphicsDevice.DisplayMode.Width, GraphicsDevice.DisplayMode.Height);
+        //}
+
+        //private void GetUIElements()
+        //{
+        // EmptyKeys.UserInterface.Input.InputManager -> throwing null, that my issue?
+        //    var elements =
+        //        Assembly.GetExecutingAssembly()
+        //            .GetTypes()
+        //            .Where(t => t.Namespace == "EmptyKeys.UserInterface.Generated")
+        //            .ToList();
+
+        //    ;
+        //    UIElements = elements;
+        //    //var actorActions = UIElements.Where(e => e.Name == "ActorActions").First();
+        //    //Type type = Type.GetType("EmptyKeys.UserInterface.Generated.ActorActions");
+        //    //var instance = Activator.CreateInstance(type);
+        //}
+
 
         /// <summary>
         /// LoadContent will be called once per game and is the place to load
@@ -73,9 +101,14 @@ namespace Hexes
         {
             Font = Content.Load<SpriteFont>("General");
 
+            //FontManager.DefaultFont = Engine.Instance.Renderer.CreateFont(Font);
+            //ActorActions = new EmptyKeys.UserInterface.Generated.ActorActions(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            //FontManager.Instance.LoadFonts(Content);
+
             Drawable.GraphicsDevice = GraphicsDevice;
             Drawable.Sb = SpriteBatch;
             Drawable.Font = Font;
+            Drawable.Camera = GameCamera;
             HandleMouse.Debug = Debug;
 
             string ModulesDir = Environment.CurrentDirectory + @"\Modules\";
@@ -116,11 +149,14 @@ namespace Hexes
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Microsoft.Xna.Framework.Input.Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            //ActorActions.UpdateInput(gameTime.ElapsedGameTime.Milliseconds);
+            //ActorActions.UpdateLayout(gameTime.ElapsedGameTime.Milliseconds);
+
             // TODO: Add your update logic here
-           
+
             base.Update(gameTime);
         }
 
@@ -138,12 +174,20 @@ namespace Hexes
 
             //so on begin looks like pass in a transform matrix
             //spriteBatch.Begin(transformMatrix: viewMatrix);
-            Debug.CamLoc = GameCamera.Transform;
+            //Debug.CamLoc = GameCamera.Transform;
 
-            HexMap.Draw();
             GraphicsDevice.Clear(Color.LawnGreen);
+            HexMap.Draw();
+
+            foreach (var hexUI in ActiveHexUIElements.AvailibleUIElements)
+            {
+                hexUI.Value.Draw();
+            }
+            //ActorActions.Draw(gameTime.ElapsedGameTime.TotalMilliseconds);
+
+            ;
             //should be moved somewhere else... :TODO
-            HandleMouse.GridSelect(mouseInfo, HexMap, GameCamera);
+            HandleMouse.TacticalViewClick(mouseInfo, HexMap, GameCamera);
             SpriteBatch.End();
            // base.Draw(gameTime);
         }

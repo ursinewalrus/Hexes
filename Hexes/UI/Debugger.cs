@@ -11,8 +11,6 @@ namespace Hexes.UI
     public class Debugger : Drawable
     {
         //set in draw each loop -> probably bad :TODO
-        public Matrix CamLoc { get; set; }
-
         public Debugger()
         {
         }
@@ -22,7 +20,7 @@ namespace Hexes.UI
         {
             //Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(GameCamera.Transform));
 
-            Sb.DrawString(Font, logMsg, Vector2.Transform(new Vector2(5,5), Matrix.Invert(CamLoc)), Color.Black );
+            Sb.DrawString(Font, logMsg, Vector2.Transform(new Vector2(5,5), Matrix.Invert(Camera.Transform)), Color.Black );
         }
         public void Log(string logMsg, Vector2 cord)
         {

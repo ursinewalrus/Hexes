@@ -16,6 +16,8 @@ namespace Hexes.Control
         public CardinalDirections.Direction RelativeMouseLocation;
         public MouseState MouseState;
         public static Debugger Debug;
+
+
         public HandleMouse(Game1 game)
         {
             MouseState = Mouse.GetState();
@@ -76,14 +78,28 @@ namespace Hexes.Control
 
         }
 
-        public static void GridSelect(HandleMouse mouseInfo, HexGrid.HexGrid hexMap, Camera camera)
+        public static void TacticalViewClick(HandleMouse mouseInfo, HexGrid.HexGrid hexMap, Camera camera)
         {
             //Probably in whatever houses the ActorActions instantiation
             //var actorUi = new ActorActions(new );
             //actorUi.DrawActorActions();
             if (mouseInfo.MouseState.LeftButton == ButtonState.Pressed)
             {
+
                 var conv = Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(camera.Transform));
+                foreach (var visibleElement in ActiveHexUIElements.AvailibleUIElements)
+                {
+                    Vector2 elementLoc = Vector2.Transform(visibleElement.Value.StartV, Matrix.Invert(camera.Transform));
+                    Vector2 elementSize = visibleElement.Value.Size;
+                    if (conv.X >= elementLoc.X && conv.Y >= elementLoc.Y && conv.X <= elementLoc.X + elementSize.X &&
+                        conv.Y <= elementLoc.Y + elementSize.Y)
+                    {
+                        //how do param passing here, how do we know what it needs, can i pass a function maybe
+                        visibleElement.Value.OnClick();
+                        return;
+                    }
+                }
+
                 var selHex = hexMap.SelectedHex(conv);
                 if (selHex != null)
                 {
@@ -99,16 +115,22 @@ namespace Hexes.Control
 
                     if (actorKey != null)
                     {
-                        hexMap.ActiveActor = actorKey;
-
-                        //inMoveDistance.ForEach(h => h.Color = Color.Red ); -> alpha channel?
-                        //we need a custom contains method, too many of these -> override enum thing probs
+                        if (actorKey.Controllable)
+                        {
+                            hexMap.ActiveActor = actorKey;
+                            ActiveHexUIElements.AvailibleUIElements.Remove("ActorActions");
+                            ActiveHexUIElements.AvailibleUIElements["ActorActions"] =
+                                new ActorActions(hexMap.ActiveActor, new Vector2(100, 100));
+                            //inMoveDistance.ForEach(h => h.Color = Color.Red ); -> alpha channel?
+                            //we need a custom contains method, too many of these -> override enum thing probs
+                        }
 
                     }
                     if (hexMap.ActiveActor != null)
                     {
                         var inMoveDistance = hexMap.AllInRadiusOf(hexMap.ActiveActor.Location, hexMap.ActiveActor.MoveDistance);
                         if (inMoveDistance.Any(h => h.R == selHex.R && h.Q == selHex.Q))
+                            //move this somewhere an element onclick can get at it
                             hexMap.ActiveActor.Location = selHex;
                     }
                     if (hexMap.ActiveActor == null)
@@ -121,6 +143,7 @@ namespace Hexes.Control
             {
                 hexMap.ActiveHex = null;
                 hexMap.ActiveActor = null;
+                ActiveHexUIElements.AvailibleUIElements.Remove("ActorActions");
             }
         }
     }

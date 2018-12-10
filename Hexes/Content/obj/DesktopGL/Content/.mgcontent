@@ -4,7 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/kk/Desktop/Hexes/Hexes/Content/File.spritefont</File>
+    <File>C:/Users/jkerxhalli/Desktop/golf/Hexes/Hexes/Content/File.spritefont</File>
   </SourceFiles>
   <DestFiles>
     <File>General.spritefont</File>

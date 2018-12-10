@@ -53,7 +53,6 @@ C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Co
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Actors\Actors.xml
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Modules\MainModule\Content\Actors\scab.png
 C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\General.xnb
-C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\obj\Debug\Hexes.csprojResolveAssemblyReference.cache
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\General.xnb
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\EmptyKeys.UserInterface.Core.dll
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\EmptyKeys.UserInterface.Debug.dll
@@ -64,3 +63,4 @@ C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\EmptyKeys.UserInterfa
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\EmptyKeys.UserInterface.Core.xml
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\EmptyKeys.UserInterface.Debug.pdb
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\EmptyKeys.UserInterface.Designer.pdb
+C:\Users\jkerxhalli\Desktop\golf\Hexes\Hexes\obj\Debug\Hexes.csprojResolveAssemblyReference.cache

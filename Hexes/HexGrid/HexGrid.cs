@@ -199,6 +199,12 @@ namespace Hexes.HexGrid
         #endregion
         public void Draw(FloatPoint center)
         {
+            throw new NotImplementedException();
+        }
+
+        public void Draw(FloatPoint center, Vector2 size)
+        {
+            throw new NotImplementedException();
         }
     }
 }
