@@ -10,7 +10,6 @@ namespace Hexes.Geometry
 {
     public class Line: Drawable, IDrawable
     {
-        public readonly static SpriteBatch Sb = Game1.SpriteBatch;
         private Color LineColor; 
         private float WidthMultiplier;
 
@@ -18,7 +17,7 @@ namespace Hexes.Geometry
         private Vector2 EndV;
         private double Length;
 
-        Texture2D texture;
+        Texture2D Texture;
 
         public Line(float startX, float startY, float endX, float endY, float wM, Color color)
         {
@@ -27,9 +26,9 @@ namespace Hexes.Geometry
             StartV = new Vector2(startX, startY);
             EndV = new Vector2(endX, endY);
 
-            texture = new Texture2D(Sb.GraphicsDevice, 1, 1);
+            Texture = new Texture2D(Sb.GraphicsDevice, 1, 1);
             LineColor = color;
-            texture.SetData<Color>(new Color[] { LineColor });
+            Texture.SetData<Color>(new Color[] { LineColor });
 
             Length = Math.Sqrt(Math.Pow(EndV.X - StartV.X, 2) + Math.Pow(EndV.Y - StartV.Y, 2));
         }
@@ -41,12 +40,12 @@ namespace Hexes.Geometry
             Vector2 edge = EndV - StartV;
             float angle = (float)Math.Atan2(edge.Y, edge.X);
 
-            Sb.Draw(texture,
+            Sb.Draw(Texture,
                 StartV,
                 null,
                 LineColor,
                 (float)Math.Atan2(EndV.Y - StartV.Y, EndV.X - StartV.X),
-                new Vector2(0f, (float)texture.Height / 2),
+                new Vector2(0f, (float)Texture.Height / 2),
                 new Vector2(Vector2.Distance(StartV, EndV), WidthMultiplier), //float for width
                 SpriteEffects.None, 
                 0f

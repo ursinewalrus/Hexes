@@ -28,8 +28,9 @@ namespace Hexes
         public Camera GameCamera;
         public List<LoadModule> Modules = new List<LoadModule>();
         public SpriteFont Font;
-        public Debugger Debug;
 
+
+        public Debugger Debug = new Debugger();
         //bool HasBeenResized = false;
 
         public Game1()
@@ -50,14 +51,14 @@ namespace Hexes
             // TODO: Add your initialization logic here
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             //
-            Drawable.GraphicsDevice = GraphicsDevice;
-            Drawable.Sb = SpriteBatch;
+            //Drawable.GraphicsDevice = GraphicsDevice;
+            //Drawable.Sb = SpriteBatch;
 
             GameWidth = GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferWidth = GameWidth / 4;
+            graphics.PreferredBackBufferWidth = GameWidth / 2;
 
             GameHeight = GraphicsDevice.DisplayMode.Height;
-            graphics.PreferredBackBufferHeight = GameHeight / 4;
+            graphics.PreferredBackBufferHeight = GameHeight / 2;
             GameCamera = new Camera(GraphicsDevice.Viewport);
 
             this.IsMouseVisible = true;
@@ -71,6 +72,12 @@ namespace Hexes
         protected override void LoadContent()
         {
             Font = Content.Load<SpriteFont>("General");
+
+            Drawable.GraphicsDevice = GraphicsDevice;
+            Drawable.Sb = SpriteBatch;
+            Drawable.Font = Font;
+            HandleMouse.Debug = Debug;
+
             string ModulesDir = Environment.CurrentDirectory + @"\Modules\";
             DirectoryInfo dirInfo = new DirectoryInfo(ModulesDir);
             List<DirectoryInfo> modules = dirInfo.GetDirectories().ToList();
@@ -82,7 +89,6 @@ namespace Hexes
             }
             var usedModule = Modules[0];
             HexMap = new HexGrid.HexGrid(usedModule.LoadedMaps, usedModule.LoadedBackgroundTiles, usedModule.LoadedActors, usedModule.ModuleName);
-            Debug = new Debugger(SpriteBatch, Font);
 
             //FileStream fs = new FileStream(@"Content/greenhex.png", FileMode.Open);
             //Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);
@@ -136,50 +142,12 @@ namespace Hexes
 
             HexMap.Draw();
             GraphicsDevice.Clear(Color.LawnGreen);
-#if DEBUG
             //should be moved somewhere else... :TODO
-            GridSelect(mouseInfo, HexMap);
-#endif
+            HandleMouse.GridSelect(mouseInfo, HexMap, GameCamera);
             SpriteBatch.End();
            // base.Draw(gameTime);
         }
 
-        protected void GridSelect(HandleMouse mouseInfo, HexGrid.HexGrid hexMap)
-        {
-            if (mouseInfo.MouseState.LeftButton == ButtonState.Pressed)
-            {
-                var conv = Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(GameCamera.Transform));
-                var selHex = HexMap.SelectedHex(conv);
-                if (selHex != null)
-                {
-                    Debug.Log("Clicked Hex " + selHex.R + ", " + selHex.Q);
-                    var hexKey =
-                        HexMap.HexStorage.Where(h => h.Key.R == selHex.R && h.Key.Q == selHex.Q).FirstOrDefault();
-                    var actorKey =
-                        HexMap.ActorStorage.Where(actor => actor.Location.Equals(selHex) ).FirstOrDefault();
-
-                    if (hexKey.Key != null)
-                        HexMap.ActiveHex = HexMap.HexStorage[hexKey.Key];
-
-                    if (actorKey != null)
-                    {
-                        HexMap.ActiveActor = actorKey;
-                        var inMoveDistance = HexMap.InRadiusOf(HexMap.ActiveActor.Location, HexMap.ActiveActor.MoveDistance);
-                        inMoveDistance.ForEach(h => h.Color = Color.Red );
-                    }
-                    if (HexMap.ActiveActor != null)
-                        HexMap.ActiveActor.Location = selHex;
-                    if (HexMap.ActiveActor == null)
-                    {
-                        //HexMap.ActiveActor
-                    }
-                }
-            }
-            if (mouseInfo.MouseState.RightButton == ButtonState.Pressed)
-            {
-                HexMap.ActiveHex = null;
-                HexMap.ActiveActor = null;
-            }
-        }
+       
     }
 }

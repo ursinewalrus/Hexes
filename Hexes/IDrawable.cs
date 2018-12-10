@@ -19,6 +19,8 @@ namespace Hexes
     {
         public static GraphicsDevice GraphicsDevice { get; set; }
         public static SpriteBatch Sb { get; set; }
+        public static SpriteFont Font { get; set; }
 
-}
+
+    }
 }

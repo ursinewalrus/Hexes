@@ -140,11 +140,12 @@ namespace Hexes.HexGrid
 
         public HexPoint SelectedHex(Vector2 screenCordinates)
         {
-            var R = (int)Math.Round(((Math.Sqrt(3) / 3 * screenCordinates.X) - (1.0f/3.0f * screenCordinates.Y)) / HexXSize);
-            var Q = (int)Math.Round((2.0f/3.0f * screenCordinates.Y) / HexYSize);
-            if (!(R > 0 || R < Rows || (Q < Rows / 2 && Q > -1*(Rows / 2) )))
+            var R = (int)Math.Round((2.0f / 3.0f * screenCordinates.Y) / HexYSize);
+            var Q = (int)Math.Round(((Math.Sqrt(3) / 3 * screenCordinates.X) - (1.0f/3.0f * screenCordinates.Y)) / HexXSize);
+            var inGrid = HexStorage.Where(h => h.Key.R == R && h.Key.Q == Q).Any();
+            if (!inGrid)
                 return null;
-            return new HexPoint(Q,R);
+            return new HexPoint(R,Q);
         }
 
         public void Draw()
@@ -156,16 +157,16 @@ namespace Hexes.HexGrid
             foreach (BasicActor actor in ActorStorage)
             {
                 var onHex = HexStorage.Where(h => h.Key.Equals(new HexPoint(actor.Location.R, actor.Location.Q))).FirstOrDefault();
-                if(!onHex.Equals(null))
+                if(onHex.Key != null)
                     actor.Draw(onHex.Value.Center);
             }
         }
 
 
-        public List<Hex> InRadiusOf(HexPoint hexPoint, int radius)
+        public List<HexPoint> AllInRadiusOf(HexPoint hexPoint, int radius)
         {
             //probs exclude self
-            var inRadius = new List<Hex>();
+            var inRadius = new List<HexPoint>();
             var hexPointCubeThirdPoint = -hexPoint.R - hexPoint.Q;
             //function cube_distance(a, b):
             foreach (var storedHex in HexStorage)
@@ -175,7 +176,7 @@ namespace Hexes.HexGrid
                 if ((Math.Abs(point.R - hexPoint.R) + Math.Abs(point.Q - hexPoint.Q) +
                      Math.Abs(hexPointCubeThirdPoint - hexThirdPoint))/2 <= radius)
                 {
-                    inRadius.Add(storedHex.Value);
+                    inRadius.Add(storedHex.Key);
                 }
             }
             return inRadius;

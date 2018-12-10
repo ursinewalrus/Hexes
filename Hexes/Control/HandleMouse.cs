@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Hexes.UI;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -14,6 +15,7 @@ namespace Hexes.Control
         public Vector2 MouseCords;
         public CardinalDirections.Direction RelativeMouseLocation;
         public MouseState MouseState;
+        public static Debugger Debug;
         public HandleMouse(Game1 game)
         {
             MouseState = Mouse.GetState();
@@ -22,7 +24,6 @@ namespace Hexes.Control
             RelativeMouseLocation = GetMouseCardinalDirection(game);
 
         }
-
 
         private CardinalDirections.Direction GetMouseCardinalDirection(Game1 game)
         {
@@ -73,6 +74,54 @@ namespace Hexes.Control
             }
             return CardinalDirections.Direction.Centered;
 
+        }
+
+        public static void GridSelect(HandleMouse mouseInfo, HexGrid.HexGrid hexMap, Camera camera)
+        {
+            //Probably in whatever houses the ActorActions instantiation
+            //var actorUi = new ActorActions(new );
+            //actorUi.DrawActorActions();
+            if (mouseInfo.MouseState.LeftButton == ButtonState.Pressed)
+            {
+                var conv = Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(camera.Transform));
+                var selHex = hexMap.SelectedHex(conv);
+                if (selHex != null)
+                {
+                    Debug.Log("Clicked Hex " + selHex.R + ", " + selHex.Q);
+
+                    var hexKey =
+                        hexMap.HexStorage.Where(h => h.Key.R == selHex.R && h.Key.Q == selHex.Q).FirstOrDefault();
+                    var actorKey =
+                        hexMap.ActorStorage.Where(actor => actor.Location.Equals(selHex)).FirstOrDefault();
+
+                    if (hexKey.Key != null)
+                        hexMap.ActiveHex = hexMap.HexStorage[hexKey.Key];
+
+                    if (actorKey != null)
+                    {
+                        hexMap.ActiveActor = actorKey;
+
+                        //inMoveDistance.ForEach(h => h.Color = Color.Red ); -> alpha channel?
+                        //we need a custom contains method, too many of these -> override enum thing probs
+
+                    }
+                    if (hexMap.ActiveActor != null)
+                    {
+                        var inMoveDistance = hexMap.AllInRadiusOf(hexMap.ActiveActor.Location, hexMap.ActiveActor.MoveDistance);
+                        if (inMoveDistance.Any(h => h.R == selHex.R && h.Q == selHex.Q))
+                            hexMap.ActiveActor.Location = selHex;
+                    }
+                    if (hexMap.ActiveActor == null)
+                    {
+                        //HexMap.ActiveActor
+                    }
+                }
+            }
+            if (mouseInfo.MouseState.RightButton == ButtonState.Pressed)
+            {
+                hexMap.ActiveHex = null;
+                hexMap.ActiveActor = null;
+            }
         }
     }
 }
