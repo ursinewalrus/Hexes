@@ -10,23 +10,25 @@ using System.Threading.Tasks;
 
 namespace Hexes.UI
 {
-    public class ActorActions : UIDrawable, IUIActions
+    public class ActorMoveAction : UIDrawable, IUIActions
     {
         public static string ElementName = "ActorActions";
         public Texture2D Texture { get; set; }
         public Color LineColor { get; set; }
         public BasicActor Actor { get; set; }
+        public HexPoint HexPoint { get; set; }
 
 
-        public ActorActions(BasicActor actor, Vector2 size)
+        public ActorMoveAction(BasicActor actor, HexPoint hexPoint)
         {
             Texture = actor.Texture;
             //maaaybe pass as param
             StartV = new Vector2(5, 25);
-            Size = size;
+            Size = new Vector2(100,100);
+            HexPoint = hexPoint;
             Actor = actor;
         }
-        public void Draw()
+        public override void Draw()
         {
             //outline draw, txt draw for actions which should be sprite, and draw over maybe, Z index? doable?
             //Sb.Draw(Texture,
@@ -44,13 +46,36 @@ namespace Hexes.UI
             // Vector2.Transform(new Vector2(5,5), Matrix.Invert(Camera.Transform))
         }
 
-      
-
+        //public delegate void CustomEventHandler(object sender, ActorMoveActionEvent a);
         public override void OnClick()
         {
-            ;
+            var eventSend = new ActorMoveActionEvent(Actor,HexPoint);
+            eventSend.MoveAction += Actor.MoveTo;
+            eventSend.OnMoveAction();
+            // MoveActionSent(null, new ActorMoveActionEvent(Actor));
             //
         }
 
+
+    }
+    public class ActorMoveActionEvent : EventArgs
+    {
+        public event EventHandler<ActorMoveActionEvent> MoveAction;
+
+        public BasicActor Actor { get; set; }
+        public HexPoint Location { get; set; }
+        public ActorMoveActionEvent(BasicActor actor, HexPoint location)
+        {
+            Actor = actor;
+            Location = location;
+        }
+        public void OnMoveAction()
+        {
+            var handler = MoveAction;
+            if (handler != null)
+            {
+                handler(this, new ActorMoveActionEvent(Actor, Location));
+            }
+        }
     }
 }

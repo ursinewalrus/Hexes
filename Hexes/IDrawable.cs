@@ -48,7 +48,6 @@ namespace Hexes
         public Vector2 StartV { get; set; }
         public Vector2 Size;
         public abstract void OnClick();
-        
 
 
     }

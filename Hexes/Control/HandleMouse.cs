@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hexes.Geometry;
 
 namespace Hexes.Control
 {
@@ -87,18 +88,6 @@ namespace Hexes.Control
             {
 
                 var conv = Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(camera.Transform));
-                foreach (var visibleElement in ActiveHexUIElements.AvailibleUIElements)
-                {
-                    Vector2 elementLoc = Vector2.Transform(visibleElement.Value.StartV, Matrix.Invert(camera.Transform));
-                    Vector2 elementSize = visibleElement.Value.Size;
-                    if (conv.X >= elementLoc.X && conv.Y >= elementLoc.Y && conv.X <= elementLoc.X + elementSize.X &&
-                        conv.Y <= elementLoc.Y + elementSize.Y)
-                    {
-                        //how do param passing here, how do we know what it needs, can i pass a function maybe
-                        visibleElement.Value.OnClick();
-                        return;
-                    }
-                }
 
                 var selHex = hexMap.SelectedHex(conv);
                 if (selHex != null)
@@ -106,12 +95,12 @@ namespace Hexes.Control
                     Debug.Log("Clicked Hex " + selHex.R + ", " + selHex.Q);
 
                     var hexKey =
-                        hexMap.HexStorage.Where(h => h.Key.R == selHex.R && h.Key.Q == selHex.Q).FirstOrDefault();
+                        hexMap.HexStorage.Where(h => h.Key.Equals(selHex)).FirstOrDefault();
                     var actorKey =
                         hexMap.ActorStorage.Where(actor => actor.Location.Equals(selHex)).FirstOrDefault();
 
                     if (hexKey.Key != null)
-                        hexMap.ActiveHex = hexMap.HexStorage[hexKey.Key];
+                        hexMap.ActiveHex = hexKey;
 
                     if (actorKey != null)
                     {
@@ -120,28 +109,39 @@ namespace Hexes.Control
                             hexMap.ActiveActor = actorKey;
                             ActiveHexUIElements.AvailibleUIElements.Remove("ActorActions");
                             ActiveHexUIElements.AvailibleUIElements["ActorActions"] =
-                                new ActorActions(hexMap.ActiveActor, new Vector2(100, 100));
+                                new ActorMoveAction(hexMap.ActiveActor, hexKey.Key);
                             //inMoveDistance.ForEach(h => h.Color = Color.Red ); -> alpha channel?
                             //we need a custom contains method, too many of these -> override enum thing probs
                         }
 
                     }
-                    if (hexMap.ActiveActor != null)
-                    {
-                        var inMoveDistance = hexMap.AllInRadiusOf(hexMap.ActiveActor.Location, hexMap.ActiveActor.MoveDistance);
-                        if (inMoveDistance.Any(h => h.R == selHex.R && h.Q == selHex.Q))
-                            //move this somewhere an element onclick can get at it
-                            hexMap.ActiveActor.Location = selHex;
-                    }
+                    //if (hexMap.ActiveActor != null)
+                    //{
+                    //    var inMoveDistance = hexMap.AllInRadiusOf(hexMap.ActiveActor.Location, hexMap.ActiveActor.MoveDistance);
+                    //    if (inMoveDistance.Any(h => h.R == selHex.R && h.Q == selHex.Q))
+                    //        //move this somewhere an element onclick can get at it
+                    //        hexMap.ActiveActor.Location = selHex;
+                    //}
                     if (hexMap.ActiveActor == null)
                     {
                         //HexMap.ActiveActor
                     }
                 }
+                foreach (var visibleElement in ActiveHexUIElements.AvailibleUIElements)
+                {
+                    Vector2 elementLoc = Vector2.Transform(visibleElement.Value.StartV, Matrix.Invert(camera.Transform));
+                    Vector2 elementSize = visibleElement.Value.Size;
+                    if (conv.X >= elementLoc.X && conv.Y >= elementLoc.Y && conv.X <= elementLoc.X + elementSize.X &&
+                        conv.Y <= elementLoc.Y + elementSize.Y)
+                    {
+                        visibleElement.Value.OnClick();
+                    }
+                }
             }
+
             if (mouseInfo.MouseState.RightButton == ButtonState.Pressed)
             {
-                hexMap.ActiveHex = null;
+                hexMap.ActiveHex = new KeyValuePair<HexPoint, Hex>();
                 hexMap.ActiveActor = null;
                 ActiveHexUIElements.AvailibleUIElements.Remove("ActorActions");
             }

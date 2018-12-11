@@ -16,7 +16,7 @@ namespace Hexes.Actors
 
         List<HexPoint> CanSee(HexPoint location);
 
-        HexPoint MoveTo(HexPoint moveFrom, HexPoint moveTo);
+        void MoveTo(HexPoint moveTo);
 
     }
 }

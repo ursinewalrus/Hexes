@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hexes.UI;
 
 namespace Hexes.Actors
 {
@@ -49,10 +50,16 @@ namespace Hexes.Actors
             // have grid calculate distance
             return new List<HexPoint>();
         }
-
-        public HexPoint MoveTo(HexPoint moveFrom, HexPoint moveTo)
+        public void MoveTo(object sender, ActorMoveActionEvent eventArgs)
         {
-            return new HexPoint(0,0);
+            //do some other cheeeecks
+            //plops you in the wrong spot but right idea
+            //
+            MoveTo(eventArgs.Location);
+        }
+        public void MoveTo(HexPoint moveTo)
+        {
+            Location = moveTo;
         }
 
         public Boolean CanMoveTo(HexPoint moveFrom, HexPoint moveTo)

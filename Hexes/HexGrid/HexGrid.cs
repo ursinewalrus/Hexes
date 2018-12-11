@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hexes.UI;
 
 namespace Hexes.HexGrid
 {
@@ -33,10 +34,9 @@ namespace Hexes.HexGrid
         public Dictionary<HexPoint, Hex> HexStorage = new  Dictionary<HexPoint, Hex>();
         public List <BasicActor> ActorStorage = new List<BasicActor>();
         #endregion
-
         #region  selectable properties
 
-        public Hex ActiveHex;
+        public KeyValuePair<HexPoint, Hex> ActiveHex;
         public BasicActor ActiveActor;
 
         #endregion
@@ -161,7 +161,6 @@ namespace Hexes.HexGrid
                     actor.Draw(onHex.Value.Center);
             }
         }
-
 
         public List<HexPoint> AllInRadiusOf(HexPoint hexPoint, int radius)
         {
