@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Hexes.Geometry
 {
-    public class Hex : Drawable, IDrawable
+    public class Hex : Drawable
     {
         #region properties
         public string Name;
@@ -163,15 +163,6 @@ namespace Hexes.Geometry
             }
         }
 
-        public void Draw(FloatPoint center)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Draw(FloatPoint center, Vector2 size)
-        {
-            throw new NotImplementedException();
-        }
         #endregion
 
         public static bool Equals(Hex a, Hex b)

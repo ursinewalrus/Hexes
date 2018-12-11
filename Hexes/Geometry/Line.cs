@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Hexes.Geometry
 {
-    public class Line: Drawable, IDrawable
+    public class Line: Drawable
     {
         private Color LineColor; 
         private float WidthMultiplier;
@@ -52,13 +52,5 @@ namespace Hexes.Geometry
             );
         }
 
-        public void Draw(FloatPoint center, Vector2 size)
-        {
-            throw new NotImplementedException();
-        }
-        public void Draw(FloatPoint center)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

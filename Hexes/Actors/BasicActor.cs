@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Hexes.Actors
 {
-    public class BasicActor : Drawable, IMovable, IActor, IDrawable
+    public class BasicActor : Drawable, IMovable, IActor
     {
         public string Name;
         public HexPoint Location { get; set; }
@@ -85,10 +85,6 @@ namespace Hexes.Actors
                     rotation: (MathHelper.PiOver2 / 3.0f) + (MathHelper.PiOver2 / 1.5f) * Rotation,
                     origin: new Vector2(size.X / 2, size.Y / 2)
                 );
-        }
-        public void Draw()
-        {
-            throw new NotImplementedException();
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Hexes.UI
 {
-    public class ActorActions : UIDrawable, IDrawable, IUIActions
+    public class ActorActions : UIDrawable, IUIActions
     {
         public static string ElementName = "ActorActions";
         public Texture2D Texture { get; set; }
@@ -52,16 +52,5 @@ namespace Hexes.UI
             //
         }
 
-
-
-        public  void Draw(FloatPoint location)
-        {
-            //
-        }
-
-        public void Draw(FloatPoint center, Vector2 size)
-        {
-            //
-        }
     }
 }

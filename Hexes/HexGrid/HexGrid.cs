@@ -197,6 +197,7 @@ namespace Hexes.HexGrid
             return new Point(hexPoint.R, hexPoint.Q - -1 * (hexPoint.R / 2));
         }
         #endregion
+        //doesnt really need the stuff in the abstract
         public void Draw(FloatPoint center)
         {
             throw new NotImplementedException();

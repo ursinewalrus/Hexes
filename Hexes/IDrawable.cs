@@ -21,12 +21,25 @@ namespace Hexes
     }
 
     //hold texture?
-    public abstract class Drawable 
+    public abstract class Drawable : IDrawable
     {
         public static GraphicsDevice GraphicsDevice { get; set; }
         public static SpriteBatch Sb { get; set; }
         public static SpriteFont Font { get; set; }
         public static Camera Camera { get; set; }
+
+        public virtual void Draw()
+        {
+            //
+        }
+        public virtual void Draw(FloatPoint center)
+        {
+            //
+        }
+        public virtual void Draw(FloatPoint center, Vector2 size)
+        {
+            //
+        }
 
     }
 
