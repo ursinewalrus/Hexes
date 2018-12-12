@@ -17,16 +17,20 @@ namespace Hexes.UI
         public Color LineColor { get; set; }
         public BasicActor Actor { get; set; }
         public HexPoint HexPoint { get; set; }
+        public HexGrid.HexGrid HexGrid { get; set; }
 
 
-        public ActorMoveAction(BasicActor actor, HexPoint hexPoint)
+
+        public ActorMoveAction(BasicActor actor, HexPoint hexPoint, HexGrid.HexGrid hexGrid)
         {
             Texture = actor.Texture;
             //maaaybe pass as param
             StartV = new Vector2(5, 25);
             Size = new Vector2(100,100);
             HexPoint = hexPoint;
+            HexGrid = hexGrid;
             Actor = actor;
+
         }
         public override void Draw()
         {
@@ -49,7 +53,7 @@ namespace Hexes.UI
         //public delegate void CustomEventHandler(object sender, ActorMoveActionEvent a);
         public override void OnClick()
         {
-            var eventSend = new ActorMoveActionEvent(Actor,HexPoint);
+            var eventSend = new ActorMoveActionEvent(Actor,HexPoint,HexGrid);
             eventSend.MoveAction += Actor.MoveTo;
             eventSend.OnMoveAction();
             // MoveActionSent(null, new ActorMoveActionEvent(Actor));
@@ -64,18 +68,21 @@ namespace Hexes.UI
 
         public BasicActor Actor { get; set; }
         public HexPoint Location { get; set; }
-        public ActorMoveActionEvent(BasicActor actor, HexPoint location)
+        public HexGrid.HexGrid HexGrid { get; set; }
+        public ActorMoveActionEvent(BasicActor actor, HexPoint location, HexGrid.HexGrid hexGrid)
         {
             Actor = actor;
             Location = location;
+            HexGrid = hexGrid;
         }
         public void OnMoveAction()
         {
             var handler = MoveAction;
             if (handler != null)
             {
-                handler(this, new ActorMoveActionEvent(Actor, Location));
+                handler(this, new ActorMoveActionEvent(Actor, Location, HexGrid));
             }
         }
     }
 }
+

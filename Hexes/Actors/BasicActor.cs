@@ -45,29 +45,66 @@ namespace Hexes.Actors
             SizeX = Convert.ToInt32(actorData["bottomrightX"]);
             SizeY = Convert.ToInt32(actorData["bottomrightY"]);
         }
-        public List<HexPoint> AllInMoveRange(HexPoint location)
+        public List<HexPoint> AllInMoveRange(HexPoint moveFrom, HexGrid.HexGrid hexGrid)
         {
-            // have grid calculate distance
-            return new List<HexPoint>();
+            //https://www.redblobgames.com/grids/hexagons/#range
+            var possibleMoves = new List<HexPoint>();
+            var visited = new List<HexPoint>();
+            var ToVisit = new List<HexPoint>
+            {
+                moveFrom
+            };
+            //this is broken cause of dumbness
+            //redo it, all
+            //while (ToVisit.Any())
+            //{
+            //    var neighborsToFind = ToVisit.First();
+            //    possibleMoves.Add(neighborsToFind);
+            //    visited.Add(neighborsToFind);
+
+            //    var neighbors = hexGrid.GetNeighbors(neighborsToFind).
+            //        Where(h => !h.Value.BlocksMovment 
+            //              && HexGrid.HexGrid.HexDistance(h.Key, moveFrom) < MoveDistance //doesnt work, thats a straight line, duh
+            //              && visited.FirstOrDefault(v => v.Equals(h.Key)) == null)
+            //        .Select(h => h.Key).ToList();
+
+
+
+            //    ToVisit.Remove(neighborsToFind);
+            //    ToVisit.AddRange(neighbors);
+            //}
+
+            return possibleMoves;
         }
+
+       
         public void MoveTo(object sender, ActorMoveActionEvent eventArgs)
         {
             //do some other cheeeecks
             //plops you in the wrong spot but right idea
             //
-            MoveTo(eventArgs.Location);
+            MoveTo(eventArgs.Actor.Location, eventArgs.Location, eventArgs.HexGrid);
         }
-        public void MoveTo(HexPoint moveTo)
+        public void MoveTo(HexPoint moveFrom, HexPoint moveTo, HexGrid.HexGrid hexGrid)
         {
-            Location = moveTo;
+            if (CanMoveTo(moveFrom, moveTo, hexGrid))
+            {
+                Location = moveTo;
+            }
         }
 
-        public Boolean CanMoveTo(HexPoint moveFrom, HexPoint moveTo)
+        public Boolean CanMoveTo(HexPoint moveFrom, HexPoint moveTo, HexGrid.HexGrid hexGrid)
         {
-            return false;
+            //split for maybe sep messages
+            //also cant be straight line, need to pathfind to it
+            if (AllInMoveRange(moveFrom, hexGrid).Any(h => h.Equals(moveTo)))
+            {
+                return true;
+            }
+            return true;
         }
 
-        public List<HexPoint> CanSee(HexPoint location)
+        public List<HexPoint> CanSee(HexPoint location, HexGrid.HexGrid hexGrid)
         {
             return new List<HexPoint>();
         }

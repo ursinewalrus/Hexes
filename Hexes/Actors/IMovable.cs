@@ -10,13 +10,13 @@ namespace Hexes.Actors
 {
     interface IMovable
     {
-        List<HexPoint> AllInMoveRange(HexPoint location);
+        List<HexPoint> AllInMoveRange(HexPoint moveFrom, HexGrid.HexGrid hexGrid);
 
-        Boolean CanMoveTo(HexPoint moveFrom, HexPoint moveTo);
+        Boolean CanMoveTo(HexPoint moveFrom, HexPoint moveTo, HexGrid.HexGrid hexGrid);
 
-        List<HexPoint> CanSee(HexPoint location);
+        List<HexPoint> CanSee(HexPoint location, HexGrid.HexGrid hexGrid);
 
-        void MoveTo(HexPoint moveTo);
+        void MoveTo(HexPoint moveFrom, HexPoint moveTo, HexGrid.HexGrid hexGrid);
 
     }
 }

@@ -17,8 +17,8 @@ namespace Hexes.Geometry
 
         HexPoint HexPoint;
 
-        bool BlocksMovment;
-        bool BlocksVision;
+        public bool BlocksMovment;
+        public bool BlocksVision;
         public Color Color = Color.White;
 
 

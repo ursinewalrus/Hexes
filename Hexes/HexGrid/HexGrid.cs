@@ -181,6 +181,25 @@ namespace Hexes.HexGrid
             return inRadius;
         }
 
+        public Dictionary<HexPoint, Hex> GetNeighbors(HexPoint hexPoint)
+        {
+            var neighboors = new Dictionary<HexPoint, Hex>();
+            var possibleNeighbors = new List<Vector2>()
+            {
+                new Vector2(+1, 0), new Vector2(+1, -1), new Vector2(0, -1), new Vector2(-1, 0), new Vector2(-1, +1), new Vector2(0, +1)
+            };
+            foreach (var v in possibleNeighbors)
+            {
+                var possibleNeighbor = new HexPoint(hexPoint.R + (int)v.X, hexPoint.Q + (int)v.Y);
+                var inGrid = HexStorage.FirstOrDefault(h => h.Key.R == possibleNeighbor.R && h.Key.Q == possibleNeighbor.Q);
+                //null check right?
+                if (inGrid.Key != null)
+                    neighboors[inGrid.Key] = inGrid.Value;
+            }
+            return neighboors;
+
+        }
+
         #region static methods
         public static int HexDistance(HexPoint hex1, HexPoint hex2)
         {
