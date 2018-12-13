@@ -99,12 +99,14 @@ namespace Hexes
         /// </summary>
         protected override void LoadContent()
         {
+            HexGrid.HexGrid.LineBetweenTwoPoints(new HexPoint(0, 0), new HexPoint(2, 5));
             Font = Content.Load<SpriteFont>("General");
 
             //FontManager.DefaultFont = Engine.Instance.Renderer.CreateFont(Font);
             //ActorActions = new EmptyKeys.UserInterface.Generated.ActorActions(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             //FontManager.Instance.LoadFonts(Content);
 
+            //static constructor?? :TODO
             Drawable.GraphicsDevice = GraphicsDevice;
             Drawable.Sb = SpriteBatch;
             Drawable.Font = Font;

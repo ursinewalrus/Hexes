@@ -199,6 +199,26 @@ namespace Hexes.HexGrid
             return neighboors;
 
         }
+        //https://www.redblobgames.com/grids/hexagons/#line-drawing
+       
+        public static List<HexPoint> LineBetweenTwoPoints(HexPoint p1, HexPoint p2)
+        {
+
+            int distance = HexDistance(p1, p2);
+            var results = new List<HexPoint>();
+            //var p1z = -p1.Q - p1.R;
+            //var p2z = -p2.Q - p2.R;
+
+            for (var i = 0; i <= distance; i++)
+            {
+                var x = (int)Math.Round(p1.Q + (p2.Q + p1.Q) * (1.0f/distance * i));
+                var y = (int)Math.Round(p1.R + (p2.R + p1.R) * (1.0f / distance * i));
+                //var z = Math.Round(p1z + (p2z + p1z) * (1.0f / distance * i));
+                results.Add(new HexPoint(y, x));
+                ;
+            }
+            return new List<HexPoint>();
+        }
 
         #region static methods
         public static int HexDistance(HexPoint hex1, HexPoint hex2)
@@ -214,6 +234,7 @@ namespace Hexes.HexGrid
         {
             return new Point(hexPoint.R, hexPoint.Q - -1 * (hexPoint.R / 2));
         }
+
         #endregion
         //doesnt really need the stuff in the abstract
         public void Draw(FloatPoint center)

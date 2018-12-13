@@ -86,8 +86,10 @@ namespace Hexes.Control
             //actorUi.DrawActorActions();
             if (mouseInfo.MouseState.LeftButton == ButtonState.Pressed)
             {
-
+                Debug.Log("Clicked ScreenCords " + mouseInfo.MouseCords.X + ", " + mouseInfo.MouseCords.Y);
                 var conv = Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(camera.Transform));
+                Debug.Log("Clicked MouseCords " + conv.X + ", " + conv.Y);
+
                 foreach (var visibleElement in ActiveHexUIElements.AvailibleUIElements)
                 {
                     Vector2 elementLoc = Vector2.Transform(visibleElement.Value.StartV, Matrix.Invert(camera.Transform));

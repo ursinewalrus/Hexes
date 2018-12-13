@@ -35,9 +35,8 @@ namespace Hexes.Geometry
         private List<Line> Edges = new List<Line>();
         private Texture2D Texture;
 
-        public static double[] HexOrientation { get; set; }
-
-        public static readonly double[] PointyCorners = {
+        public static double[] HexOrientation = 
+            {
                 Math.Sqrt(3.0), //f0
                 Math.Sqrt(3.0) / 2.0, //f1
                 0.0, //f2
@@ -56,7 +55,6 @@ namespace Hexes.Geometry
         #region set up hex properties
         public Hex(HexPoint hexPoint, string name, Dictionary<string, string> hexData, string moduleName)
         {
-            HexOrientation = PointyCorners;
             Name = name;
             ModuleName = moduleName;
             //make these use HexPoint for consistency
@@ -124,8 +122,8 @@ namespace Hexes.Geometry
             float x = (float)(HexOrientation[0] * HexPoint.Q + HexOrientation[1] * HexPoint.R) * SizeX;
             float y = (float)(HexOrientation[2] * HexPoint.Q + HexOrientation[3] * HexPoint.R) * SizeY;
             return new FloatPoint(x, y);
-
         }
+
 
         public void MakeEdges()
         {
@@ -164,6 +162,13 @@ namespace Hexes.Geometry
         }
 
         #endregion
+
+        public static FloatPoint CenterHexToPixel(HexPoint hex)
+        {
+            float x = (float)(HexOrientation[0] * hex.Q + HexOrientation[1] * hex.R) * SizeX;
+            float y = (float)(HexOrientation[2] * hex.Q + HexOrientation[3] * hex.R) * SizeY;
+            return new FloatPoint(x, y);
+        }
 
         public static bool Equals(Hex a, Hex b)
         {

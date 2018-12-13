@@ -17,6 +17,7 @@ namespace Hexes.Actors
         public HexPoint Location { get; set; }
         public Boolean Controllable;
         public int MoveDistance;
+        public int SightRange;
         public Texture2D Texture;
         public int HP { get; set; }
         public string ModuleName;
@@ -44,45 +45,41 @@ namespace Hexes.Actors
             fs.Dispose();
             SizeX = Convert.ToInt32(actorData["bottomrightX"]);
             SizeY = Convert.ToInt32(actorData["bottomrightY"]);
+            SightRange = 10;
         }
         public List<HexPoint> AllInMoveRange(HexPoint moveFrom, HexGrid.HexGrid hexGrid)
         {
             //https://www.redblobgames.com/grids/hexagons/#range
-            var possibleMoves = new List<HexPoint>();
+            //var possibleMoves = new List<HexPoint>();
             var visited = new List<HexPoint>();
-            var ToVisit = new List<HexPoint>
+            var toVisit = new List<HexPoint>[MoveDistance + 1];
+            for (var i=0 ; i<toVisit.Count();i++)
             {
-                moveFrom
-            };
-            //this is broken cause of dumbness
-            //redo it, all
-            //while (ToVisit.Any())
-            //{
-            //    var neighborsToFind = ToVisit.First();
-            //    possibleMoves.Add(neighborsToFind);
-            //    visited.Add(neighborsToFind);
+                toVisit[i] = new List<HexPoint>();
+            }
+            toVisit[0].Add(moveFrom);
 
-            //    var neighbors = hexGrid.GetNeighbors(neighborsToFind).
-            //        Where(h => !h.Value.BlocksMovment 
-            //              && HexGrid.HexGrid.HexDistance(h.Key, moveFrom) < MoveDistance //doesnt work, thats a straight line, duh
-            //              && visited.FirstOrDefault(v => v.Equals(h.Key)) == null)
-            //        .Select(h => h.Key).ToList();
-
-
-
-            //    ToVisit.Remove(neighborsToFind);
-            //    ToVisit.AddRange(neighbors);
-            //}
-
-            return possibleMoves;
+            for (var i = 0; i < MoveDistance; i++)
+            {
+                foreach (var h in toVisit[i])
+                {
+                    var neighbors = hexGrid.GetNeighbors(h);
+                    foreach (var n in neighbors)
+                    {
+                        if (!n.Value.BlocksMovment && !visited.Any(v => v.Equals(n.Key)))
+                        {
+                            visited.Add(n.Key);
+                            toVisit[i + 1].Add(n.Key);
+                        }
+                    }
+                }
+            }
+            return visited;
         }
 
        
         public void MoveTo(object sender, ActorMoveActionEvent eventArgs)
         {
-            //do some other cheeeecks
-            //plops you in the wrong spot but right idea
-            //
             MoveTo(eventArgs.Actor.Location, eventArgs.Location, eventArgs.HexGrid);
         }
         public void MoveTo(HexPoint moveFrom, HexPoint moveTo, HexGrid.HexGrid hexGrid)
@@ -101,9 +98,10 @@ namespace Hexes.Actors
             {
                 return true;
             }
-            return true;
+            return false;
         }
 
+        //https://www.redblobgames.com/grids/hexagons/#field-of-view
         public List<HexPoint> CanSee(HexPoint location, HexGrid.HexGrid hexGrid)
         {
             return new List<HexPoint>();
