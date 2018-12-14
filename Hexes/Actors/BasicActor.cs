@@ -24,7 +24,16 @@ namespace Hexes.Actors
         public static float SizeX;
         public static float SizeY;
         public int Rotation;
-
+        public static Dictionary<int, List<Vector2>> FoVArms = new Dictionary<int, List<Vector2>>()
+        {
+            //rotation, <left arm, right arm>
+            {0, new List<Vector2>(){new Vector2(0,-1),new Vector2(-1,1)}},
+            {1, new List<Vector2>(){new Vector2(-1,0),new Vector2(0,1)}}, //rotation 1
+            {2, new List<Vector2>(){new Vector2(-1,1),new Vector2(1,0)}}, // 3 o clock
+            {3, new List<Vector2>(){new Vector2(0,1),new Vector2(1,-1)}},
+            {4, new List<Vector2>(){new Vector2(1,0),new Vector2(0,-1)}},
+            {5, new List<Vector2>(){new Vector2(1,-1),new Vector2(-1,0)}}
+        };
 
         public BasicActor(HexPoint location, string name, Dictionary<string, string> actorData, int rotation, bool PC, string moduleName)
         {
