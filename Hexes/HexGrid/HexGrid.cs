@@ -181,7 +181,6 @@ namespace Hexes.HexGrid
             return inRadius;
         }
 
-        //might not be needed
         public void HighlightHexes(List<HexPoint> hexPoints, Boolean hightlight)
         {
             foreach(var hexPoint in hexPoints)

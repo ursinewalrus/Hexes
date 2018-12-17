@@ -60,7 +60,7 @@ namespace Hexes.Actors
         #endregion
 
         #region move related
-        public List<HexPoint> AllInMoveRange(HexPoint moveFrom, HexGrid.HexGrid hexGrid)
+        public List<HexPoint> AllInMoveRange(HexGrid.HexGrid hexGrid)
         {
             //https://www.redblobgames.com/grids/hexagons/#range
             //var possibleMoves = new List<HexPoint>();
@@ -70,7 +70,7 @@ namespace Hexes.Actors
             {
                 toVisit[i] = new List<HexPoint>();
             }
-            toVisit[0].Add(moveFrom);
+            toVisit[0].Add(Location);
 
             for (var i = 0; i < MoveDistance; i++)
             {
@@ -92,22 +92,22 @@ namespace Hexes.Actors
 
         public void MoveTo(object sender, ActorMoveActionEvent eventArgs)
         {
-            MoveTo(eventArgs.Actor.Location, eventArgs.Location, eventArgs.HexGrid);
+            MoveTo(eventArgs.Location, eventArgs.HexGrid);
         }
-        public void MoveTo(HexPoint moveFrom, HexPoint moveTo, HexGrid.HexGrid hexGrid)
+        public void MoveTo(HexPoint moveTo, HexGrid.HexGrid hexGrid)
         {
-            if (CanMoveTo(moveFrom, moveTo, hexGrid))
+            if (CanMoveTo(moveTo, hexGrid))
             {
                 Location = moveTo;
                 hexGrid.UnHighlightAll();
             }
         }
 
-        public Boolean CanMoveTo(HexPoint moveFrom, HexPoint moveTo, HexGrid.HexGrid hexGrid)
+        public Boolean CanMoveTo(HexPoint moveTo, HexGrid.HexGrid hexGrid)
         {
             //split for maybe sep messages
             //also cant be straight line, need to pathfind to it
-            if (AllInMoveRange(moveFrom, hexGrid).Any(h => h.Equals(moveTo)))
+            if (AllInMoveRange(hexGrid).Any(h => h.Equals(moveTo)))
             {
                 return true;
             }
@@ -131,7 +131,7 @@ namespace Hexes.Actors
         }
         #endregion
         //https://www.redblobgames.com/grids/hexagons/#field-of-view
-        public List<HexPoint> CanSee(HexPoint location, HexGrid.HexGrid hexGrid)
+        public List<HexPoint> CanSee()
         {
             return new List<HexPoint>();
         }

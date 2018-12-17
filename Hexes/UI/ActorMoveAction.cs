@@ -51,7 +51,7 @@ namespace Hexes.UI
         //public delegate void CustomEventHandler(object sender, ActorMoveActionEvent a);
         public override void OnClick()
         {
-            var eventSend = new ActorMoveActionEvent(Actor,HexPoint,HexGrid);
+            var eventSend = new ActorMoveActionEvent(HexPoint,HexGrid);
             eventSend.MoveAction += Actor.MoveTo;
             eventSend.OnMoveAction();
             // MoveActionSent(null, new ActorMoveActionEvent(Actor));
@@ -64,12 +64,10 @@ namespace Hexes.UI
     {
         public event EventHandler<ActorMoveActionEvent> MoveAction;
 
-        public BasicActor Actor { get; set; }
         public HexPoint Location { get; set; }
         public HexGrid.HexGrid HexGrid { get; set; }
-        public ActorMoveActionEvent(BasicActor actor, HexPoint location, HexGrid.HexGrid hexGrid)
+        public ActorMoveActionEvent(HexPoint location, HexGrid.HexGrid hexGrid)
         {
-            Actor = actor;
             Location = location;
             HexGrid = hexGrid;
         }
@@ -79,7 +77,7 @@ namespace Hexes.UI
             var handler = MoveAction;
             if (handler != null)
             {
-                handler(this, new ActorMoveActionEvent(Actor, Location, HexGrid));
+                handler(this, new ActorMoveActionEvent(Location, HexGrid));
             }
         }
     }

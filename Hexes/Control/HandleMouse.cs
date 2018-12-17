@@ -163,7 +163,7 @@ namespace Hexes.Control
                     {
 
                         hexKey.Value.Highlighted = true;
-                        var moveable = hexMap.ActiveActor.AllInMoveRange(hexMap.ActiveActor.Location, hexMap);
+                        var moveable = hexMap.ActiveActor.AllInMoveRange(hexMap);
                         moveable.ForEach(h => hexMap.HexStorage[h].Highlighted = true);
 
                         //bundle this all, whatever is being selected, create all UI elements for it, probably metatype property on basicactor 
