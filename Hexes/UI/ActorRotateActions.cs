@@ -44,7 +44,7 @@ namespace Hexes.UI
         }
         public override void OnClick()
         {
-            var eventSend = new ActorRotateActionEvent(Actor, HexGrid, true);
+            var eventSend = new ActorRotateActionEvent(HexGrid, true);
             eventSend.RotateAction += Actor.Rotate;
             eventSend.OnRotateAction();
         }
@@ -84,7 +84,7 @@ namespace Hexes.UI
         }
         public override void OnClick()
         {
-            var eventSend = new ActorRotateActionEvent(Actor, HexGrid, false);
+            var eventSend = new ActorRotateActionEvent(HexGrid, false);
             eventSend.RotateAction += Actor.Rotate;
             eventSend.OnRotateAction();
         }

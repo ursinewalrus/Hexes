@@ -19,8 +19,8 @@ namespace Hexes.HexGrid
         //tile: {datakey:dataval}
         private Dictionary<string, Dictionary<string, string>> TileData = new Dictionary<string, Dictionary<string, string>>();
         //x-y: {tile}
-        private Dictionary<Point, string> SpecificTilePlacements = new Dictionary<Point, string>();
-        private Dictionary<Point, string> SpecificActorPlacements = new Dictionary<Point, string>();
+        private Dictionary<HexPoint, string> SpecificTilePlacements = new Dictionary<HexPoint, string>();
+        private Dictionary<HexPoint, string> SpecificActorPlacements = new Dictionary<HexPoint, string>();
         //{tile: odds}
         //private Dictionary<string, int> TileOdds = new Dictionary<string, int>();
         //private int TotalTileOdds = 0;
@@ -77,21 +77,21 @@ namespace Hexes.HexGrid
             mapData["specificTilePlacements"].Split(new string[] { "),(" }, StringSplitOptions.None).ToList().ForEach( (t) =>
             {
                 List<string> placementParams = t.Split(',').ToList();
-                int x = Convert.ToInt32(placementParams[0].Trim(new[] { ' ', ')', '(' }));
-                int y = Convert.ToInt32(placementParams[1].Trim());
+                int r = Convert.ToInt32(placementParams[0].Trim(new[] { ' ', ')', '(' }));
+                int q = Convert.ToInt32(placementParams[1].Trim());
                 string type = placementParams[2].Trim(new[] { ' ', ')', '(' });
-                SpecificTilePlacements[new Point(x,y)] = type;
+                SpecificTilePlacements[new HexPoint(r,q)] = type;
             });
             //set specific placements for actors
             mapData["specificActorPlacements"].Split(new string[] { "),(" }, StringSplitOptions.None).ToList().ForEach((t) =>
             {
                 List<string> placementParams = t.Split(',').ToList();
-                int x = Convert.ToInt32(placementParams[0].Trim(new[] { ' ', ')', '(' }));
-                int y = Convert.ToInt32(placementParams[1].Trim());
+                int r = Convert.ToInt32(placementParams[0].Trim(new[] { ' ', ')', '(' }));
+                int q = Convert.ToInt32(placementParams[1].Trim());
                 string type = placementParams[2].Trim(new[] { ' ', ')', '(' });
                 string controllStatus = placementParams[3].Trim(new[] { ' ', ')', '(' });
                 string rotation = placementParams[4].Trim(new[] { ' ', ')', '(' });
-                SpecificActorPlacements[new Point(x, y)] = type + "-" + controllStatus + '-' +  rotation;
+                SpecificActorPlacements[new HexPoint(r, q)] = type + "-" + controllStatus + '-' +  rotation;
             });
 
             DefaultTile = mapData["defaultTile"];
@@ -107,7 +107,7 @@ namespace Hexes.HexGrid
                     int hexR = r;
                     int hexQ = q - (r / 2);
                     //placing tiles into drawable storage
-                    var tilePlacementKeyExists = SpecificTilePlacements.Where(p => p.Key.X == hexR && p.Key.Y == hexQ).ToList();
+                    var tilePlacementKeyExists = SpecificTilePlacements.Where(p => p.Key.Equals(new HexPoint(hexR, hexQ))).ToList();
                     if (tilePlacementKeyExists.Any())
                     {
                         var placementKey = tilePlacementKeyExists[0];
@@ -124,7 +124,7 @@ namespace Hexes.HexGrid
 
                     }
                     //placing actors into actor storage
-                    var actorPlacementKeyExists = SpecificActorPlacements.Where(p => p.Key.X == hexR && p.Key.Y == hexQ).ToList();
+                    var actorPlacementKeyExists = SpecificActorPlacements.Where(p => p.Key.Equals(new HexPoint(hexR, hexQ))).ToList();
                     if (actorPlacementKeyExists.Any())
                     {
                         var placementKey = actorPlacementKeyExists[0];
@@ -142,10 +142,11 @@ namespace Hexes.HexGrid
         {
             var R = (int)Math.Round((2.0f / 3.0f * screenCordinates.Y) / HexYSize);
             var Q = (int)Math.Round(((Math.Sqrt(3) / 3 * screenCordinates.X) - (1.0f/3.0f * screenCordinates.Y)) / HexXSize);
-            var inGrid = HexStorage.Where(h => h.Key.R == R && h.Key.Q == Q).Any();
+            var possiblePoint = new HexPoint(R,Q);
+            var inGrid = HexStorage.Any(h => h.Key.Equals(possiblePoint));
             if (!inGrid)
                 return null;
-            return new HexPoint(R,Q);
+            return possiblePoint;
         }
 
         public void Draw()

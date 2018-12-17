@@ -102,7 +102,6 @@ namespace Hexes
         /// </summary>
         protected override void LoadContent()
         {
-            HexGrid.HexGrid.LineBetweenTwoPoints(new HexPoint(0, 0), new HexPoint(2, 5));
             Font = Content.Load<SpriteFont>("General");
 
             //FontManager.DefaultFont = Engine.Instance.Renderer.CreateFont(Font);
@@ -133,7 +132,9 @@ namespace Hexes
             }
             var usedModule = Modules[0];
             HexMap = new HexGrid.HexGrid(usedModule.LoadedMaps, usedModule.LoadedBackgroundTiles, usedModule.LoadedActors, usedModule.ModuleName);
-
+            var l = new List<HexPoint>() {new HexPoint(0, 0)};
+            var t = l.Contains(new HexPoint(0, 0));
+            ;
             //FileStream fs = new FileStream(@"Content/greenhex.png", FileMode.Open);
             //Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);
             //fs.Dispose();

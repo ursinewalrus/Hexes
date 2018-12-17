@@ -17,12 +17,25 @@ namespace Hexes.Geometry
             Q = q;
         }
 
-        public bool Equals(HexPoint otherPoint)
+        public override bool Equals(object obj)
         {
+            var otherPoint = obj as HexPoint;
             if (otherPoint == null)
                 return false;
 
             return (otherPoint.Q == Q && otherPoint.R == R);
         }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = (int)2166136261;
+                hash = hash*16777619 ^ R.GetHashCode();
+                hash = hash * 16777619 ^ Q.GetHashCode();
+                return hash;
+            }
+        }
+
     }
 }

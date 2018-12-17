@@ -14,7 +14,7 @@ namespace Hexes.Actors
 
         Boolean CanMoveTo(HexPoint moveTo, HexGrid.HexGrid hexGrid);
 
-        List<HexPoint> CanSee();
+        List<HexPoint> CanSee(HexPoint startLocLeft, HexPoint startLocRight, HexGrid.HexGrid hexGrid);
 
         void MoveTo(HexPoint moveTo, HexGrid.HexGrid hexGrid);
 
