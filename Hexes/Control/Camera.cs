@@ -70,7 +70,6 @@ namespace Hexes.Control
             UpdateMatrix();
             Vector2 cameraMovement = Vector2.Zero;
             float scrollSpeed = Math.Max(Zoom * 10, 5);
-
             switch(scrollDirection)
             {
                 case CardinalDirections.Direction.North:

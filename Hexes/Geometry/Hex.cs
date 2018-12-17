@@ -20,7 +20,7 @@ namespace Hexes.Geometry
         public bool BlocksMovment;
         public bool BlocksVision;
         public Color Color = Color.White;
-
+        public bool Highlighted { get; set; }
 
         public List<FloatPoint> HexCorners;
         public static float SizeX = 100;
@@ -34,6 +34,9 @@ namespace Hexes.Geometry
         public FloatPoint Center;
         private List<Line> Edges = new List<Line>();
         private Texture2D Texture;
+        public static Texture2D SelectedTexture;
+        public bool Hovered = false;
+
 
         public static double[] HexOrientation = 
             {
@@ -56,6 +59,7 @@ namespace Hexes.Geometry
         public Hex(HexPoint hexPoint, string name, Dictionary<string, string> hexData, string moduleName)
         {
             Name = name;
+            Highlighted = false;
             ModuleName = moduleName;
             //make these use HexPoint for consistency
             HexPoint = hexPoint;
@@ -77,6 +81,8 @@ namespace Hexes.Geometry
             FileStream fs = new FileStream(assetPath, FileMode.Open);
             Texture = Texture2D.FromStream(GraphicsDevice, fs);
             fs.Dispose();
+
+
         }
         #endregion 
 
@@ -155,8 +161,29 @@ namespace Hexes.Geometry
                     //effects: SpriteEffects.None,
                     //layerDepth: 0.0f
                     );
+            if (Highlighted)
+            {
+                Sb.Draw(texture: SelectedTexture,
+                    destinationRectangle: new Rectangle((int)Center.X, (int)Center.Y, (int)25, (int)25),
+                    //this is inconsistent -> maybe not anymore
+                    sourceRectangle: new Rectangle(0, 0, 25,25),
+                    color: Color,
+                    origin: new Vector2(SizeX / 2, SizeY / 2)
+                    //scale: new Vector2(9000,0.5f),
+                    //effects: SpriteEffects.None,
+                    //layerDepth: 0.0f
+                    );
+            }
             foreach (Line line in Edges)
             {
+                //if (Hovered)
+                //{
+                //    line.Draw(Color.Yellow);
+                //}
+                //else
+                //{
+                //    line.Draw(Color.Black);
+                //}
                 line.Draw();
             }
         }

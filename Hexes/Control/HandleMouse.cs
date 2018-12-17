@@ -11,23 +11,56 @@ using Hexes.Geometry;
 
 namespace Hexes.Control
 {
-    public class HandleMouse
+    public class HandleMouse //and keyboard...
     {
         public Vector2 MouseCords;
         public CardinalDirections.Direction RelativeMouseLocation;
         public MouseState MouseState;
         public static Debugger Debug;
 
+        public bool PrevMouseClickedStateClicked = false;
+        public bool CompletedClick = false;
 
-        public HandleMouse(Game1 game)
+        public HandleMouse()
+        {
+            //MouseState = Mouse.GetState();
+            //MouseCords.X = MouseState.X;
+            //MouseCords.Y = MouseState.Y;
+            //RelativeMouseLocation = GetMouseCardinalDirection(game);
+            //if(MouseState.LeftButton == ButtonState.Pressed)
+            //{
+            //    PrevMouseClickedStateClicked = true;
+            //    CompletedClick = false;
+
+            //}
+            //if (PrevMouseClickedStateClicked && MouseState.LeftButton != ButtonState.Pressed)
+            //{
+            //    CompletedClick = true;
+            //}
+
+        }
+        public void SetMouseState(Game1 game)
         {
             MouseState = Mouse.GetState();
             MouseCords.X = MouseState.X;
             MouseCords.Y = MouseState.Y;
             RelativeMouseLocation = GetMouseCardinalDirection(game);
+            if (MouseState.LeftButton == ButtonState.Pressed)
+            {
+                PrevMouseClickedStateClicked = true;
+                CompletedClick = false;
 
+            }
+            if (PrevMouseClickedStateClicked && MouseState.LeftButton == ButtonState.Released)
+            {
+                CompletedClick = true;
+                PrevMouseClickedStateClicked = false;
+            }
+            else if (CompletedClick)
+            {
+                CompletedClick = false;
+            }
         }
-
         private CardinalDirections.Direction GetMouseCardinalDirection(Game1 game)
         {
             float mouseX = MouseCords.X;
@@ -41,37 +74,39 @@ namespace Hexes.Control
 
             float XDistance = width - mouseX;
             float YDistance = height - mouseY;
+            var keyState = Keyboard.GetState();
 
+            
 
-            if (XDistance < xScrollTrigger)
+            if(keyState.IsKeyDown(Keys.D))
             {
-                if(YDistance < yScrollTrigger)
+                if(keyState.IsKeyDown(Keys.S))
                 {
                     return CardinalDirections.Direction.SouthEast;
                 }
-                else if(height - yScrollTrigger < YDistance)
+                else if(keyState.IsKeyDown(Keys.W))
                 {
                     return CardinalDirections.Direction.NorthEast;
                 }
                 return CardinalDirections.Direction.East;
             }
-            else if( width - xScrollTrigger < XDistance)
+            else if(keyState.IsKeyDown(Keys.A))
             {
-                if (YDistance < yScrollTrigger)
+                if (keyState.IsKeyDown(Keys.S))
                 {
                     return CardinalDirections.Direction.SouthWest;
                 }
-                else if (height - yScrollTrigger < YDistance)
+                else if(keyState.IsKeyDown(Keys.W))
                 {
                     return CardinalDirections.Direction.NorthWest;
                 }
                 return CardinalDirections.Direction.West;
             }
-            else if(YDistance < yScrollTrigger)
+            else if(keyState.IsKeyDown(Keys.S))
             {
                 return CardinalDirections.Direction.South;
             }
-            else if( height - yScrollTrigger < YDistance)
+            else if(keyState.IsKeyDown(Keys.W))
             {
                 return CardinalDirections.Direction.North;
             }
@@ -79,15 +114,24 @@ namespace Hexes.Control
 
         }
 
-        public static void TacticalViewClick(HandleMouse mouseInfo, HexGrid.HexGrid hexMap, Camera camera)
+        public void TacticalViewMouseHandle(HexGrid.HexGrid hexMap, Camera camera)
         {
             //Probably in whatever houses the ActorActions instantiation
             //var actorUi = new ActorActions(new );
             //actorUi.DrawActorActions();
-            if (mouseInfo.MouseState.LeftButton == ButtonState.Pressed)
+
+            var conv = Vector2.Transform(MouseCords, Matrix.Invert(camera.Transform));
+            var selHex = hexMap.SelectedHex(conv);
+            hexMap.HexStorage.ToList().ForEach(h => h.Value.Hovered = false);
+            //:TODO also annoying
+            if (selHex != null)
             {
-                Debug.Log("Clicked ScreenCords " + mouseInfo.MouseCords.X + ", " + mouseInfo.MouseCords.Y);
-                var conv = Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(camera.Transform));
+                // :TODO this is annoying to do
+                hexMap.HexStorage.Where(h => h.Key.Equals(selHex)).First().Value.Hovered = true;
+            }
+            if (CompletedClick/*mouseInfo.MouseState.LeftButton == ButtonState.Pressed*/)
+            {
+                Debug.Log("Clicked ScreenCords " + MouseCords.X + ", " + MouseCords.Y);
                 Debug.Log("Clicked MouseCords " + conv.X + ", " + conv.Y);
 
                 foreach (var visibleElement in ActiveHexUIElements.AvailibleUIElements)
@@ -101,7 +145,7 @@ namespace Hexes.Control
                         return;
                     }
                 }
-                var selHex = hexMap.SelectedHex(conv);
+               
                 if (selHex != null)
                 {
                     Debug.Log("Clicked Hex " + selHex.R + ", " + selHex.Q);
@@ -110,16 +154,36 @@ namespace Hexes.Control
                         hexMap.HexStorage.FirstOrDefault(h => h.Key.Equals(selHex));
                     var actorKey =
                         hexMap.ActorStorage.FirstOrDefault(actor => actor.Location.Equals(selHex));
-
+                    //probably should be moved somewhere
+                    hexMap.UnHighlightAll();
                     if (hexKey.Key != null)
                         hexMap.ActiveHex = hexKey;
 
                     if (hexMap.ActiveActor != null && hexMap.ActiveActor.Controllable)
                     {
-                        //hexMap.ActiveActor = actorKey;
-                        ActiveHexUIElements.AvailibleUIElements.Remove("ActorActions");
-                        ActiveHexUIElements.AvailibleUIElements["ActorActions"] =
-                            new ActorMoveAction(hexMap.ActiveActor, hexKey.Key, hexMap);
+
+                        hexKey.Value.Highlighted = true;
+                        var moveable = hexMap.ActiveActor.AllInMoveRange(hexMap.ActiveActor.Location, hexMap);
+                        moveable.ForEach(h => hexMap.HexStorage[h].Highlighted = true);
+
+                        //bundle this all, whatever is being selected, create all UI elements for it, probably metatype property on basicactor 
+                        #region create actor UI elements
+                        //or just make this its own list of elements
+                        //Virtual "grid" to  hold these so can just add more elements without needing to do any manual sizing :TODO -> priority
+                        ActiveHexUIElements.AvailibleUIElements.Remove("ActorMoveActions"); //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
+                        var moveElement = new ActorMoveAction(hexMap.ActiveActor, hexKey.Key, hexMap);
+                        ActiveHexUIElements.AvailibleUIElements[moveElement.ElementName] = moveElement;
+
+                        ActiveHexUIElements.AvailibleUIElements.Remove("ActorRotateClockWiseActions");
+                        var rotateClockwiseElement = new ActorRotateClockWise(hexMap.ActiveActor, hexKey.Key, hexMap);
+                        ActiveHexUIElements.AvailibleUIElements[rotateClockwiseElement.ElementName] = rotateClockwiseElement;
+
+                        ActiveHexUIElements.AvailibleUIElements.Remove("ActorRotateCounterClockWiseActions");
+                        var rotateCounterClockwiseElement = new ActorRotateCounterClockWise(hexMap.ActiveActor, hexKey.Key, hexMap);
+                        ActiveHexUIElements.AvailibleUIElements[rotateCounterClockwiseElement.ElementName] = rotateCounterClockwiseElement;
+
+
+                        #endregion  
                         //inMoveDistance.ForEach(h => h.Color = Color.Red ); -> alpha channel?
                         //we need a custom contains method, too many of these -> override enum thing probs
 
@@ -137,12 +201,16 @@ namespace Hexes.Control
                     }
                 }
             }
-
-            if (mouseInfo.MouseState.RightButton == ButtonState.Pressed)
+            //temp, not all conditions for UI in, remove :TODO
+            if (MouseState.RightButton == ButtonState.Pressed)
             {
                 hexMap.ActiveHex = new KeyValuePair<HexPoint, Hex>();
                 hexMap.ActiveActor = null;
-                ActiveHexUIElements.AvailibleUIElements.Remove("ActorActions");
+                ActiveHexUIElements.AvailibleUIElements.Remove("ActorMoveActions");
+                ActiveHexUIElements.AvailibleUIElements.Remove("ActorRotateClockWiseActions");
+                ActiveHexUIElements.AvailibleUIElements.Remove("ActorRotateCounterClockWiseActions");
+                hexMap.UnHighlightAll();
+
             }
         }
     }

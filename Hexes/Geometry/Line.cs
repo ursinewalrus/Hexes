@@ -10,7 +10,7 @@ namespace Hexes.Geometry
 {
     public class Line: Drawable
     {
-        private Color LineColor; 
+        public Color LineColor; 
         private float WidthMultiplier;
 
         private Vector2 StartV;
@@ -39,6 +39,7 @@ namespace Hexes.Geometry
         {
             Vector2 edge = EndV - StartV;
             float angle = (float)Math.Atan2(edge.Y, edge.X);
+            //float drawPosZ = Color.Yellow == lineColor ? 0f : 0.01f;
 
             Sb.Draw(Texture,
                 StartV,
@@ -47,7 +48,7 @@ namespace Hexes.Geometry
                 (float)Math.Atan2(EndV.Y - StartV.Y, EndV.X - StartV.X),
                 new Vector2(0f, (float)Texture.Height / 2),
                 new Vector2(Vector2.Distance(StartV, EndV), WidthMultiplier), //float for width
-                SpriteEffects.None, 
+                SpriteEffects.None,
                 0f
             );
         }

@@ -181,6 +181,21 @@ namespace Hexes.HexGrid
             return inRadius;
         }
 
+        //might not be needed
+        public void HighlightHexes(List<HexPoint> hexPoints, Boolean hightlight)
+        {
+            foreach(var hexPoint in hexPoints)
+            {
+                HexStorage[hexPoint].Highlighted = hightlight;
+            }
+        }
+        public void UnHighlightAll()
+        {
+            foreach(var hex in HexStorage)
+            {
+                hex.Value.Highlighted = false;
+            }
+        }
         public Dictionary<HexPoint, Hex> GetNeighbors(HexPoint hexPoint)
         {
             var neighboors = new Dictionary<HexPoint, Hex>();

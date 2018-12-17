@@ -28,6 +28,7 @@ namespace Hexes
         public static SpriteFont Font { get; set; }
         public static Camera Camera { get; set; }
 
+        //iffy
         public virtual void Draw()
         {
             //
@@ -43,12 +44,11 @@ namespace Hexes
 
     }
 
+    //Give this a defined draw method :TODO
     public abstract class UIDrawable : Drawable
     {
         public Vector2 StartV { get; set; }
         public Vector2 Size;
         public abstract void OnClick();
-
-
     }
 }

@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace Hexes.UI
 {
+    // :TODO inherit draw method
     public class ActorMoveAction : UIDrawable, IUIActions
     {
-        public static string ElementName = "ActorActions";
+        public string ElementName = "ActorMoveActions";
         public Texture2D Texture { get; set; }
         public Color LineColor { get; set; }
         public BasicActor Actor { get; set; }
@@ -25,7 +26,8 @@ namespace Hexes.UI
         {
             Texture = actor.Texture;
             //maaaybe pass as param
-            StartV = new Vector2(5, 25);
+            //not centerpoint, upper left corner
+            StartV = new Vector2(5, 40);
             Size = new Vector2(100,100);
             HexPoint = hexPoint;
             HexGrid = hexGrid;
@@ -34,20 +36,16 @@ namespace Hexes.UI
         }
         public override void Draw()
         {
-            //outline draw, txt draw for actions which should be sprite, and draw over maybe, Z index? doable?
-            //Sb.Draw(Texture,
-            //     Vector2.Transform(StartV, Matrix.Invert(Camera.Transform)),
-            //    Color.Black
-            //    );
-            //Sb.Draw(Texture,
-            //       destinationRectangle: new Rectangle(5,25,30,50),
-            //       color: Color.White
-            //   );
-            var v2 = Vector2.Transform(new Vector2(30f, 40f), Matrix.Invert(Camera.Transform));
-            Actor.Draw(new FloatPoint(v2.X, v2.Y), Size);
-            Sb.DrawString(Font, "MOVE", Vector2.Transform(StartV, Matrix.Invert(Camera.Transform)), Color.Black);
-
-            // Vector2.Transform(new Vector2(5,5), Matrix.Invert(Camera.Transform))
+            var v2 = Vector2.Transform(StartV, Matrix.Invert(Camera.Transform));
+            Sb.Draw(
+                Texture,
+                    destinationRectangle: new Rectangle((int)v2.X, (int)v2.Y, (int)Size.X , (int)Size.Y ),
+                    sourceRectangle: new Rectangle(0, 0, 100, 100),
+                    color: Color.White
+                // origin: new Vector2(Size.X / 2, Size.Y / 2)
+                );
+            //Actor.Draw(new FloatPoint(v2.X, v2.Y), Size);
+            //Sb.DrawString(Font, "MOVE", Vector2.Transform(StartV, Matrix.Invert(Camera.Transform)), Color.Black);
         }
 
         //public delegate void CustomEventHandler(object sender, ActorMoveActionEvent a);
@@ -75,6 +73,7 @@ namespace Hexes.UI
             Location = location;
             HexGrid = hexGrid;
         }
+        // :TODO probaly abstractable
         public void OnMoveAction()
         {
             var handler = MoveAction;

@@ -62,10 +62,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\ActiveHexUIElements.cs" />
+    <Compile Include="UI\ActorRotateActions.cs" />
     <Compile Include="UI\Debugger.cs" />
     <Compile Include="UI\ActorMoveAction.cs" />
     <Compile Include="UI\IUIActions.cs" />
-    <Compile Include="UI\UIEvents\ActorActionEvents.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -138,11 +138,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="BehaviorsLicense.txt" />
+    <Content Include="Content\UIElements\rotateClockWise.png" />
+    <Content Include="Content\UIElements\rotateCounterClockWise.png" />
     <Content Include="license.txt" />
     <Content Include="Modules\MainModule\Actors\Actors.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\blackhex.png" />
     <Content Include="Modules\MainModule\Content\Backgrounds\bluehex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -159,6 +162,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Modules\MainModule\BackgroundTiles\Backgrounds.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\UIElements\yellowSelecthex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Modules\MainModule\Maps\Maps.xml">
