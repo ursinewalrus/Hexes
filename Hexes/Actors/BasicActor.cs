@@ -147,11 +147,15 @@ namespace Hexes.Actors
                     {
 
                         inSight.Add(edgePoints[i]);
-                        leftArmCord.R += (int)lookDirArms[0].X;
-                        leftArmCord.Q += (int)lookDirArms[0].Y;
-                        rightArmCord.R += (int)lookDirArms[1].X;
-                        rightArmCord.Q += (int)lookDirArms[1].Y;
+                        leftArmCord.R += (int) lookDirArms[0].X;
+                        leftArmCord.Q += (int) lookDirArms[0].Y;
+                        rightArmCord.R += (int) lookDirArms[1].X;
+                        rightArmCord.Q += (int) lookDirArms[1].Y;
                         blocked = false;
+                        gaps[e] = 1;
+                    }
+                    else
+                    {
                         gaps[e] = 1;
                     }
                 }
@@ -175,6 +179,7 @@ namespace Hexes.Actors
                     }
                     if (!newLeft.Equals(new HexPoint(-1, -1)) && !newRight.Equals(new HexPoint(-1, -1)))
                     {
+                        //recourse, reset
                         inSight.AddRange(CanSee(newLeft, newRight, hexGrid));
                         newLeft = new HexPoint(-1, -1);
                         newRight = new HexPoint(-1, -1);
