@@ -100,9 +100,8 @@ namespace Hexes.UI
         public bool ClockWise { get; set; }
 
 
-        public ActorRotateActionEvent(BasicActor actor, HexGrid.HexGrid hexGrid, bool clockWise)
+        public ActorRotateActionEvent(HexGrid.HexGrid hexGrid, bool clockWise)
         {
-            Actor = actor;
             HexGrid = hexGrid;
             ClockWise = clockWise;
         }
@@ -112,7 +111,7 @@ namespace Hexes.UI
             var handler = RotateAction;
             if (handler != null)
             {
-                handler(this, new ActorRotateActionEvent(Actor, HexGrid, ClockWise));
+                handler(this, new ActorRotateActionEvent(HexGrid, ClockWise));
             }
         }
     }
