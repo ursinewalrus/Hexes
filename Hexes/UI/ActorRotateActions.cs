@@ -104,6 +104,7 @@ namespace Hexes.UI
         {
             HexGrid = hexGrid;
             ClockWise = clockWise;
+            //:TODO re do actors can see
         }
         // :TODO probaly abstractable
         public void OnRotateAction()

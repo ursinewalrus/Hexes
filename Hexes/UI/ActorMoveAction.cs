@@ -70,6 +70,7 @@ namespace Hexes.UI
         {
             Location = location;
             HexGrid = hexGrid;
+            //:TODO everyone's can see should be re run
         }
         // :TODO probaly abstractable
         public void OnMoveAction()

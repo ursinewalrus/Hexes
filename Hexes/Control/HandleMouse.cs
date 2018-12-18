@@ -166,11 +166,20 @@ namespace Hexes.Control
                     {
                         //sets selected hex, :TODO when get select texture, have that set its own value
                         hexKey.Value.Highlighted = true;
-                        //var moveable = hexMap.ActiveActor.AllInMoveRange(hexMap);
+                        var moveable = hexMap.ActiveActor.AllInMoveRange(hexMap);
                         //moveable.ForEach(h => hexMap.HexStorage[h].Highlighted = true);
+                        //:TODO lambda this out
+                        //moveable.ForEach((s) =>
+                        //{
+                        //    var insight = hexMap.HexStorage.Where(h => h.Key.Equals(s)).FirstOrDefault();
+                        //    if (insight.Value != null)
+                        //    {
+                        //        insight.Value.Highlighted = true;
+                        //    }
+                        //});
 
+                        //dont highlight but clear fog of war if player or if npc update info :TODO
                         var seeable = hexMap.ActiveActor.CanSee(hexMap.ActiveActor.Location, hexMap);
-                        ;
                         seeable.ForEach((s) =>
                         {
                             var insight = hexMap.HexStorage.Where(h => h.Key.Equals(s)).FirstOrDefault();

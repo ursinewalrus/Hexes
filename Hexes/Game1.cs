@@ -167,6 +167,7 @@ namespace Hexes
             //ActorActions.UpdateLayout(gameTime.ElapsedGameTime.Milliseconds);
 
             // TODO: Add your update logic here
+            //:TODO update all actor actions / stats
 
             base.Update(gameTime);
         }

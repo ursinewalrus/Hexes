@@ -25,15 +25,17 @@ namespace Hexes.Actors
         public static float SizeX;
         public static float SizeY;
         public int Rotation;
+        public List<HexPoint> HexesCanSee = new List<HexPoint>();
+
         public static Dictionary<int, List<Vector2>> FoVArms = new Dictionary<int, List<Vector2>>()
         {
             //rotation, <left arm, right arm>
             {0, new List<Vector2>(){new Vector2(-1,0),new Vector2(0,1)}},
-            {1, new List<Vector2>(){new Vector2(0,1),new Vector2(1,0)}}, //rotation 1
-            {2, new List<Vector2>(){new Vector2(1,0),new Vector2(1,-1)}}, // 3 o clock
-            {3, new List<Vector2>(){new Vector2(1,-1),new Vector2(0,-1)}},
+            {1, new List<Vector2>(){new Vector2(-1,1),new Vector2(1,0)}}, //rotation 1
+            {2, new List<Vector2>(){new Vector2(0,1),new Vector2(1,-1)}}, // 3 o clock
+            {3, new List<Vector2>(){new Vector2(1,0),new Vector2(0,-1)}},
             {4, new List<Vector2>(){new Vector2(1,-1),new Vector2(-1,0)}},
-            {5, new List<Vector2>(){new Vector2(-1,0),new Vector2(-1,0)}}
+            {5, new List<Vector2>(){new Vector2(0,-1),new Vector2(-1,1)}}
         };
 
         public BasicActor(HexPoint location, string name, Dictionary<string, string> actorData, int rotation, bool PC, string moduleName)
@@ -55,7 +57,7 @@ namespace Hexes.Actors
             fs.Dispose();
             SizeX = Convert.ToInt32(actorData["bottomrightX"]);
             SizeY = Convert.ToInt32(actorData["bottomrightY"]);
-            SightRange = 2;
+            SightRange = 3;
         }
         #endregion
 
@@ -126,7 +128,7 @@ namespace Hexes.Actors
         //this could probably be redone once it starts working
         public List<HexPoint> CanSee(HexPoint startLoc, HexGrid.HexGrid hexGrid)
         {
-            var inSight = new List<HexPoint>();
+            HexesCanSee = new List<HexPoint>();
             //invent hexes for ones that dont exist for the purpose of our calculations
             var lookDirArms = FoVArms[Rotation];
             var lArmR = startLoc.R + (int)lookDirArms[0].X * SightRange;
@@ -139,8 +141,28 @@ namespace Hexes.Actors
             var rightArmCord = new HexPoint(rArmR, rArmQ);
 
             var furthestEdge = HexGrid.HexGrid.LineBetweenTwoPoints(leftArmCord, rightArmCord);
-            return furthestEdge;
-            //return inSight;
+
+            foreach (var hexPoint in furthestEdge)
+            {
+                var ray = HexGrid.HexGrid.LineBetweenTwoPoints(startLoc, hexPoint);
+                //should be drawing away from the start point
+                foreach (var rayPoint in ray)
+                {
+                    if (hexGrid.HexStorage.ContainsKey((rayPoint)))
+                    {
+                        var hex = hexGrid.HexStorage.First(h => h.Key.Equals(rayPoint));
+                        if (!hex.Value.BlocksVision)
+                        {
+                            HexesCanSee.Add(hex.Key);
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                }
+            }
+            return HexesCanSee;
         }
 
 

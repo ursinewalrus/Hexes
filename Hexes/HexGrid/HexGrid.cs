@@ -221,15 +221,24 @@ namespace Hexes.HexGrid
             //totally0
             int distance = HexDistance(p1, p2);
             var results = new List<HexPoint>();
-            //var p1z = -p1.Q - p1.R;
-            //var p2z = -p2.Q - p2.R;
+
+            var p1Q = p1.Q;// + 1e-6f;
+            var p2Q = p2.Q - 1e-6f;
+
+            var p1R = p1.R;// + 2e-6f;
+            var p2R = p2.R - 2e-6f;
+
+
+            var p1Z = -p1.Q - p1.R;// + -3e-6f;
+            var p2Z = -p2.Q - p2.R + 3e-6f;
+
 
             for (var i = 0; i <= distance; i++)
             {
-                var x = p1.Q + (p2.Q - p1.Q) * (1.0f/distance * i);
-                var y = p1.R + (p2.R - p1.R) * (1.0f / distance * i);
-                //var z = Math.Round(p1z + (p2z + p1z) * (1.0f / distance * i));
-                var rounded = RoundCubeCordinates(x, y);
+                var x = p1Q + (p2Q - p1Q) * (1.0f/distance * i);
+                var y = p1R + (p2R - p1R) * (1.0f / distance * i);
+                var z = p1Z + (p2Z - p1Z) * (1.0f / distance * i);
+                var rounded = RoundCubeCordinates(x, y, z);
                 results.Add(new HexPoint((int)rounded.Y, (int)rounded.X));
                 ;
             }
@@ -237,10 +246,9 @@ namespace Hexes.HexGrid
         }
 
 
-        public static Vector2 RoundCubeCordinates(float x, float y)
+        public static Vector2 RoundCubeCordinates(float x, float y, float z)
         {
             //Q or R??
-            var z = - y - x;
             var rx = (float)Math.Round(x);
             var ry = (float)Math.Round(y);
             var rz = (float)Math.Round(z);
