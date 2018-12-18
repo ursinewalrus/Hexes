@@ -121,18 +121,22 @@ namespace Hexes.Control
             //actorUi.DrawActorActions();
 
             var conv = Vector2.Transform(MouseCords, Matrix.Invert(camera.Transform));
+
             var selHex = hexMap.SelectedHex(conv);
+
             hexMap.HexStorage.ToList().ForEach(h => h.Value.Hovered = false);
             //:TODO also annoying
             if (selHex != null)
             {
+                Debug.Log("Hover Hex " + selHex.R + ", " + selHex.Q);
+
                 // :TODO this is annoying to do
                 hexMap.HexStorage.Where(h => h.Key.Equals(selHex)).First().Value.Hovered = true;
             }
             if (CompletedClick/*mouseInfo.MouseState.LeftButton == ButtonState.Pressed*/)
             {
-                Debug.Log("Clicked ScreenCords " + MouseCords.X + ", " + MouseCords.Y);
-                Debug.Log("Clicked MouseCords " + conv.X + ", " + conv.Y);
+                //Debug.Log("Clicked ScreenCords " + MouseCords.X + ", " + MouseCords.Y);
+                //Debug.Log("Clicked MouseCords " + conv.X + ", " + conv.Y);
 
                 foreach (var visibleElement in ActiveHexUIElements.AvailibleUIElements)
                 {
@@ -148,7 +152,6 @@ namespace Hexes.Control
                
                 if (selHex != null)
                 {
-                    Debug.Log("Clicked Hex " + selHex.R + ", " + selHex.Q);
 
                     var hexKey =
                         hexMap.HexStorage.FirstOrDefault(h => h.Key.Equals(selHex));
@@ -161,10 +164,21 @@ namespace Hexes.Control
 
                     if (hexMap.ActiveActor != null && hexMap.ActiveActor.Controllable)
                     {
-
+                        //sets selected hex, :TODO when get select texture, have that set its own value
                         hexKey.Value.Highlighted = true;
-                        var moveable = hexMap.ActiveActor.AllInMoveRange(hexMap);
-                        moveable.ForEach(h => hexMap.HexStorage[h].Highlighted = true);
+                        //var moveable = hexMap.ActiveActor.AllInMoveRange(hexMap);
+                        //moveable.ForEach(h => hexMap.HexStorage[h].Highlighted = true);
+
+                        var seeable = hexMap.ActiveActor.CanSee(hexMap.ActiveActor.Location, hexMap);
+                        ;
+                        seeable.ForEach((s) =>
+                        {
+                            var insight = hexMap.HexStorage.Where(h => h.Key.Equals(s)).FirstOrDefault();
+                            if(insight.Value != null)
+                            {
+                                insight.Value.Highlighted = true;
+                            }
+                        });
 
                         //bundle this all, whatever is being selected, create all UI elements for it, probably metatype property on basicactor 
                         #region create actor UI elements

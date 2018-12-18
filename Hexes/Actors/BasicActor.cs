@@ -28,12 +28,12 @@ namespace Hexes.Actors
         public static Dictionary<int, List<Vector2>> FoVArms = new Dictionary<int, List<Vector2>>()
         {
             //rotation, <left arm, right arm>
-            {0, new List<Vector2>(){new Vector2(0,-1),new Vector2(-1,1)}},
-            {1, new List<Vector2>(){new Vector2(-1,0),new Vector2(0,1)}}, //rotation 1
-            {2, new List<Vector2>(){new Vector2(-1,1),new Vector2(1,0)}}, // 3 o clock
-            {3, new List<Vector2>(){new Vector2(0,1),new Vector2(1,-1)}},
-            {4, new List<Vector2>(){new Vector2(1,0),new Vector2(0,-1)}},
-            {5, new List<Vector2>(){new Vector2(1,-1),new Vector2(-1,0)}}
+            {0, new List<Vector2>(){new Vector2(-1,0),new Vector2(0,1)}},
+            {1, new List<Vector2>(){new Vector2(0,1),new Vector2(1,0)}}, //rotation 1
+            {2, new List<Vector2>(){new Vector2(1,0),new Vector2(1,-1)}}, // 3 o clock
+            {3, new List<Vector2>(){new Vector2(1,-1),new Vector2(0,-1)}},
+            {4, new List<Vector2>(){new Vector2(1,-1),new Vector2(-1,0)}},
+            {5, new List<Vector2>(){new Vector2(-1,0),new Vector2(-1,0)}}
         };
 
         public BasicActor(HexPoint location, string name, Dictionary<string, string> actorData, int rotation, bool PC, string moduleName)
@@ -55,7 +55,7 @@ namespace Hexes.Actors
             fs.Dispose();
             SizeX = Convert.ToInt32(actorData["bottomrightX"]);
             SizeY = Convert.ToInt32(actorData["bottomrightY"]);
-            SightRange = 10;
+            SightRange = 2;
         }
         #endregion
 
@@ -124,69 +124,23 @@ namespace Hexes.Actors
         #endregion
         //https://www.redblobgames.com/grids/hexagons/#field-of-view
         //this could probably be redone once it starts working
-        public List<HexPoint> CanSee(HexPoint startLocLeft, HexPoint startLocRight, HexGrid.HexGrid hexGrid)
+        public List<HexPoint> CanSee(HexPoint startLoc, HexGrid.HexGrid hexGrid)
         {
             var inSight = new List<HexPoint>();
             //invent hexes for ones that dont exist for the purpose of our calculations
             var lookDirArms = FoVArms[Rotation];
-            var leftArmCord = new HexPoint(startLocLeft.R + (int)lookDirArms[0].X, startLocLeft.Q + (int)lookDirArms[0].Y);
-            var rightArmCord = new HexPoint(startLocRight.R + (int)lookDirArms[1].X, startLocRight.Q + (int)lookDirArms[1].Y);
-            for (var i = 0; i < SightRange; i++)
-            {
-                //left to right
-                var edgePoints = HexGrid.HexGrid.LineBetweenTwoPoints(leftArmCord, rightArmCord);
-                var blocked = true;
-                var edgeRange = edgePoints.Count();
-                var gaps = new int[edgeRange];
-                //all through or half way 
-                for (var e = 0; e < edgeRange; e++)
-                {
-                    //actually exists
-                    var hex = hexGrid.HexStorage.FirstOrDefault(h => h.Key.Equals(edgePoints[i]));
-                    if (!hex.Key.Equals(null) || !hex.Value.BlocksVision)
-                    {
+            var lArmR = startLoc.R + (int)lookDirArms[0].X * SightRange;
+            var lArmQ = startLoc.Q + (int)lookDirArms[0].Y * SightRange;
 
-                        inSight.Add(edgePoints[i]);
-                        leftArmCord.R += (int) lookDirArms[0].X;
-                        leftArmCord.Q += (int) lookDirArms[0].Y;
-                        rightArmCord.R += (int) lookDirArms[1].X;
-                        rightArmCord.Q += (int) lookDirArms[1].Y;
-                        blocked = false;
-                        gaps[e] = 1;
-                    }
-                    else
-                    {
-                        gaps[e] = 1;
-                    }
-                }
-                if (blocked)
-                {
-                    return inSight;
-                }
-                //now we check if we need to move in edges or recurse
-                for (var s = 0; s < gaps.Length; s++)
-                {
-                    HexPoint newLeft = new HexPoint(-1,-1);
-                    HexPoint newRight = new HexPoint(-1, -1);
+            var rArmR = startLoc.R + (int)lookDirArms[1].X * SightRange;
+            var rArmQ = startLoc.Q + (int)lookDirArms[1].Y * SightRange;
 
-                    if (gaps[s] == 1 && newLeft.Equals(new HexPoint(-1,-1)))
-                    {
-                        newLeft = edgePoints[s];
-                    }
-                    if (gaps[s] == 1 && !newLeft.Equals(new HexPoint(-1, -1)))
-                    {
-                        newRight = edgePoints[s];
-                    }
-                    if (!newLeft.Equals(new HexPoint(-1, -1)) && !newRight.Equals(new HexPoint(-1, -1)))
-                    {
-                        //recourse, reset
-                        inSight.AddRange(CanSee(newLeft, newRight, hexGrid));
-                        newLeft = new HexPoint(-1, -1);
-                        newRight = new HexPoint(-1, -1);
-                    }
-                }
-            }
-            return inSight;
+            var leftArmCord = new HexPoint(lArmR, lArmQ);
+            var rightArmCord = new HexPoint(rArmR, rArmQ);
+
+            var furthestEdge = HexGrid.HexGrid.LineBetweenTwoPoints(leftArmCord, rightArmCord);
+            return furthestEdge;
+            //return inSight;
         }
 
 

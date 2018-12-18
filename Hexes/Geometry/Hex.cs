@@ -21,6 +21,7 @@ namespace Hexes.Geometry
         public bool BlocksVision;
         public Color Color = Color.White;
         public bool Highlighted { get; set; }
+        public static Texture2D SelectedTexture {get; set;}
 
         public List<FloatPoint> HexCorners;
         public static float SizeX = 100;
@@ -34,7 +35,7 @@ namespace Hexes.Geometry
         public FloatPoint Center;
         private List<Line> Edges = new List<Line>();
         private Texture2D Texture;
-        public static Texture2D SelectedTexture;
+        public static Texture2D HighlightedTexture;
         public bool Hovered = false;
 
 
@@ -163,10 +164,10 @@ namespace Hexes.Geometry
                     );
             if (Highlighted)
             {
-                Sb.Draw(texture: SelectedTexture,
-                    destinationRectangle: new Rectangle((int)Center.X, (int)Center.Y, (int)25, (int)25),
+                Sb.Draw(texture: HighlightedTexture,
+                    destinationRectangle: new Rectangle((int)Center.X, (int)Center.Y, (int)SizeX * 2, (int)SizeY * 2),
                     //this is inconsistent -> maybe not anymore
-                    sourceRectangle: new Rectangle(0, 0, 25,25),
+                    sourceRectangle: new Rectangle(ResizeLeft, 0, ResizeRight, (int)SizeY),
                     color: Color,
                     origin: new Vector2(SizeX / 2, SizeY / 2)
                     //scale: new Vector2(9000,0.5f),

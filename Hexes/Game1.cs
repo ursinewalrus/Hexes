@@ -116,6 +116,7 @@ namespace Hexes
             HandleMouse.Debug = Debug;
 
             #region load UI Textures
+            Hex.HighlightedTexture = Content.Load<Texture2D>(@"UIElements\yellowTransparentHex");
             Hex.SelectedTexture = Content.Load<Texture2D>(@"UIElements\yellowSelecthex");
             ActorRotateClockWise.Texture = Content.Load<Texture2D>(@"UIElements\rotateClockWise");
             ActorRotateCounterClockWise.Texture = Content.Load<Texture2D>(@"UIElements\rotateCounterClockWise");
@@ -132,9 +133,7 @@ namespace Hexes
             }
             var usedModule = Modules[0];
             HexMap = new HexGrid.HexGrid(usedModule.LoadedMaps, usedModule.LoadedBackgroundTiles, usedModule.LoadedActors, usedModule.ModuleName);
-            var l = new List<HexPoint>() {new HexPoint(0, 0)};
-            var t = l.Contains(new HexPoint(0, 0));
-            ;
+
             //FileStream fs = new FileStream(@"Content/greenhex.png", FileMode.Open);
             //Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);
             //fs.Dispose();
@@ -184,12 +183,27 @@ namespace Hexes
 
             SpriteBatch.Begin(transformMatrix: GameCamera.Transform, sortMode: SpriteSortMode.Deferred);
 
+            #region linetesting
+            var d = HexGrid.HexGrid.LineBetweenTwoPoints(new HexPoint(0, 1), new HexPoint(3, 0));
+            var hexCenter1 = HexMap.HexStorage.First(h => h.Key.Equals(new HexPoint(0, 1))).Value.Center;
+            var hexCenter2 = HexMap.HexStorage.First(h => h.Key.Equals(new HexPoint(3, 0))).Value.Center;
+
+            var tLine = new Line(hexCenter1.X, hexCenter1.Y, hexCenter2.X, hexCenter2.Y,3,Color.Black);
+            d.ForEach((p) =>
+            {
+                var val = HexMap.HexStorage.First(h => h.Key.Equals(p));
+                val.Value.Highlighted = true;
+            });
+            #endregion
+
             //so on begin looks like pass in a transform matrix
             //spriteBatch.Begin(transformMatrix: viewMatrix);
             //Debug.CamLoc = GameCamera.Transform;
 
             GraphicsDevice.Clear(Color.LawnGreen);
             HexMap.Draw();
+
+            tLine.Draw();
 
             foreach (var hexUI in ActiveHexUIElements.AvailibleUIElements)
             {

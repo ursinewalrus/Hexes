@@ -218,7 +218,7 @@ namespace Hexes.HexGrid
        
         public static List<HexPoint> LineBetweenTwoPoints(HexPoint p1, HexPoint p2)
         {
-
+            //totally0
             int distance = HexDistance(p1, p2);
             var results = new List<HexPoint>();
             //var p1z = -p1.Q - p1.R;
@@ -226,15 +226,70 @@ namespace Hexes.HexGrid
 
             for (var i = 0; i <= distance; i++)
             {
-                var x = (int)Math.Round(p1.Q + (p2.Q + p1.Q) * (1.0f/distance * i));
-                var y = (int)Math.Round(p1.R + (p2.R + p1.R) * (1.0f / distance * i));
+                var x = p1.Q + (p2.Q - p1.Q) * (1.0f/distance * i);
+                var y = p1.R + (p2.R - p1.R) * (1.0f / distance * i);
                 //var z = Math.Round(p1z + (p2z + p1z) * (1.0f / distance * i));
-                results.Add(new HexPoint(y, x));
+                var rounded = RoundCubeCordinates(x, y);
+                results.Add(new HexPoint((int)rounded.Y, (int)rounded.X));
                 ;
             }
-            return new List<HexPoint>();
+            return results;
         }
 
+
+        public static Vector2 RoundCubeCordinates(float x, float y)
+        {
+            //Q or R??
+            var z = - y - x;
+            var rx = (float)Math.Round(x);
+            var ry = (float)Math.Round(y);
+            var rz = (float)Math.Round(z);
+
+            var xDif = Math.Abs(rx - x);
+            var yDif = Math.Abs(ry - y);
+            var zDif = Math.Abs(rz - z);
+
+            if (xDif > yDif && xDif > zDif)
+                rx = -ry - rz;
+            else if (yDif > zDif)
+                ry = -rx - rz;
+            return new Vector2(rx, ry);
+        }
+        /*
+         * 
+         * function cube_round(cube):
+    var rx = round(cube.x)
+    var ry = round(cube.y)
+    var rz = round(cube.z)
+
+    var x_diff = abs(rx - cube.x)
+    var y_diff = abs(ry - cube.y)
+    var z_diff = abs(rz - cube.z)
+
+    if x_diff > y_diff and x_diff > z_diff:
+        rx = -ry-rz
+    else if y_diff > z_diff:
+        ry = -rx-rz
+    else:
+        rz = -rx-ry
+
+    return Cube(rx, ry, rz)
+
+            function lerp(a, b, t): # for floats
+    return a + (b - a) * t
+
+function cube_lerp(a, b, t): # for hexes
+    return Cube(lerp(a.x, b.x, t), 
+                lerp(a.y, b.y, t),
+                lerp(a.z, b.z, t))
+
+function cube_linedraw(a, b):
+    var N = cube_distance(a, b)
+    var results = []
+    for each 0 ≤ i ≤ N:
+        results.append(cube_round(cube_lerp(a, b, 1.0/N * i)))
+    return results
+         */
         #region static methods
         public static int HexDistance(HexPoint hex1, HexPoint hex2)
         {
