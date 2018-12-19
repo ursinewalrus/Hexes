@@ -57,7 +57,7 @@ namespace Hexes.Actors
             fs.Dispose();
             SizeX = Convert.ToInt32(actorData["bottomrightX"]);
             SizeY = Convert.ToInt32(actorData["bottomrightY"]);
-            SightRange = 3;
+            SightRange = 8;
         }
         #endregion
 
@@ -102,6 +102,7 @@ namespace Hexes.Actors
             {
                 Location = moveTo;
                 hexGrid.UnHighlightAll();
+                hexGrid.CheckLines = new List<Line>();
             }
         }
 
@@ -121,7 +122,6 @@ namespace Hexes.Actors
             var clockwise = eventArgs.ClockWise;
             var dir = clockwise ? 1 : -1;
             Rotation = (Rotation + dir + 6) % 6;
-
         }
         #endregion
         //https://www.redblobgames.com/grids/hexagons/#field-of-view
@@ -131,6 +131,7 @@ namespace Hexes.Actors
             HexesCanSee = new List<HexPoint>();
             //invent hexes for ones that dont exist for the purpose of our calculations
             var lookDirArms = FoVArms[Rotation];
+            
             var lArmR = startLoc.R + (int)lookDirArms[0].X * SightRange;
             var lArmQ = startLoc.Q + (int)lookDirArms[0].Y * SightRange;
 
@@ -140,27 +141,47 @@ namespace Hexes.Actors
             var leftArmCord = new HexPoint(lArmR, lArmQ);
             var rightArmCord = new HexPoint(rArmR, rArmQ);
 
-            var furthestEdge = HexGrid.HexGrid.LineBetweenTwoPoints(leftArmCord, rightArmCord);
-
+            var shiftRight = false;
+            if (Rotation>0 && Rotation < 4)
+            {
+                shiftRight = true;
+            }
+            var furthestEdge = HexGrid.HexGrid.LineBetweenTwoPoints(leftArmCord, rightArmCord, shiftRight);
             foreach (var hexPoint in furthestEdge)
             {
                 var ray = HexGrid.HexGrid.LineBetweenTwoPoints(startLoc, hexPoint);
-                //should be drawing away from the start point
+                //:TODO REMOVE after testing
+                var startLinePointHex = hexGrid.HexStorage.First(h => h.Key.Equals(ray[0])).Value;
+                var endLinePoint = hexGrid.HexStorage.First(h => h.Key.Equals(ray[0])).Value;
+                //
+
+                var blocked = false;
+
+            //should be drawing away from the start point
                 foreach (var rayPoint in ray)
                 {
-                    if (hexGrid.HexStorage.ContainsKey((rayPoint)))
+                    if (!blocked)
                     {
-                        var hex = hexGrid.HexStorage.First(h => h.Key.Equals(rayPoint));
-                        if (!hex.Value.BlocksVision)
+                        if (hexGrid.HexStorage.ContainsKey((rayPoint)))
                         {
-                            HexesCanSee.Add(hex.Key);
+                            var hex = hexGrid.HexStorage.First(h => h.Key.Equals(rayPoint));
+                            if (!hex.Value.BlocksVision)
+                            {
+                                HexesCanSee.Add(hex.Key);
+                                endLinePoint = hex.Value;
+                            }
+                            else
+                            {
+                                blocked = true;
+                            }
                         }
                         else
                         {
-                            continue;
+                            blocked = true;
                         }
                     }
                 }
+                hexGrid.CheckLines.Add(new Line(startLinePointHex.Center.X, startLinePointHex.Center.Y, endLinePoint.Center.X, endLinePoint.Center.Y,3f,Color.Black));
             }
             return HexesCanSee;
         }

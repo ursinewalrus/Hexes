@@ -33,7 +33,15 @@ namespace Hexes.HexGrid
 
         public Dictionary<HexPoint, Hex> HexStorage = new  Dictionary<HexPoint, Hex>();
         public List <BasicActor> ActorStorage = new List<BasicActor>();
+
         #endregion
+
+        #region debug test whatever
+        //FOR DEBUG :TODO
+        public List<Line> CheckLines = new List<Line>();
+        public Dictionary<Point, String> CheckLinesLabels = new Dictionary<Point,String>();
+
+        #endregion  
         #region  selectable properties
 
         public KeyValuePair<HexPoint, Hex> ActiveHex;
@@ -215,22 +223,24 @@ namespace Hexes.HexGrid
 
         }
         //https://www.redblobgames.com/grids/hexagons/#line-drawing
-       
-        public static List<HexPoint> LineBetweenTwoPoints(HexPoint p1, HexPoint p2)
+
+        public static List<HexPoint> LineBetweenTwoPoints(HexPoint p1, HexPoint p2, bool shiftRight = false)
         {
             //totally0
             int distance = HexDistance(p1, p2);
             var results = new List<HexPoint>();
 
+            var bumpOver = (shiftRight) ? -1f : 1f;
+
             var p1Q = p1.Q;// + 1e-6f;
-            var p2Q = p2.Q - 1e-6f;
+            var p2Q = p2.Q - ( 1e-6f * bumpOver);
 
             var p1R = p1.R;// + 2e-6f;
-            var p2R = p2.R - 2e-6f;
+            var p2R = p2.R - (2e-6f * bumpOver);
 
 
             var p1Z = -p1.Q - p1.R;// + -3e-6f;
-            var p2Z = -p2.Q - p2.R + 3e-6f;
+            var p2Z = -p2.Q - p2.R + (3e-6f * bumpOver);
 
 
             for (var i = 0; i <= distance; i++)

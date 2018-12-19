@@ -59,3 +59,4 @@ C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\UIElements\ye
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\UIElements\rotateClockWise.xnb
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\UIElements\rotateCounterClockWise.xnb
 C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\UIElements\yellowSelecthex.xnb
+C:\Users\kk\Desktop\Hexes\Hexes\bin\DesktopGL\AnyCPU\Debug\Content\UIElements\yellowTransparentHex.xnb

@@ -184,18 +184,16 @@ namespace Hexes
 
             SpriteBatch.Begin(transformMatrix: GameCamera.Transform, sortMode: SpriteSortMode.Deferred);
 
-            #region linetesting
-            var d = HexGrid.HexGrid.LineBetweenTwoPoints(new HexPoint(0, 1), new HexPoint(3, 0));
-            var hexCenter1 = HexMap.HexStorage.First(h => h.Key.Equals(new HexPoint(0, 1))).Value.Center;
-            var hexCenter2 = HexMap.HexStorage.First(h => h.Key.Equals(new HexPoint(3, 0))).Value.Center;
+            //var d = HexGrid.HexGrid.LineBetweenTwoPoints(new HexPoint(2, 2), new HexPoint(0, 1),true);
+            //var hexCenter1 = HexMap.HexStorage.First(h => h.Key.Equals(new HexPoint(0, 1))).Value.Center;
+            //var hexCenter2 = HexMap.HexStorage.First(h => h.Key.Equals(new HexPoint(2, 2))).Value.Center;
 
-            var tLine = new Line(hexCenter1.X, hexCenter1.Y, hexCenter2.X, hexCenter2.Y,3,Color.Black);
-            d.ForEach((p) =>
-            {
-                var val = HexMap.HexStorage.First(h => h.Key.Equals(p));
-                val.Value.Highlighted = true;
-            });
-            #endregion
+            //var tLine = new Line(hexCenter1.X, hexCenter1.Y, hexCenter2.X, hexCenter2.Y, 3, Color.Black);
+            //d.ForEach((p) =>
+            //{
+            //    var val = HexMap.HexStorage.First(h => h.Key.Equals(p));
+            //    val.Value.Highlighted = true;
+            //});
 
             //so on begin looks like pass in a transform matrix
             //spriteBatch.Begin(transformMatrix: viewMatrix);
@@ -204,7 +202,8 @@ namespace Hexes
             GraphicsDevice.Clear(Color.LawnGreen);
             HexMap.Draw();
 
-            tLine.Draw();
+            HexMap.CheckLines.ForEach(l => l.Draw());
+            //tLine.Draw();
 
             foreach (var hexUI in ActiveHexUIElements.AvailibleUIElements)
             {
