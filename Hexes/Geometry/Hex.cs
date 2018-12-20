@@ -32,7 +32,7 @@ namespace Hexes.Geometry
         public int ResizeTop;
         public int ResizeBottom;
 
-        public FloatPoint Center;
+        public Vector2 Center;
         private List<Line> Edges = new List<Line>();
         private Texture2D Texture;
         public static Texture2D HighlightedTexture;
@@ -124,11 +124,11 @@ namespace Hexes.Geometry
             return new FloatPoint((float)(SizeX * Math.Cos(angle)),(float)(SizeY * Math.Sin(angle)));
         }
 
-        public FloatPoint CenterHexToPixel()
+        public Vector2 CenterHexToPixel()
         {
             float x = (float)(HexOrientation[0] * HexPoint.Q + HexOrientation[1] * HexPoint.R) * SizeX;
             float y = (float)(HexOrientation[2] * HexPoint.Q + HexOrientation[3] * HexPoint.R) * SizeY;
-            return new FloatPoint(x, y);
+            return new Vector2(x, y);
         }
 
 

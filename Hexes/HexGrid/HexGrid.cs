@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hexes.UI;
+using Hexes.Utilities;
 
 namespace Hexes.HexGrid
 {
@@ -38,8 +39,9 @@ namespace Hexes.HexGrid
 
         #region debug test whatever
         //FOR DEBUG :TODO
-        public List<Line> CheckLines = new List<Line>();
-        public Dictionary<Point, String> CheckLinesLabels = new Dictionary<Point,String>();
+        public List<DebugLine> DebugLines = new List<DebugLine>();
+        //public List<Line> CheckLines = new List<Line>();
+        //public Dictionary<Point, String> CheckLinesLabels = new Dictionary<Point,String>();
 
         #endregion  
         #region  selectable properties

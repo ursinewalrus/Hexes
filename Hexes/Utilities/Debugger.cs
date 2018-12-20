@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Hexes.UI
+namespace Hexes.Utilities
 {
     public class Debugger : Drawable
     {
@@ -16,13 +16,13 @@ namespace Hexes.UI
         }
 
         //dont actually be writing these to the screen, needs to be an object so it actually persists
-        public void Log(string logMsg)
+        public static void Log(string logMsg)
         {
             //Vector2.Transform(mouseInfo.MouseCords, Matrix.Invert(GameCamera.Transform));
 
             Sb.DrawString(Font, logMsg, Vector2.Transform(new Vector2(5,5), Matrix.Invert(Camera.Transform)), Color.Black );
         }
-        public void Log(string logMsg, Vector2 cord)
+        public static void Log(string logMsg, Vector2 cord)
         {
             Sb.DrawString(Font, logMsg, cord, Color.Black);
         }

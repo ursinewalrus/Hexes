@@ -18,8 +18,6 @@ namespace Hexes.UI
         public Color LineColor { get; set; }
         public BasicActor Actor { get; set; }
         public HexPoint HexPoint { get; set; }
-        public HexGrid.HexGrid HexGrid { get; set; }
-
 
 
         public ActorMoveAction(BasicActor actor, HexPoint hexPoint, HexGrid.HexGrid hexGrid)
@@ -36,18 +34,8 @@ namespace Hexes.UI
         }
         public override void Draw()
         {
-            var v2 = Vector2.Transform(StartV, Matrix.Invert(Camera.Transform));
-            Sb.Draw(
-                Texture,
-                    destinationRectangle: new Rectangle((int)v2.X, (int)v2.Y, (int)Size.X , (int)Size.Y ),
-                    sourceRectangle: new Rectangle(0, 0, 100, 100),
-                    color: Color.White
-                // origin: new Vector2(Size.X / 2, Size.Y / 2)
-                );
-            //Actor.Draw(new FloatPoint(v2.X, v2.Y), Size);
-            //Sb.DrawString(Font, "MOVE", Vector2.Transform(StartV, Matrix.Invert(Camera.Transform)), Color.Black);
+            base.Draw(Texture);
         }
-
         //public delegate void CustomEventHandler(object sender, ActorMoveActionEvent a);
         public override void OnClick()
         {

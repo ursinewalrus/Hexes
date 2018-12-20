@@ -10,6 +10,7 @@ using System.Reflection;
 using Hexes.Control;
 using Hexes.HexGrid;
 using Hexes.UI;
+using Hexes.Utilities;
 
 namespace Hexes
 {
@@ -34,7 +35,6 @@ namespace Hexes
 
         //private EmptyKeys.UserInterface.Generated.ActorActions ActorActions;
 
-        public Debugger Debug = new Debugger();
         //bool HasBeenResized = false;
 
         public Game1()
@@ -60,10 +60,10 @@ namespace Hexes
             //Drawable.Sb = SpriteBatch;
 
             GameWidth = GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferWidth = GameWidth / 2;
+            graphics.PreferredBackBufferWidth = GameWidth / 4;
 
             GameHeight = GraphicsDevice.DisplayMode.Height;
-            graphics.PreferredBackBufferHeight = GameHeight / 2;
+            graphics.PreferredBackBufferHeight = GameHeight / 4;
             GameCamera = new Camera(GraphicsDevice.Viewport);
 
             this.IsMouseVisible = true;
@@ -113,8 +113,7 @@ namespace Hexes
             Drawable.Sb = SpriteBatch;
             Drawable.Font = Font;
             Drawable.Camera = GameCamera;
-            HandleMouse.Debug = Debug;
-
+            Debugger.Font = Font;
             #region load UI Textures
             Hex.HighlightedTexture = Content.Load<Texture2D>(@"UIElements\yellowTransparentHex");
             Hex.SelectedTexture = Content.Load<Texture2D>(@"UIElements\yellowSelecthex");
@@ -169,9 +168,32 @@ namespace Hexes
             // TODO: Add your update logic here
             //:TODO update all actor actions / stats
 
+            #region ray test
+            if(Keyboard.GetState().IsKeyDown(Keys.Left) == true && gameTime.TotalGameTime.Seconds - lastPressedIndexRot > .5)
+            {
+                if (debugRayIndex > 0)
+                {
+                    debugRayIndex--;
+                    lastPressedIndexRot = gameTime.TotalGameTime.Seconds;
+                }
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Right) == true && gameTime.TotalGameTime.Seconds - lastPressedIndexRot > .5 )
+            {
+                if(HexMap.DebugLines.Count() - 1 > debugRayIndex)
+                {
+                    debugRayIndex++;
+                    lastPressedIndexRot = gameTime.TotalGameTime.Seconds;
+                }
+            }
+            #endregion
+
+
             base.Update(gameTime);
         }
-
+        #region ray test
+        public static int debugRayIndex = 0;
+        public int lastPressedIndexRot = 0;
+        #endregion
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -184,27 +206,19 @@ namespace Hexes
 
             SpriteBatch.Begin(transformMatrix: GameCamera.Transform, sortMode: SpriteSortMode.Deferred);
 
-            //var d = HexGrid.HexGrid.LineBetweenTwoPoints(new HexPoint(2, 2), new HexPoint(0, 1),true);
-            //var hexCenter1 = HexMap.HexStorage.First(h => h.Key.Equals(new HexPoint(0, 1))).Value.Center;
-            //var hexCenter2 = HexMap.HexStorage.First(h => h.Key.Equals(new HexPoint(2, 2))).Value.Center;
-
-            //var tLine = new Line(hexCenter1.X, hexCenter1.Y, hexCenter2.X, hexCenter2.Y, 3, Color.Black);
-            //d.ForEach((p) =>
-            //{
-            //    var val = HexMap.HexStorage.First(h => h.Key.Equals(p));
-            //    val.Value.Highlighted = true;
-            //});
-
-            //so on begin looks like pass in a transform matrix
-            //spriteBatch.Begin(transformMatrix: viewMatrix);
-            //Debug.CamLoc = GameCamera.Transform;
-
             GraphicsDevice.Clear(Color.LawnGreen);
             HexMap.Draw();
+            #region ray test
+            if (HexMap.DebugLines.Any())
+            {
+                var debugRay = HexMap.DebugLines[debugRayIndex];
+                debugRay.Line.Draw();
+                debugRay.DrawDebugStrings();
+                ;
+            }
+            #endregion
 
-            HexMap.CheckLines.ForEach(l => l.Draw());
-            //tLine.Draw();
-
+            //:TODO replace with calls to UIGridbag, init one on the left somehow
             foreach (var hexUI in ActiveHexUIElements.AvailibleUIElements)
             {
                 hexUI.Value.Draw();

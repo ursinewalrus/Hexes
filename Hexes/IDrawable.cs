@@ -50,5 +50,27 @@ namespace Hexes
         public Vector2 StartV { get; set; }
         public Vector2 Size;
         public abstract void OnClick();
+        public HexGrid.HexGrid HexGrid { get; set; }
+
+        protected UIDrawable(HexPoint hexPoint, HexGrid.HexGrid hexGrid)
+        {
+            
+        }
+
+        protected UIDrawable()
+        {
+            
+        }
+        public void Draw(Texture2D texture)
+        {
+            var v2 = Vector2.Transform(StartV, Matrix.Invert(Camera.Transform));
+            Sb.Draw(
+                texture,
+                    destinationRectangle: new Rectangle((int)v2.X, (int)v2.Y, (int)Size.X, (int)Size.Y),
+                    sourceRectangle: new Rectangle(0, 0, 100, 100),
+                    color: Color.White
+                // origin: new Vector2(Size.X / 2, Size.Y / 2)
+                );
+        }
     }
 }

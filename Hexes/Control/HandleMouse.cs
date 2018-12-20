@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hexes.Geometry;
+using Hexes.Utilities;
 
 namespace Hexes.Control
 {
@@ -16,7 +17,6 @@ namespace Hexes.Control
         public Vector2 MouseCords;
         public CardinalDirections.Direction RelativeMouseLocation;
         public MouseState MouseState;
-        public static Debugger Debug;
 
         public bool PrevMouseClickedStateClicked = false;
         public bool CompletedClick = false;
@@ -128,7 +128,7 @@ namespace Hexes.Control
             //:TODO also annoying
             if (selHex != null)
             {
-                Debug.Log("Hover Hex " + selHex.R + ", " + selHex.Q);
+                Debugger.Log("Hover Hex " + selHex.R + ", " + selHex.Q);
 
                 // :TODO this is annoying to do
                 hexMap.HexStorage.Where(h => h.Key.Equals(selHex)).First().Value.Hovered = true;
@@ -192,19 +192,18 @@ namespace Hexes.Control
                         //bundle this all, whatever is being selected, create all UI elements for it, probably metatype property on basicactor 
                         #region create actor UI elements
                         //or just make this its own list of elements
-                        //Virtual "grid" to  hold these so can just add more elements without needing to do any manual sizing :TODO -> priority
+                        //UIGridBag -> where do we put it
                         ActiveHexUIElements.AvailibleUIElements.Remove("ActorMoveActions"); //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
                         var moveElement = new ActorMoveAction(hexMap.ActiveActor, hexKey.Key, hexMap);
                         ActiveHexUIElements.AvailibleUIElements[moveElement.ElementName] = moveElement;
 
                         ActiveHexUIElements.AvailibleUIElements.Remove("ActorRotateClockWiseActions");
-                        var rotateClockwiseElement = new ActorRotateClockWise(hexMap.ActiveActor, hexKey.Key, hexMap);
+                        var rotateClockwiseElement = new ActorRotateClockWise(hexMap.ActiveActor);
                         ActiveHexUIElements.AvailibleUIElements[rotateClockwiseElement.ElementName] = rotateClockwiseElement;
 
                         ActiveHexUIElements.AvailibleUIElements.Remove("ActorRotateCounterClockWiseActions");
-                        var rotateCounterClockwiseElement = new ActorRotateCounterClockWise(hexMap.ActiveActor, hexKey.Key, hexMap);
+                        var rotateCounterClockwiseElement = new ActorRotateCounterClockWise(hexMap.ActiveActor);
                         ActiveHexUIElements.AvailibleUIElements[rotateCounterClockwiseElement.ElementName] = rotateCounterClockwiseElement;
-
 
                         #endregion  
                         //inMoveDistance.ForEach(h => h.Color = Color.Red ); -> alpha channel?

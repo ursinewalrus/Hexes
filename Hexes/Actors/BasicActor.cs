@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Hexes.UI;
+using Hexes.Utilities;
 
 namespace Hexes.Actors
 {
@@ -102,7 +103,7 @@ namespace Hexes.Actors
             {
                 Location = moveTo;
                 hexGrid.UnHighlightAll();
-                hexGrid.CheckLines = new List<Line>();
+                hexGrid.DebugLines = new List<DebugLine>();
             }
         }
 
@@ -131,7 +132,7 @@ namespace Hexes.Actors
             HexesCanSee = new List<HexPoint>();
             //invent hexes for ones that dont exist for the purpose of our calculations
             var lookDirArms = FoVArms[Rotation];
-            
+
             var lArmR = startLoc.R + (int)lookDirArms[0].X * SightRange;
             var lArmQ = startLoc.Q + (int)lookDirArms[0].Y * SightRange;
 
@@ -142,7 +143,7 @@ namespace Hexes.Actors
             var rightArmCord = new HexPoint(rArmR, rArmQ);
 
             var shiftRight = false;
-            if (Rotation>0 && Rotation < 4)
+            if (Rotation > 0 && Rotation < 4)
             {
                 shiftRight = true;
             }
@@ -154,10 +155,11 @@ namespace Hexes.Actors
                 var startLinePointHex = hexGrid.HexStorage.First(h => h.Key.Equals(ray[0])).Value;
                 var endLinePoint = hexGrid.HexStorage.First(h => h.Key.Equals(ray[0])).Value;
                 //
+                var debugLine = new DebugLine();
 
                 var blocked = false;
 
-            //should be drawing away from the start point
+                //should be drawing away from the start point
                 foreach (var rayPoint in ray)
                 {
                     if (!blocked)
@@ -167,6 +169,7 @@ namespace Hexes.Actors
                             var hex = hexGrid.HexStorage.First(h => h.Key.Equals(rayPoint));
                             if (!hex.Value.BlocksVision)
                             {
+                                debugLine.DebugStrings[hex.Value.Center] = hex.Key.R + " " + hex.Key.Q;
                                 HexesCanSee.Add(hex.Key);
                                 endLinePoint = hex.Value;
                             }
@@ -181,7 +184,10 @@ namespace Hexes.Actors
                         }
                     }
                 }
-                hexGrid.CheckLines.Add(new Line(startLinePointHex.Center.X, startLinePointHex.Center.Y, endLinePoint.Center.X, endLinePoint.Center.Y,3f,Color.Black));
+                var debugLineLine = new Line(startLinePointHex.Center.X, startLinePointHex.Center.Y,
+                    endLinePoint.Center.X, endLinePoint.Center.Y, 3f, Color.Black);
+                debugLine.Line = debugLineLine;
+                hexGrid.DebugLines.Add(debugLine);
             }
             return HexesCanSee;
         }
@@ -189,7 +195,7 @@ namespace Hexes.Actors
 
         #region drawstuff
         //maybe also a draw that just takes the R/Q cords?
-        public void Draw(FloatPoint center)
+        public void Draw(Vector2 center)
         {
             Sb.Draw(Texture,
                     destinationRectangle: new Rectangle((int)center.X, (int)center.Y, (int)SizeX, (int)SizeY),
