@@ -60,10 +60,10 @@ namespace Hexes
             //Drawable.Sb = SpriteBatch;
 
             GameWidth = GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferWidth = GameWidth / 4;
+            graphics.PreferredBackBufferWidth = GameWidth / 2;
 
             GameHeight = GraphicsDevice.DisplayMode.Height;
-            graphics.PreferredBackBufferHeight = GameHeight / 4;
+            graphics.PreferredBackBufferHeight = GameHeight / 2;
             GameCamera = new Camera(GraphicsDevice.Viewport);
 
             this.IsMouseVisible = true;
@@ -169,21 +169,26 @@ namespace Hexes
             //:TODO update all actor actions / stats
 
             #region ray test
-            if(Keyboard.GetState().IsKeyDown(Keys.Left) == true && gameTime.TotalGameTime.Seconds - lastPressedIndexRot > .5)
+            if(Keyboard.GetState().IsKeyDown(Keys.Left) == true)
             {
                 if (debugRayIndex > 0)
                 {
                     debugRayIndex--;
-                    lastPressedIndexRot = gameTime.TotalGameTime.Seconds;
+                    lastPressedIndexRot = gameTime.TotalGameTime.Milliseconds;
                 }
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.Right) == true && gameTime.TotalGameTime.Seconds - lastPressedIndexRot > .5 )
+            if (Keyboard.GetState().IsKeyDown(Keys.Right) == true)
             {
                 if(HexMap.DebugLines.Count() - 1 > debugRayIndex)
                 {
                     debugRayIndex++;
-                    lastPressedIndexRot = gameTime.TotalGameTime.Seconds;
+                    lastPressedIndexRot = gameTime.TotalGameTime.Milliseconds;
                 }
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
+                debugRayIndex = 0;
+
             }
             #endregion
 

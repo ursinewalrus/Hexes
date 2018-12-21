@@ -63,9 +63,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\ActiveHexUIElements.cs" />
     <Compile Include="UI\ActorRotateActions.cs" />
-    <Compile Include="UI\Debugger.cs" />
     <Compile Include="UI\ActorMoveAction.cs" />
     <Compile Include="UI\IUIActions.cs" />
+    <Compile Include="UI\UIGridBag.cs" />
+    <Compile Include="Utilities\Debugger.cs" />
+    <Compile Include="Utilities\DebugLine.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -129,12 +131,6 @@
     </None>
     <None Include="app.manifest" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\HexesUI\HexesUI.csproj">
-      <Project>{f3c4f1fc-f6af-4e51-a95f-84dbb8ed6038}</Project>
-      <Name>HexesUI</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="BehaviorsLicense.txt" />

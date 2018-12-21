@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hexes", "Hexes\Hexes.csproj", "{78C0F853-BED1-45AA-9020-57B500BFA376}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HexesUI", "HexesUI\HexesUI.csproj", "{F3C4F1FC-F6AF-4E51-A95F-84DBB8ED6038}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{78C0F853-BED1-45AA-9020-57B500BFA376}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78C0F853-BED1-45AA-9020-57B500BFA376}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78C0F853-BED1-45AA-9020-57B500BFA376}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3C4F1FC-F6AF-4E51-A95F-84DBB8ED6038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3C4F1FC-F6AF-4E51-A95F-84DBB8ED6038}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F3C4F1FC-F6AF-4E51-A95F-84DBB8ED6038}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F3C4F1FC-F6AF-4E51-A95F-84DBB8ED6038}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

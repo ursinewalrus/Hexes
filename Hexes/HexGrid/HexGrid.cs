@@ -234,14 +234,14 @@ namespace Hexes.HexGrid
 
             var bumpOver = (shiftRight) ? -1f : 1f;
 
-            var p1Q = p1.Q;// + 1e-6f;
+            var p1Q = p1.Q -( 1e-6f * bumpOver);
             var p2Q = p2.Q - ( 1e-6f * bumpOver);
 
-            var p1R = p1.R;// + 2e-6f;
+            var p1R = p1.R - (2e-6f * bumpOver);
             var p2R = p2.R - (2e-6f * bumpOver);
 
 
-            var p1Z = -p1.Q - p1.R;// + -3e-6f;
+            var p1Z = -p1.Q - p1.R + (3e-6f * bumpOver);
             var p2Z = -p2.Q - p2.R + (3e-6f * bumpOver);
 
 

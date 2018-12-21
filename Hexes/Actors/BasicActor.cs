@@ -58,7 +58,7 @@ namespace Hexes.Actors
             fs.Dispose();
             SizeX = Convert.ToInt32(actorData["bottomrightX"]);
             SizeY = Convert.ToInt32(actorData["bottomrightY"]);
-            SightRange = 8;
+            SightRange = 6;
         }
         #endregion
 
