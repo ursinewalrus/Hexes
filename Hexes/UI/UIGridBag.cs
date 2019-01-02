@@ -19,40 +19,38 @@ namespace Hexes.UI
         public int moveOverXIndex;
         public int moveOverYIndex;
 
-        public UIGridBag(Vector2 upperLeft, float maxWidth, float maxHeight, bool fillHorizontal = true)
+        public UIGridBag(Vector2 upperLeft, float maxWidth, float maxHeight)
         {
             UpperLeft = upperLeft;
             MaxWidth = maxWidth;
             MaxHeight = maxHeight;
-
-            MoveOverAmount[0] = 0;
-            MoveOverAmount[1] = 0;
-
-            if (fillHorizontal)
-            {
-                moveOverXIndex = 0;
-                moveOverYIndex = 1;
-            }
-            else
-            {
-                moveOverXIndex = 1;
-                moveOverYIndex = 0;
-            }
-            //fillHorizontal controls index for accessing vars in moved over height/width
-            //MoveOverAmount = fillHorizontal ? new Vector2() : 
         }
 
-        public void PlaceElements()
+        public void Draw()
         {
-            var currentUpperLeft = new Vector2(UpperLeft.X, UpperLeft.Y);
-            float totalMovedOver = 0;
-            float totalMovedDown = 0;
-            var placed = true;
+
+            var nextToPlaced = 0;
+            Vector2 lastUpperLeft = new Vector2(UpperLeft.X, UpperLeft.Y);
+            Vector2 lastLowerRight = new Vector2(0,0);
             foreach (var element in GridElements)
             {
-                element.StartV = currentUpperLeft;
-                element.Draw();
-                
+                element.StartV = lastUpperLeft;
+                if (nextToPlaced == 0 || element.StartV.X + element.Size.X < MaxWidth)
+                {
+                    lastLowerRight = element.StartV + element.Size;
+                    lastUpperLeft.X += element.Size.X;
+                    nextToPlaced++;
+                    element.Draw();
+                }
+                else
+                {
+                    element.StartV = new Vector2(UpperLeft.X, lastLowerRight.Y);
+                    lastUpperLeft.X += element.Size.X;
+                    nextToPlaced = 0;
+                    element.Draw();
+
+                }
+
             }
         }
     }

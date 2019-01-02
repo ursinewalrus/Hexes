@@ -193,17 +193,17 @@ namespace Hexes.Control
                         #region create actor UI elements
                         //or just make this its own list of elements
                         //UIGridBag -> where do we put it
-                        ActiveHexUIElements.AvailibleUIElements.Remove("ActorMoveActions"); //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
+                        var actorActionsUIBag = new UIGridBag(UIGridBagLocationCordinates.Left, 100, 500);
+                        ActiveHexUIElements.AvailibleUIElements.Remove(UIGridBagLocations.Left); //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
+
                         var moveElement = new ActorMoveAction(hexMap.ActiveActor, hexKey.Key, hexMap);
-                        ActiveHexUIElements.AvailibleUIElements[moveElement.ElementName] = moveElement;
-
-                        ActiveHexUIElements.AvailibleUIElements.Remove("ActorRotateClockWiseActions");
                         var rotateClockwiseElement = new ActorRotateClockWise(hexMap.ActiveActor);
-                        ActiveHexUIElements.AvailibleUIElements[rotateClockwiseElement.ElementName] = rotateClockwiseElement;
-
-                        ActiveHexUIElements.AvailibleUIElements.Remove("ActorRotateCounterClockWiseActions");
                         var rotateCounterClockwiseElement = new ActorRotateCounterClockWise(hexMap.ActiveActor);
-                        ActiveHexUIElements.AvailibleUIElements[rotateCounterClockwiseElement.ElementName] = rotateCounterClockwiseElement;
+                        actorActionsUIBag.GridElements.Add(moveElement);
+                        actorActionsUIBag.GridElements.Add(rotateClockwiseElement);
+                        actorActionsUIBag.GridElements.Add(rotateCounterClockwiseElement);
+                        ActiveHexUIElements.AvailibleUIElements[UIGridBagLocations.Left] = actorActionsUIBag;
+
 
                         #endregion  
                         //inMoveDistance.ForEach(h => h.Color = Color.Red ); -> alpha channel?
