@@ -29,7 +29,7 @@ namespace Hexes
         public Camera GameCamera;
         public List<LoadModule> Modules = new List<LoadModule>();
         public SpriteFont Font;
-        public HandleMouse MouseHandler;
+        //public HandleMouse MouseHandler;
 
         //private List<Type> UIElements;
 
@@ -60,15 +60,15 @@ namespace Hexes
             //Drawable.Sb = SpriteBatch;
 
             GameWidth = GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferWidth = GameWidth / 2;
+            graphics.PreferredBackBufferWidth = GameWidth / 3;
 
             GameHeight = GraphicsDevice.DisplayMode.Height;
-            graphics.PreferredBackBufferHeight = GameHeight / 2;
+            graphics.PreferredBackBufferHeight = GameHeight / 3;
             GameCamera = new Camera(GraphicsDevice.Viewport);
 
             this.IsMouseVisible = true;
 
-            MouseHandler = new HandleMouse();
+            //MouseHandler = new HandleMouse();
            // GetUIElements();
 
             base.Initialize();
@@ -113,7 +113,7 @@ namespace Hexes
             Drawable.Sb = SpriteBatch;
             Drawable.Font = Font;
             Drawable.Camera = GameCamera;
-            Debugger.Font = Font;
+            Drawable.Font = Font;
             #region load UI Textures
             Hex.HighlightedTexture = Content.Load<Texture2D>(@"UIElements\yellowTransparentHex");
             Hex.SelectedTexture = Content.Load<Texture2D>(@"UIElements\yellowSelecthex");
@@ -205,8 +205,8 @@ namespace Hexes
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            MouseHandler.SetMouseState(this);
-            var mouseLoc = MouseHandler.RelativeMouseLocation;
+            HandleMouse.SetMouseState(this);
+            var mouseLoc = HandleMouse.RelativeMouseLocation;
             GameCamera.UpdateCamera(this.GraphicsDevice.Viewport, mouseLoc);
 
             SpriteBatch.Begin(transformMatrix: GameCamera.Transform, sortMode: SpriteSortMode.Deferred);
@@ -232,7 +232,7 @@ namespace Hexes
 
             ;
             //should be moved somewhere else... :TODO
-            MouseHandler.TacticalViewMouseHandle(HexMap, GameCamera);
+            HandleMouse.TacticalViewMouseHandle(HexMap, GameCamera);
             SpriteBatch.End();
            // base.Draw(gameTime);
         }

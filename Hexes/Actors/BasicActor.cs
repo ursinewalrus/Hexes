@@ -19,6 +19,7 @@ namespace Hexes.Actors
         public HexPoint Location { get; set; }
         public Boolean Controllable;
         public int MoveDistance;
+        public int MoveDistanceRemaining;
         public int SightRange;
         public Texture2D Texture;
         public int HP { get; set; }

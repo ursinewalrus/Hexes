@@ -12,34 +12,34 @@ using Hexes.Utilities;
 
 namespace Hexes.Control
 {
-    public class HandleMouse //and keyboard...
+    public static class HandleMouse //and keyboard...
     {
-        public Vector2 MouseCords;
-        public CardinalDirections.Direction RelativeMouseLocation;
-        public MouseState MouseState;
+        public static Vector2 MouseCords;
+        public static CardinalDirections.Direction RelativeMouseLocation;
+        public static MouseState MouseState;
 
-        public bool PrevMouseClickedStateClicked = false;
-        public bool CompletedClick = false;
+        public static bool PrevMouseClickedStateClicked = false;
+        public static bool CompletedClick = false;
 
-        public HandleMouse()
-        {
-            //MouseState = Mouse.GetState();
-            //MouseCords.X = MouseState.X;
-            //MouseCords.Y = MouseState.Y;
-            //RelativeMouseLocation = GetMouseCardinalDirection(game);
-            //if(MouseState.LeftButton == ButtonState.Pressed)
-            //{
-            //    PrevMouseClickedStateClicked = true;
-            //    CompletedClick = false;
+        //public static HandleMouse()
+        //{
+        //    //MouseState = Mouse.GetState();
+        //    //MouseCords.X = MouseState.X;
+        //    //MouseCords.Y = MouseState.Y;
+        //    //RelativeMouseLocation = GetMouseCardinalDirection(game);
+        //    //if(MouseState.LeftButton == ButtonState.Pressed)
+        //    //{
+        //    //    PrevMouseClickedStateClicked = true;
+        //    //    CompletedClick = false;
 
-            //}
-            //if (PrevMouseClickedStateClicked && MouseState.LeftButton != ButtonState.Pressed)
-            //{
-            //    CompletedClick = true;
-            //}
+        //    //}
+        //    //if (PrevMouseClickedStateClicked && MouseState.LeftButton != ButtonState.Pressed)
+        //    //{
+        //    //    CompletedClick = true;
+        //    //}
 
-        }
-        public void SetMouseState(Game1 game)
+        //}
+        public static void SetMouseState(Game1 game)
         {
             MouseState = Mouse.GetState();
             MouseCords.X = MouseState.X;
@@ -61,22 +61,10 @@ namespace Hexes.Control
                 CompletedClick = false;
             }
         }
-        private CardinalDirections.Direction GetMouseCardinalDirection(Game1 game)
+        private static CardinalDirections.Direction GetMouseCardinalDirection(Game1 game)
         {
-            float mouseX = MouseCords.X;
-            float mouseY = MouseCords.Y;
-
-            int width = game.GraphicsDevice.Viewport.Width;
-            int height = game.GraphicsDevice.Viewport.Height;
-
-            var xScrollTrigger = width / 8;
-            var yScrollTrigger = height / 8;
-
-            float XDistance = width - mouseX;
-            float YDistance = height - mouseY;
+          
             var keyState = Keyboard.GetState();
-
-            
 
             if(keyState.IsKeyDown(Keys.D))
             {
@@ -114,7 +102,7 @@ namespace Hexes.Control
 
         }
 
-        public void TacticalViewMouseHandle(HexGrid.HexGrid hexMap, Camera camera)
+        public static void TacticalViewMouseHandle(HexGrid.HexGrid hexMap, Camera camera)
         {
             //Probably in whatever houses the ActorActions instantiation
             //var actorUi = new ActorActions(new );
@@ -138,15 +126,19 @@ namespace Hexes.Control
                 //Debug.Log("Clicked ScreenCords " + MouseCords.X + ", " + MouseCords.Y);
                 //Debug.Log("Clicked MouseCords " + conv.X + ", " + conv.Y);
 
-                foreach (var visibleElement in ActiveHexUIElements.AvailibleUIElements)
+                foreach (var bag in ActiveHexUIElements.AvailibleUIElements)
                 {
-                    Vector2 elementLoc = Vector2.Transform(visibleElement.Value.StartV, Matrix.Invert(camera.Transform));
-                    Vector2 elementSize = visibleElement.Value.Size;
-                    if (conv.X >= elementLoc.X && conv.Y >= elementLoc.Y && conv.X <= elementLoc.X + elementSize.X &&
-                        conv.Y <= elementLoc.Y + elementSize.Y)
+                    foreach (var visibleElement in bag.Value.GridElements)
                     {
-                        visibleElement.Value.OnClick();
-                        return;
+                        Vector2 elementLoc = Vector2.Transform(visibleElement.StartV,
+                            Matrix.Invert(camera.Transform));
+                        Vector2 elementSize = visibleElement.Size;
+                        if (conv.X >= elementLoc.X && conv.Y >= elementLoc.Y && conv.X <= elementLoc.X + elementSize.X &&
+                            conv.Y <= elementLoc.Y + elementSize.Y)
+                        {
+                            visibleElement.OnClick();
+                            return;
+                        }
                     }
                 }
                
