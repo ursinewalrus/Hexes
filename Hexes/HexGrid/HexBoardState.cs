@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hexes.Actors;
 using Hexes.Control;
 
 namespace Hexes.HexGrid
@@ -13,6 +14,7 @@ namespace Hexes.HexGrid
     public class HexBoardState
     {
         public HexGrid ActiveBoard;
+        public BasicActor ActiveActor;
         public Camera Camera;
         public bool PCControl;
 
@@ -24,9 +26,31 @@ namespace Hexes.HexGrid
 
         public void CheckBoardStateLoop()
         {
+            SetNextActorControl();
             if (PCControl)
             {
-                HandleMouse.TacticalViewMouseHandle(ActiveBoard, Camera);
+                HandleMouse.TacticalViewMouseHandle(ActiveBoard, Camera, ActiveActor);
+            }
+            else
+            {
+                ActiveActor.UseAIMoveAction();
+            }
+        }
+
+        public void SetNextActorControl()
+        {
+            if(!ActiveBoard.ActorStorage.Any())
+            {
+               //no ones on the board? 
+            }
+            ActiveActor = ActiveBoard.ActorStorage.FirstOrDefault(a => !a.Moved);
+            if (ActiveActor != null)
+            {
+                PCControl = ActiveActor.Controllable;
+            }
+            else
+            {
+                ActiveBoard.ActorStorage.ForEach(a => a.Moved = false);
             }
         }
     }

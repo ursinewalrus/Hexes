@@ -59,7 +59,7 @@ namespace Hexes.HexGrid
 
             AsignMapData(mapData[MapName]);
             //AsignActorData(actorData);
-            FillGrid(tileData, actorData, moduleName);
+            FillGrid(actorData, moduleName);
             ;
         }
 
@@ -101,14 +101,15 @@ namespace Hexes.HexGrid
                 string type = placementParams[2].Trim(new[] { ' ', ')', '(' });
                 string controllStatus = placementParams[3].Trim(new[] { ' ', ')', '(' });
                 string rotation = placementParams[4].Trim(new[] { ' ', ')', '(' });
-                SpecificActorPlacements[new HexPoint(r, q)] = type + "-" + controllStatus + '-' +  rotation;
+                string faction = placementParams[5].Trim(new[] { ' ', ')', '(' });
+                SpecificActorPlacements[new HexPoint(r, q)] = type + "-" + controllStatus + '-' +  rotation + "-" + faction;
             });
 
             DefaultTile = mapData["defaultTile"];
 
         }
 
-        private void FillGrid(Dictionary<string, Dictionary<string, string>> tileData, Dictionary<string, Dictionary<string, string>> actorData, string moduleName)
+        private void FillGrid( Dictionary<string, Dictionary<string, string>> actorData, string moduleName)
         {
             for (var r = 0; r < Rows; r++)
             {
@@ -142,9 +143,18 @@ namespace Hexes.HexGrid
                         bool controllable = placementKey.Value.Split('-')[1] == "PC" ? true : false;
                         int rotation = Convert.ToInt32(placementKey.Value.Split('-')[2]);
                         BasicActor actor = new BasicActor(new HexPoint(hexR, hexQ), actorType, actorData[actorType], rotation, controllable, moduleName);
+                        //choose the AI
+                        if (!actor.Controllable)//other factors
+                        {
+                            actor.SetAIController(this);
+                        }
                         ActorStorage.Add(actor);
                     }
                 }
+            }
+            if (ActorStorage.Any())
+            {
+                ActorStorage = ActorStorage.OrderBy(h => h.Speed).ToList();
             }
         }
 

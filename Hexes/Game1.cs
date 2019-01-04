@@ -23,7 +23,8 @@ namespace Hexes
         GraphicsDeviceManager graphics;
         //in drawable?
         public static SpriteBatch SpriteBatch;
-        HexGrid.HexGrid HexMap;
+        //HexGrid.HexGrid HexMap;
+        private HexBoardState BoardState;
         int GameHeight;
         int GameWidth;
         public Camera GameCamera;
@@ -131,8 +132,8 @@ namespace Hexes
                 Modules.Add(loadedModule);
             }
             var usedModule = Modules[0];
-            HexMap = new HexGrid.HexGrid(usedModule.LoadedMaps, usedModule.LoadedBackgroundTiles, usedModule.LoadedActors, usedModule.ModuleName);
-
+            var hexMap = new HexGrid.HexGrid(usedModule.LoadedMaps, usedModule.LoadedBackgroundTiles, usedModule.LoadedActors, usedModule.ModuleName);
+            BoardState = new HexBoardState(hexMap, GameCamera);
             //FileStream fs = new FileStream(@"Content/greenhex.png", FileMode.Open);
             //Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);
             //fs.Dispose();
@@ -179,7 +180,7 @@ namespace Hexes
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Right) == true)
             {
-                if(HexMap.DebugLines.Count() - 1 > debugRayIndex)
+                if(BoardState.ActiveBoard.DebugLines.Count() - 1 > debugRayIndex)
                 {
                     debugRayIndex++;
                     lastPressedIndexRot = gameTime.TotalGameTime.Milliseconds;
@@ -191,7 +192,6 @@ namespace Hexes
 
             }
             #endregion
-
 
             base.Update(gameTime);
         }
@@ -212,11 +212,11 @@ namespace Hexes
             SpriteBatch.Begin(transformMatrix: GameCamera.Transform, sortMode: SpriteSortMode.Deferred);
 
             GraphicsDevice.Clear(Color.LawnGreen);
-            HexMap.Draw();
+            BoardState.ActiveBoard.Draw();
             #region ray test
-            if (HexMap.DebugLines.Any())
+            if (BoardState.ActiveBoard.DebugLines.Any())
             {
-                var debugRay = HexMap.DebugLines[debugRayIndex];
+                var debugRay = BoardState.ActiveBoard.DebugLines[debugRayIndex];
                 debugRay.Line.Draw();
                 debugRay.DrawDebugStrings();
                 ;
@@ -229,10 +229,11 @@ namespace Hexes
                 hexUI.Value.Draw();
             }
             //ActorActions.Draw(gameTime.ElapsedGameTime.TotalMilliseconds);
+            BoardState.CheckBoardStateLoop();
 
             ;
             //should be moved somewhere else... :TODO
-            HandleMouse.TacticalViewMouseHandle(HexMap, GameCamera);
+
             SpriteBatch.End();
            // base.Draw(gameTime);
         }

@@ -27,8 +27,11 @@ namespace Hexes.Actors
         public static float SizeX;
         public static float SizeY;
         public int Rotation;
+        public int Speed;
         public List<HexPoint> HexesCanSee = new List<HexPoint>();
-
+        public AIController AIController = null;
+        public bool Moved = false;
+        public ActorFactions Faction;
         public static Dictionary<int, List<Vector2>> FoVArms = new Dictionary<int, List<Vector2>>()
         {
             //rotation, <left arm, right arm>
@@ -53,6 +56,13 @@ namespace Hexes.Actors
         {
             MoveDistance = Convert.ToInt32(actorData["moveDistance"]);
             HP = Convert.ToInt32(actorData["defaultHP"]);
+            Speed = Convert.ToInt32(actorData["speed"]);
+            //need better faction logic
+            if(Controllable)
+                Faction = ActorFactions.Player;
+            else
+                Faction = ActorFactions.Enemy1;
+
             string assetPath = @"Modules\" + ModuleName + @"\" + actorData["texture"];
             FileStream fs = new FileStream(assetPath, FileMode.Open);
             Texture = Texture2D.FromStream(GraphicsDevice, fs);
@@ -64,7 +74,7 @@ namespace Hexes.Actors
         #endregion
 
         #region move related
-        public List<HexPoint> AllInMoveRange(HexGrid.HexGrid hexGrid)
+        public List<HexPoint> MoveableInMoveRange(HexGrid.HexGrid hexGrid)
         {
             //https://www.redblobgames.com/grids/hexagons/#range
             //var possibleMoves = new List<HexPoint>();
@@ -106,13 +116,14 @@ namespace Hexes.Actors
                 hexGrid.UnHighlightAll();
                 hexGrid.DebugLines = new List<DebugLine>();
             }
+            Moved = true;
         }
 
         public Boolean CanMoveTo(HexPoint moveTo, HexGrid.HexGrid hexGrid)
         {
             //split for maybe sep messages
             //also cant be straight line, need to pathfind to it
-            if (AllInMoveRange(hexGrid).Contains(moveTo))
+            if (MoveableInMoveRange(hexGrid).Contains(moveTo))
             {
                 return true;
             }
@@ -121,37 +132,44 @@ namespace Hexes.Actors
 
         public void Rotate(object sender, ActorRotateActionEvent eventArgs)
         {
-            var clockwise = eventArgs.ClockWise;
+            Rotate(eventArgs.ClockWise);
+        }
+
+        public void Rotate(bool clockwise)
+        {
             var dir = clockwise ? 1 : -1;
             Rotation = (Rotation + dir + 6) % 6;
         }
+
+        public void Rotate(int dir)
+        {
+            //cap on this if rotation costs
+            Rotation = dir;
+        }
         #endregion
+
         //https://www.redblobgames.com/grids/hexagons/#field-of-view
         //this could probably be redone once it starts working
-        public List<HexPoint> CanSee(HexPoint startLoc, HexGrid.HexGrid hexGrid)
+        public List<HexPoint> CanSee(HexGrid.HexGrid hexGrid)
         {
             HexesCanSee = new List<HexPoint>();
             //invent hexes for ones that dont exist for the purpose of our calculations
             var lookDirArms = FoVArms[Rotation];
 
-            var lArmR = startLoc.R + (int)lookDirArms[0].X * SightRange;
-            var lArmQ = startLoc.Q + (int)lookDirArms[0].Y * SightRange;
+            var lArmR = Location.R + (int)lookDirArms[0].X * SightRange;
+            var lArmQ = Location.Q + (int)lookDirArms[0].Y * SightRange;
 
-            var rArmR = startLoc.R + (int)lookDirArms[1].X * SightRange;
-            var rArmQ = startLoc.Q + (int)lookDirArms[1].Y * SightRange;
+            var rArmR = Location.R + (int)lookDirArms[1].X * SightRange;
+            var rArmQ = Location.Q + (int)lookDirArms[1].Y * SightRange;
 
             var leftArmCord = new HexPoint(lArmR, lArmQ);
             var rightArmCord = new HexPoint(rArmR, rArmQ);
 
-            var shiftRight = false;
-            if (Rotation > 0 && Rotation < 4)
-            {
-                shiftRight = true;
-            }
+            var shiftRight = (Rotation > 0 && Rotation < 4) ? true : false;
             var furthestEdge = HexGrid.HexGrid.LineBetweenTwoPoints(leftArmCord, rightArmCord, shiftRight);
             foreach (var hexPoint in furthestEdge)
             {
-                var ray = HexGrid.HexGrid.LineBetweenTwoPoints(startLoc, hexPoint);
+                var ray = HexGrid.HexGrid.LineBetweenTwoPoints(Location, hexPoint);
                 //:TODO REMOVE after testing
                 var startLinePointHex = hexGrid.HexStorage.First(h => h.Key.Equals(ray[0])).Value;
                 var endLinePoint = hexGrid.HexStorage.First(h => h.Key.Equals(ray[0])).Value;
@@ -193,6 +211,20 @@ namespace Hexes.Actors
             return HexesCanSee;
         }
 
+        #region AIControll related
+
+        public void SetAIController(HexGrid.HexGrid grid)
+        {
+            AIController = new AIController(grid);
+        }
+
+        public void UseAIMoveAction()
+        {
+            AIController.Wander(this);
+            Moved = true;
+        }
+
+        #endregion
 
         #region drawstuff
         //maybe also a draw that just takes the R/Q cords?

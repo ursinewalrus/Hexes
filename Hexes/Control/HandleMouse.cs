@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hexes.Actors;
 using Hexes.Geometry;
 using Hexes.Utilities;
 
@@ -102,7 +103,7 @@ namespace Hexes.Control
 
         }
 
-        public static void TacticalViewMouseHandle(HexGrid.HexGrid hexMap, Camera camera)
+        public static void TacticalViewMouseHandle(HexGrid.HexGrid hexMap, Camera camera, BasicActor actionableActor)
         {
             //Probably in whatever houses the ActorActions instantiation
             //var actorUi = new ActorActions(new );
@@ -158,7 +159,7 @@ namespace Hexes.Control
                     {
                         //sets selected hex, :TODO when get select texture, have that set its own value
                         hexKey.Value.Highlighted = true;
-                        var moveable = hexMap.ActiveActor.AllInMoveRange(hexMap);
+                        //var moveable = hexMap.ActiveActor.MoveableInMoveRange(hexMap);
                         //moveable.ForEach(h => hexMap.HexStorage[h].Highlighted = true);
                         //:TODO lambda this out
                         //moveable.ForEach((s) =>
@@ -171,7 +172,7 @@ namespace Hexes.Control
                         //});
 
                         //dont highlight but clear fog of war if player or if npc update info :TODO
-                        var seeable = hexMap.ActiveActor.CanSee(hexMap.ActiveActor.Location, hexMap);
+                        var seeable = hexMap.ActiveActor.CanSee(hexMap);
                         seeable.ForEach((s) =>
                         {
                             var insight = hexMap.HexStorage.Where(h => h.Key.Equals(s)).FirstOrDefault();
@@ -185,17 +186,20 @@ namespace Hexes.Control
                         #region create actor UI elements
                         //or just make this its own list of elements
                         //UIGridBag -> where do we put it
-                        var actorActionsUIBag = new UIGridBag(UIGridBagLocationCordinates.Left, 100, 500);
-                        ActiveHexUIElements.AvailibleUIElements.Remove(UIGridBagLocations.Left); //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
+                        if (hexMap.ActiveActor == actionableActor)
+                        {
+                            var actorActionsUIBag = new UIGridBag(UIGridBagLocationCordinates.Left, 100, 500);
+                            ActiveHexUIElements.AvailibleUIElements.Remove(UIGridBagLocations.Left);
+                                //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
 
-                        var moveElement = new ActorMoveAction(hexMap.ActiveActor, hexKey.Key, hexMap);
-                        var rotateClockwiseElement = new ActorRotateClockWise(hexMap.ActiveActor);
-                        var rotateCounterClockwiseElement = new ActorRotateCounterClockWise(hexMap.ActiveActor);
-                        actorActionsUIBag.GridElements.Add(moveElement);
-                        actorActionsUIBag.GridElements.Add(rotateClockwiseElement);
-                        actorActionsUIBag.GridElements.Add(rotateCounterClockwiseElement);
-                        ActiveHexUIElements.AvailibleUIElements[UIGridBagLocations.Left] = actorActionsUIBag;
-
+                            var moveElement = new ActorMoveAction(hexMap.ActiveActor, hexKey.Key, hexMap);
+                            var rotateClockwiseElement = new ActorRotateClockWise(hexMap.ActiveActor);
+                            var rotateCounterClockwiseElement = new ActorRotateCounterClockWise(hexMap.ActiveActor);
+                            actorActionsUIBag.GridElements.Add(moveElement);
+                            actorActionsUIBag.GridElements.Add(rotateClockwiseElement);
+                            actorActionsUIBag.GridElements.Add(rotateCounterClockwiseElement);
+                            ActiveHexUIElements.AvailibleUIElements[UIGridBagLocations.Left] = actorActionsUIBag;
+                        }
 
                         #endregion  
                         //inMoveDistance.ForEach(h => h.Color = Color.Red ); -> alpha channel?
