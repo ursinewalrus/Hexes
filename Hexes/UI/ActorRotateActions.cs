@@ -13,13 +13,13 @@ namespace Hexes.UI
     //TODO : Make their draw methods come from the same place
     public class ActorRotateClockWise : UIDrawable, IUIActions
     {
-        public string ElementName = "ActorRotateClockWiseActions";
         public static Texture2D Texture { get; set; }
         public BasicActor Actor { get; set; }
         public HexPoint HexPoint { get; set; }
 
         public ActorRotateClockWise(BasicActor actor)
         {
+            ElementName = "ActorRotateClockWiseActions";
             //maaaybe pass as param
             StartV = new Vector2(5, 70);
             Size = new Vector2(100, 100);
@@ -41,7 +41,6 @@ namespace Hexes.UI
 
     public class ActorRotateCounterClockWise : UIDrawable, IUIActions
     {
-        public string ElementName = "ActorRotateCounterClockWiseActions";
         public static Texture2D Texture { get; set; }
         public Color LineColor { get; set; }
         public BasicActor Actor { get; set; }
@@ -49,8 +48,10 @@ namespace Hexes.UI
 
         public ActorRotateCounterClockWise(BasicActor actor)
         {
-            //maaaybe pass as param
-            StartV = new Vector2(5, 120);
+
+        ElementName = "ActorRotateCounterClockWiseActions";
+        //maaaybe pass as param
+        StartV = new Vector2(5, 120);
             Size = new Vector2(100, 100);
             Actor = actor;
         }

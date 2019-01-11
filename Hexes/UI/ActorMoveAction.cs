@@ -13,7 +13,6 @@ namespace Hexes.UI
     // :TODO inherit draw method
     public class ActorMoveAction : UIDrawable, IUIActions
     {
-        public string ElementName = "ActorMoveActions";
         public Texture2D Texture { get; set; }
         public Color LineColor { get; set; }
         public BasicActor Actor { get; set; }
@@ -22,6 +21,7 @@ namespace Hexes.UI
 
         public ActorMoveAction(BasicActor actor, HexPoint hexPoint, HexGrid.HexGrid hexGrid)
         {
+            ElementName = "ActorMoveActions";
             Texture = actor.Texture;
             //maaaybe pass as param
             //not centerpoint, upper left corner
