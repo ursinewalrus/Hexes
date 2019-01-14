@@ -16,10 +16,10 @@ namespace Hexes.UI
         public Texture2D Texture { get; set; }
         public Color LineColor { get; set; }
         public BasicActor Actor { get; set; }
-        public HexPoint HexPoint { get; set; }
+        public HexPoint HexPointTo { get; set; }
 
 
-        public ActorMoveAction(BasicActor actor, HexPoint hexPoint, HexGrid.HexGrid hexGrid)
+        public ActorMoveAction(BasicActor actor, HexPoint hexPointTo, HexGrid.HexGrid hexGrid)
         {
             ElementName = "ActorMoveActions";
             Texture = actor.Texture;
@@ -27,7 +27,7 @@ namespace Hexes.UI
             //not centerpoint, upper left corner
             StartV = new Vector2(5, 40);
             Size = new Vector2(100,100);
-            HexPoint = hexPoint;
+            HexPointTo = hexPointTo;
             HexGrid = hexGrid;
             Actor = actor;
 
@@ -39,7 +39,7 @@ namespace Hexes.UI
         //public delegate void CustomEventHandler(object sender, ActorMoveActionEvent a);
         public override void OnClick()
         {
-            var eventSend = new ActorMoveActionEvent(HexPoint,HexGrid);
+            var eventSend = new ActorMoveActionEvent(HexPointTo,HexGrid);
             eventSend.MoveAction += Actor.MoveTo;
             eventSend.OnMoveAction();
             // MoveActionSent(null, new ActorMoveActionEvent(Actor));

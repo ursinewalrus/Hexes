@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using Hexes.Control;
@@ -51,6 +52,7 @@ namespace Hexes
         public Vector2 Size;
         public abstract void OnClick();
         public HexGrid.HexGrid HexGrid { get; set; }
+        public string ElementName { get; protected set; }
 
         protected UIDrawable(HexPoint hexPoint, HexGrid.HexGrid hexGrid)
         {

@@ -195,9 +195,11 @@ namespace Hexes.Control
                             var moveElement = new ActorMoveAction(hexMap.ActiveActor, hexKey.Key, hexMap);
                             var rotateClockwiseElement = new ActorRotateClockWise(hexMap.ActiveActor);
                             var rotateCounterClockwiseElement = new ActorRotateCounterClockWise(hexMap.ActiveActor);
+                            var actionElement = new ActorDoActionAction(hexMap.ActiveActor,hexMap);
                             actorActionsUIBag.GridElements.Add(moveElement);
                             actorActionsUIBag.GridElements.Add(rotateClockwiseElement);
                             actorActionsUIBag.GridElements.Add(rotateCounterClockwiseElement);
+                            actorActionsUIBag.GridElements.Add(actionElement);
                             ActiveHexUIElements.AvailibleUIElements[UIGridBagLocations.Left] = actorActionsUIBag;
                         }
 

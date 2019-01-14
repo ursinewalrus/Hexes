@@ -49,9 +49,9 @@ namespace Hexes.UI
         public ActorRotateCounterClockWise(BasicActor actor)
         {
 
-        ElementName = "ActorRotateCounterClockWiseActions";
-        //maaaybe pass as param
-        StartV = new Vector2(5, 120);
+            ElementName = "ActorRotateCounterClockWiseActions";
+            //maaaybe pass as param
+            StartV = new Vector2(5, 120);
             Size = new Vector2(100, 100);
             Actor = actor;
         }
@@ -75,9 +75,7 @@ namespace Hexes.UI
     {
         public event EventHandler<ActorRotateActionEvent> RotateAction;
 
-        public BasicActor Actor { get; set; }
         public bool ClockWise { get; set; }
-
 
         public ActorRotateActionEvent(bool clockWise)
         {
