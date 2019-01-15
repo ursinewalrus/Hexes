@@ -189,7 +189,7 @@ namespace Hexes.Control
                         //UIGridBag -> where do we put it
                         if (hexMap.ActiveActor == actionableActor)
                         {
-                            var actorActionsUIBag = new UIGridBag(UIGridBagLocationCordinates.Left, new List<int>() { 1,2 });
+                            var actorActionsUIBag = new UIGridBag(UIGridBagLocationCordinates.Left, new List<int>() { 1,2,1 });
                             ActiveHexUIElements.AvailibleUIElements.Remove(UIGridBagLocations.Left);
                                 //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
 

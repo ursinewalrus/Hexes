@@ -32,6 +32,11 @@ namespace Hexes.UI
             eventSend.ActionAction += Actor.DoAction;
             eventSend.OnActionAction();
         }
+
+        public override void Draw()
+        {
+            base.Draw(Texture);
+        }
     }
 
     public class ActorDoActionActionEvent : EventArgs

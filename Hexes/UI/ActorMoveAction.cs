@@ -25,8 +25,7 @@ namespace Hexes.UI
             Texture = actor.Texture;
             //maaaybe pass as param
             //not centerpoint, upper left corner
-            StartV = new Vector2(5, 40);
-            Size = new Vector2(100,100);
+            //StartV = new Vector2(5, 40);
             HexPointTo = hexPointTo;
             HexGrid = hexGrid;
             Actor = actor;

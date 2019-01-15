@@ -21,8 +21,8 @@ namespace Hexes.UI
         {
             ElementName = "ActorRotateClockWiseActions";
             //maaaybe pass as param
-            StartV = new Vector2(5, 70);
-            Size = new Vector2(100, 100);
+            //StartV = new Vector2(5, 70);
+            //Size = new Vector2(100, 100);
             Actor = actor;
         }
 
@@ -51,8 +51,8 @@ namespace Hexes.UI
 
             ElementName = "ActorRotateCounterClockWiseActions";
             //maaaybe pass as param
-            StartV = new Vector2(5, 120);
-            Size = new Vector2(100, 100);
+            //StartV = new Vector2(5, 120);
+            //Size = new Vector2(100, 100);
             Actor = actor;
         }
 

@@ -49,7 +49,7 @@ namespace Hexes
     public abstract class UIDrawable : Drawable
     {
         public Vector2 StartV { get; set; }
-        public Vector2 Size;
+        public Vector2 Size = new Vector2(100, 100);
         public abstract void OnClick();
         public HexGrid.HexGrid HexGrid { get; set; }
         public string ElementName { get; protected set; }
