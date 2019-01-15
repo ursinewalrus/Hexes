@@ -211,6 +211,11 @@ namespace Hexes.Actors
             return HexesCanSee;
         }
 
+        public void DoAction(object sender, ActorDoActionActionEvent eventArgs)
+        {
+            
+        }
+
         #region AIControll related
 
         public void SetAIController(HexGrid.HexGrid grid)

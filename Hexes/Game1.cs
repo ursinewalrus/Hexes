@@ -115,7 +115,7 @@ namespace Hexes
             Drawable.Font = Font;
             Drawable.Camera = GameCamera;
             Drawable.Font = Font;
-            #region load UI Textures
+            #region load static UI Textures
             Hex.HighlightedTexture = Content.Load<Texture2D>(@"UIElements\yellowTransparentHex");
             Hex.SelectedTexture = Content.Load<Texture2D>(@"UIElements\yellowSelecthex");
             ActorRotateClockWise.Texture = Content.Load<Texture2D>(@"UIElements\rotateClockWise");
