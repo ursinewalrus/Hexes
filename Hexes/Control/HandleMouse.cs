@@ -173,14 +173,15 @@ namespace Hexes.Control
 
                         //dont highlight but clear fog of war if player or if npc update info :TODO
                         var seeable = hexMap.ActiveActor.CanSee(hexMap);
-                        seeable.ForEach((s) =>
-                        {
-                            var insight = hexMap.HexStorage.Where(h => h.Key.Equals(s)).FirstOrDefault();
-                            if(insight.Value != null)
-                            {
-                                insight.Value.Highlighted = true;
-                            }
-                        });
+                        hexMap.HighlightHexes(seeable);
+                        //seeable.ForEach((s) =>
+                        //{
+                        //    var insight = hexMap.HexStorage.Where(h => h.Key.Equals(s)).FirstOrDefault();
+                        //    if(insight.Value != null)
+                        //    {
+                        //        insight.Value.Highlighted = true;
+                        //    }
+                        //});
 
                         //bundle this all, whatever is being selected, create all UI elements for it, probably metatype property on basicactor 
                         #region create actor UI elements
@@ -188,7 +189,7 @@ namespace Hexes.Control
                         //UIGridBag -> where do we put it
                         if (hexMap.ActiveActor == actionableActor)
                         {
-                            var actorActionsUIBag = new UIGridBag(UIGridBagLocationCordinates.Left, 100, 500);
+                            var actorActionsUIBag = new UIGridBag(UIGridBagLocationCordinates.Left, new List<int>() { 1,2 });
                             ActiveHexUIElements.AvailibleUIElements.Remove(UIGridBagLocations.Left);
                                 //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
 
@@ -224,9 +225,7 @@ namespace Hexes.Control
             {
                 hexMap.ActiveHex = new KeyValuePair<HexPoint, Hex>();
                 hexMap.ActiveActor = null;
-                ActiveHexUIElements.AvailibleUIElements.Remove("ActorMoveActions");
-                ActiveHexUIElements.AvailibleUIElements.Remove("ActorRotateClockWiseActions");
-                ActiveHexUIElements.AvailibleUIElements.Remove("ActorRotateCounterClockWiseActions");
+                ActiveHexUIElements.AvailibleUIElements.Remove(UIGridBagLocations.Left);
                 hexMap.UnHighlightAll();
 
             }

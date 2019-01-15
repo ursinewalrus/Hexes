@@ -69,7 +69,7 @@ namespace Hexes.Actors
             fs.Dispose();
             SizeX = Convert.ToInt32(actorData["bottomrightX"]);
             SizeY = Convert.ToInt32(actorData["bottomrightY"]);
-            SightRange = 6;
+            SightRange = 9;
         }
         #endregion
 
@@ -230,6 +230,12 @@ namespace Hexes.Actors
         //maybe also a draw that just takes the R/Q cords?
         public void Draw(Vector2 center)
         {
+            //special draw for factions :TODO
+            if (Controllable)
+            {
+
+                Sb.DrawString(Font, "A", center - new Vector2(50,50) , Color.Black );
+            }
             Sb.Draw(Texture,
                     destinationRectangle: new Rectangle((int)center.X, (int)center.Y, (int)SizeX, (int)SizeY),
                     sourceRectangle: new Rectangle(0, 0, (int)SizeX, (int)SizeY),

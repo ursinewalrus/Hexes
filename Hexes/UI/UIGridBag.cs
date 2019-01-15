@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hexes.Geometry;
 using Microsoft.Xna.Framework;
 
 namespace Hexes.UI
@@ -12,45 +13,46 @@ namespace Hexes.UI
     {
         public List<UIDrawable> GridElements = new List<UIDrawable>();
         public Vector2 UpperLeft;
-        public float MaxWidth;
-        public float MaxHeight;
+        public List<int> PerRow;
         // x/y decoupled from x/y
         public int[] MoveOverAmount = new int[2];
-        public int moveOverXIndex;
-        public int moveOverYIndex;
 
-        public UIGridBag(Vector2 upperLeft, float maxWidth, float maxHeight)
+        public UIGridBag(Vector2 upperLeft, List<int> perRow)
         {
             UpperLeft = upperLeft;
-            MaxWidth = maxWidth;
-            MaxHeight = maxHeight;
+            PerRow = perRow;
         }
 
         public void Draw()
         {
-
-            var nextToPlaced = 0;
-            Vector2 lastUpperLeft = new Vector2(UpperLeft.X, UpperLeft.Y);
-            Vector2 lastLowerRight = new Vector2(0,0);
+#if DEBUG
+            //var edges = new List<Line>()
+            //{
+            //    new Line(UpperLeft.X,UpperLeft.Y,UpperLeft.X+MaxWidth,UpperLeft.Y,2,Color.Black),
+            //    new Line(UpperLeft.X,UpperLeft.Y,UpperLeft.X,UpperLeft.Y+MaxHeight,2,Color.Black),
+            //    new Line(UpperLeft.X,UpperLeft.Y+MaxHeight,UpperLeft.X+MaxWidth,UpperLeft.Y+MaxHeight,2,Color.Black),
+            //    new Line(UpperLeft.X+MaxWidth,UpperLeft.Y,UpperLeft.X+MaxWidth,UpperLeft.Y+MaxHeight,2,Color.Black)
+            //};
+            //edges.ForEach(e => e.Draw()); -> need camera transform
+#endif
+            int rowIndex = 0;
+            float movedOver = 0;
+            var rowCounter = new List<int>(PerRow);
+            //we are going to assume all UI elements are the same height atm
             foreach (var element in GridElements)
             {
-                element.StartV = lastUpperLeft;
-                if (nextToPlaced == 0 || element.StartV.X + element.Size.X < MaxWidth)
+                if (rowCounter[rowIndex] < 1 && rowIndex + 1 <= rowCounter.Count())
                 {
-                    lastLowerRight = element.StartV + element.Size;
-                    lastUpperLeft.X += element.Size.X;
-                    nextToPlaced++;
-                    element.Draw();
+                    rowIndex++;
+                    movedOver = 0;
                 }
-                else
+                if(rowCounter[rowIndex] > 0)
                 {
-                    element.StartV = new Vector2(UpperLeft.X, lastLowerRight.Y);
-                    lastUpperLeft.X += element.Size.X;
-                    nextToPlaced = 0;
+                    element.StartV = new Vector2(UpperLeft.X + movedOver, UpperLeft.Y + (rowIndex * element.Size.Y) / 2);
                     element.Draw();
-
+                    rowCounter[rowIndex]--;
+                    movedOver += element.Size.X / 2;
                 }
-
             }
         }
     }

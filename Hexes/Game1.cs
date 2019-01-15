@@ -61,10 +61,10 @@ namespace Hexes
             //Drawable.Sb = SpriteBatch;
 
             GameWidth = GraphicsDevice.DisplayMode.Width;
-            graphics.PreferredBackBufferWidth = GameWidth / 3;
+            graphics.PreferredBackBufferWidth = GameWidth / 2;
 
             GameHeight = GraphicsDevice.DisplayMode.Height;
-            graphics.PreferredBackBufferHeight = GameHeight / 3;
+            graphics.PreferredBackBufferHeight = GameHeight / 2;
             GameCamera = new Camera(GraphicsDevice.Viewport);
 
             this.IsMouseVisible = true;
@@ -214,16 +214,20 @@ namespace Hexes
             GraphicsDevice.Clear(Color.LawnGreen);
             BoardState.ActiveBoard.Draw();
             #region ray test
-            if (BoardState.ActiveBoard.DebugLines.Any())
-            {
-                var debugRay = BoardState.ActiveBoard.DebugLines[debugRayIndex];
-                debugRay.Line.Draw();
-                debugRay.DrawDebugStrings();
-                ;
-            }
+            //if (BoardState.ActiveBoard.DebugLines.Any())
+            //{
+            //    BoardState.ActiveBoard.DebugLines.ForEach(l => 
+            //    {
+            //        l.DrawDebugStrings();
+            //        l.Line.Draw();
+            //    });
+            //    //var debugRay = BoardState.ActiveBoard.DebugLines[debugRayIndex];
+            //    //debugRay.Line.Draw();
+            //    //debugRay.DrawDebugStrings();
+            //    //;
+            //}
             #endregion
 
-            //:TODO replace with calls to UIGridbag, init one on the left somehow
             foreach (var hexUI in ActiveHexUIElements.AvailibleUIElements)
             {
                 hexUI.Value.Draw();

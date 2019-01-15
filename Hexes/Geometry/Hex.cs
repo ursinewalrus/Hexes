@@ -147,11 +147,19 @@ namespace Hexes.Geometry
         #endregion
 
         #region draw hex texture+geometry
+       
         public void Draw()
         {
             //https://www.codeproject.com/Articles/1119973/Part-I-Creating-a-Digital-Hexagonal-Tile-Map
             //public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth);
-
+            var effect = SpriteEffects.None;
+            //:TODO list of flippables
+            //if you want weird effects that animate way too fast
+            //if (RandomEffectSet == false &&  Name == "boulder")
+            //{
+            //    Effect = (SpriteEffects)new Random().Next(3);
+            //    RandomEffectSet = true;
+            //}
             Sb.Draw(texture: Texture,
                     destinationRectangle: new Rectangle((int)Center.X, (int)Center.Y, (int)SizeX * 2, (int)SizeY * 2),
                     //this is inconsistent -> maybe not anymore
@@ -159,7 +167,7 @@ namespace Hexes.Geometry
                     color: Color,
                     origin: new Vector2(SizeX / 2, SizeY / 2)
                     //scale: new Vector2(9000,0.5f),
-                    //effects: SpriteEffects.None,
+                    //effects: Effect
                     //layerDepth: 0.0f
                     );
             if (Highlighted)

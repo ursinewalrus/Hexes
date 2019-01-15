@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Hexes.Actors;
 using Hexes.Control;
@@ -16,7 +17,6 @@ namespace Hexes.HexGrid
         public HexGrid ActiveBoard;
         public BasicActor ActiveActor;
         public Camera Camera;
-        public bool PCControl;
 
         public HexBoardState(HexGrid grid, Camera camera)
         {
@@ -27,7 +27,10 @@ namespace Hexes.HexGrid
         public void CheckBoardStateLoop()
         {
             SetNextActorControl();
-            if (PCControl)
+            //need to, while moving, lock it
+            //if someone is moving dont execute below
+            ActiveBoard.HighlightHex(ActiveActor.Location);
+            if (ActiveActor.Controllable)
             {
                 HandleMouse.TacticalViewMouseHandle(ActiveBoard, Camera, ActiveActor);
             }
@@ -44,13 +47,12 @@ namespace Hexes.HexGrid
                //no ones on the board? 
             }
             ActiveActor = ActiveBoard.ActorStorage.FirstOrDefault(a => !a.Moved);
-            if (ActiveActor != null)
+            if (ActiveActor == null)
             {
-                PCControl = ActiveActor.Controllable;
-            }
-            else
-            {
+                //no one left to move/action, reset it all, re sort, asign
                 ActiveBoard.ActorStorage.ForEach(a => a.Moved = false);
+                ActiveBoard.ActorStorage = ActiveBoard.ActorStorage.OrderBy(a => a.Speed).ToList();
+                ActiveActor = ActiveBoard.ActorStorage.FirstOrDefault(a => !a.Moved);
             }
         }
     }

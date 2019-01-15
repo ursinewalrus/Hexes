@@ -101,8 +101,8 @@ namespace Hexes.HexGrid
                 string type = placementParams[2].Trim(new[] { ' ', ')', '(' });
                 string controllStatus = placementParams[3].Trim(new[] { ' ', ')', '(' });
                 string rotation = placementParams[4].Trim(new[] { ' ', ')', '(' });
-                string faction = placementParams[5].Trim(new[] { ' ', ')', '(' });
-                SpecificActorPlacements[new HexPoint(r, q)] = type + "-" + controllStatus + '-' +  rotation + "-" + faction;
+                //string faction = placementParams[5].Trim(new[] { ' ', ')', '(' });
+                SpecificActorPlacements[new HexPoint(r, q)] = type + "-" + controllStatus + '-' + rotation;// + "-" + faction;
             });
 
             DefaultTile = mapData["defaultTile"];
@@ -202,12 +202,17 @@ namespace Hexes.HexGrid
             return inRadius;
         }
 
-        public void HighlightHexes(List<HexPoint> hexPoints, Boolean hightlight)
+        public void HighlightHexes(List<HexPoint> hexPoints)
         {
             foreach(var hexPoint in hexPoints)
             {
-                HexStorage[hexPoint].Highlighted = hightlight;
+                HexStorage[hexPoint].Highlighted = true;
             }
+        }
+
+        public void HighlightHex(HexPoint hexPoint)
+        {
+            HexStorage[hexPoint].Highlighted = true;
         }
         public void UnHighlightAll()
         {
