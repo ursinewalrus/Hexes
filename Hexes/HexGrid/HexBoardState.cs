@@ -32,6 +32,7 @@ namespace Hexes.HexGrid
             ActiveBoard.HighlightHex(ActiveActor.Location);
             if (ActiveActor.Controllable)
             {
+                ActiveActor.StartTurn();
                 HandleMouse.TacticalViewMouseHandle(ActiveBoard, Camera, ActiveActor);
             }
             else
@@ -46,13 +47,13 @@ namespace Hexes.HexGrid
             {
                //no ones on the board? 
             }
-            ActiveActor = ActiveBoard.ActorStorage.FirstOrDefault(a => !a.Moved);
+            ActiveActor = ActiveBoard.ActorStorage.FirstOrDefault(a => !a.TurnDone);
             if (ActiveActor == null)
             {
                 //no one left to move/action, reset it all, re sort, asign
-                ActiveBoard.ActorStorage.ForEach(a => a.Moved = false);
+                ActiveBoard.ActorStorage.ForEach(a => a.TurnDone = false);
                 ActiveBoard.ActorStorage = ActiveBoard.ActorStorage.OrderBy(a => a.Speed).ToList();
-                ActiveActor = ActiveBoard.ActorStorage.FirstOrDefault(a => !a.Moved);
+                ActiveActor = ActiveBoard.ActorStorage.FirstOrDefault(a => !a.TurnDone);
             }
         }
     }

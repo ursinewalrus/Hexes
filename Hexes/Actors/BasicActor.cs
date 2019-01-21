@@ -30,9 +30,19 @@ namespace Hexes.Actors
         public int Speed;
         public List<HexPoint> HexesCanSee = new List<HexPoint>();
         public AIController AIController = null;
-        public bool Moved = false;
+        public bool TurnDone = false;
         public ActorFactions Faction;
         public List<string> DefaultActions = new List<string>();
+
+        public int ActionPoints;
+        public int MaxMoveAp;
+        //:TODO maybe enum the values, but where
+        public Dictionary<string, int> ActiveTurnState = new Dictionary<string, int>()
+        {
+            {"RemainingMoves", 0},
+            {"RemainingActions", 0 }
+        };
+
         public static Dictionary<int, List<Vector2>> FoVArms = new Dictionary<int, List<Vector2>>()
         {
             //rotation, <left arm, right arm>
@@ -75,6 +85,13 @@ namespace Hexes.Actors
         }
         #endregion
 
+        public void StartTurn()
+        {
+            ActiveTurnState["RemainingMoves"] = MaxMoveAp;
+            ActiveTurnState["RemainingActions"] = ActionPoints - MaxMoveAp;
+
+        }
+
         #region move related
         public List<HexPoint> MoveableInMoveRange(HexGrid.HexGrid hexGrid)
         {
@@ -112,13 +129,33 @@ namespace Hexes.Actors
         }
         public void MoveTo(HexPoint moveTo, HexGrid.HexGrid hexGrid)
         {
-            if (CanMoveTo(moveTo, hexGrid))
+            if (CanMoveTo(moveTo, hexGrid) && ActiveTurnState["RemainingMoves"] > 0)//should be checked elsewhere for UI reasons
             {
                 Location = moveTo;
                 hexGrid.UnHighlightAll();
                 hexGrid.DebugLines = new List<DebugLine>();
+                UseAP(true);
             }
-            Moved = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="move">True for if for movment, false if for action</param>
+        public void UseAP(bool move)
+        {
+            if (move)
+            {
+                ActiveTurnState["RemainingMoves"]--;
+            }
+            else
+            {
+                ActiveTurnState["RemainingActions"]--;
+            }
+            if (ActiveTurnState["RemainingMoves"] + ActiveTurnState["RemainingActions"] == 0)
+            {
+                TurnDone = true;
+            }
         }
 
         public Boolean CanMoveTo(HexPoint moveTo, HexGrid.HexGrid hexGrid)
@@ -239,7 +276,6 @@ namespace Hexes.Actors
         public void UseAIMoveAction()
         {
             AIController.Wander(this);
-            Moved = true;
         }
 
         #endregion
