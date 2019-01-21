@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,20 +16,24 @@ namespace Hexes.UI
         public Texture2D Texture { get; set; }
         public Color LineColor { get; set; }
         public BasicActor Actor { get; set; }
-
-        public ActorDoActionAction(BasicActor actor, HexGrid.HexGrid hexGrid)
+        Dictionary<string, string> ActionArgs { get; set; }
+        public ActorDoActionAction(BasicActor actor, HexGrid.HexGrid hexGrid, string actionName, Dictionary<string, string> actionArgs )
         {
+
             //:TODO generalize more or make more options, not sufficient
-            ElementName = "DoAction";
+            ElementName = actionName;
             //make some custom one :TODO
-            Texture = actor.Texture;
+            string assetPath = @"Modules\" + actionArgs["moduleName"] + @"\" + actionArgs["texture"];
+            FileStream fs = new FileStream(assetPath, FileMode.Open);
+            Texture = Texture2D.FromStream(GraphicsDevice, fs);
             HexGrid = hexGrid;
             Actor = actor;
+            ActionArgs = actionArgs;
         }
 
         public override void OnClick()
         {
-            var eventSend = new ActorDoActionActionEvent("BasicAttackQue",HexGrid);
+            var eventSend = new ActorDoActionActionEvent("BasicAttackQue",HexGrid, ActionArgs);
             eventSend.ActionAction += Actor.DoAction;
             eventSend.OnActionAction();
         }
@@ -45,10 +50,12 @@ namespace Hexes.UI
         private string Action { get; set; }
         public HexGrid.HexGrid HexGrid { get; set; }
 
-        public ActorDoActionActionEvent(string action, HexGrid.HexGrid hexGrid)
+        Dictionary<string, string> ActionArgs { get; set; }
+        public ActorDoActionActionEvent(string action, HexGrid.HexGrid hexGrid, Dictionary<string, string> actionArgs )
         {
             Action = action;
             HexGrid = hexGrid;
+            ActionArgs = actionArgs;
         }
         public void OnActionAction()
         {
@@ -56,7 +63,7 @@ namespace Hexes.UI
 
             if (handler != null)
             {
-                handler(this, new ActorDoActionActionEvent(Action, HexGrid));
+                handler(this, new ActorDoActionActionEvent(Action, HexGrid, ActionArgs));
             }
         }
 

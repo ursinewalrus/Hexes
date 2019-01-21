@@ -11,6 +11,7 @@ using Hexes.Control;
 using Hexes.HexGrid;
 using Hexes.UI;
 using Hexes.Utilities;
+using Hexes.Actors;
 
 namespace Hexes
 {
@@ -120,6 +121,7 @@ namespace Hexes
             Hex.SelectedTexture = Content.Load<Texture2D>(@"UIElements\yellowSelecthex");
             ActorRotateClockWise.Texture = Content.Load<Texture2D>(@"UIElements\rotateClockWise");
             ActorRotateCounterClockWise.Texture = Content.Load<Texture2D>(@"UIElements\rotateCounterClockWise");
+            ActorMoveAction.Texture = Content.Load<Texture2D>(@"UIElements\move");
             #endregion
 
             string ModulesDir = Environment.CurrentDirectory + @"\Modules\";
@@ -133,6 +135,8 @@ namespace Hexes
             }
             var usedModule = Modules[0];
             var hexMap = new HexGrid.HexGrid(usedModule.LoadedMaps, usedModule.LoadedBackgroundTiles, usedModule.LoadedActors, usedModule.ModuleName);
+            //:TODO iterative to for multimodules
+            ActionHandler.ActionsList = usedModule.LoadedActions;
             BoardState = new HexBoardState(hexMap, GameCamera);
             //FileStream fs = new FileStream(@"Content/greenhex.png", FileMode.Open);
             //Texture2D background1 = Texture2D.FromStream(GraphicsDevice, fs);

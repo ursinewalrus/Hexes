@@ -32,6 +32,7 @@ namespace Hexes.Actors
         public AIController AIController = null;
         public bool Moved = false;
         public ActorFactions Faction;
+        public List<string> DefaultActions = new List<string>();
         public static Dictionary<int, List<Vector2>> FoVArms = new Dictionary<int, List<Vector2>>()
         {
             //rotation, <left arm, right arm>
@@ -57,8 +58,9 @@ namespace Hexes.Actors
             MoveDistance = Convert.ToInt32(actorData["moveDistance"]);
             HP = Convert.ToInt32(actorData["defaultHP"]);
             Speed = Convert.ToInt32(actorData["speed"]);
+            DefaultActions = actorData["defaultActions"].Split(',').ToList();
             //need better faction logic
-            if(Controllable)
+            if (Controllable)
                 Faction = ActorFactions.Player;
             else
                 Faction = ActorFactions.Enemy1;
@@ -211,11 +213,22 @@ namespace Hexes.Actors
             return HexesCanSee;
         }
 
+        #region action handling
         public void DoAction(object sender, ActorDoActionActionEvent eventArgs)
         {
-            
+            ;
         }
 
+        public void ActionHandler(string action, List<string> args, bool queued)
+        {
+            switch (action)
+            {
+                case "attack":
+                    
+                    break;
+            }
+        }
+        #endregion
         #region AIControll related
 
         public void SetAIController(HexGrid.HexGrid grid)
