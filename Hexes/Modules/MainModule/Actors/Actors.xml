@@ -5,7 +5,7 @@
         moveDistance="3"
         defaultHP="5"
         speed="5"
-        defaultActions="jab"
+        defaultActions="jab,move,rotate"
         ap="3"
         maxMoveAp="2"
       />

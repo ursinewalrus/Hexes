@@ -12,7 +12,7 @@ using Hexes.Utilities;
 
 namespace Hexes.Actors
 {
-    public class BasicActor : Drawable, IMovable, IActor
+    public class BasicActor : Drawable, IMovable
     {
         #region properites and setup
         public string Name;
@@ -37,10 +37,10 @@ namespace Hexes.Actors
         public int ActionPoints;
         public int MaxMoveAp;
         //:TODO maybe enum the values, but where
-        public Dictionary<string, int> ActiveTurnState = new Dictionary<string, int>()
+        public Dictionary<CurrentTurn, int> ActiveTurnState = new Dictionary<CurrentTurn, int>()
         {
-            {"RemainingMoves", 0},
-            {"RemainingActions", 0 }
+            {CurrentTurn.RemainingMoves, 0},
+            {CurrentTurn.RemainingActions, 0 }
         };
 
         public static Dictionary<int, List<Vector2>> FoVArms = new Dictionary<int, List<Vector2>>()
@@ -87,8 +87,8 @@ namespace Hexes.Actors
 
         public void StartTurn()
         {
-            ActiveTurnState["RemainingMoves"] = MaxMoveAp;
-            ActiveTurnState["RemainingActions"] = ActionPoints - MaxMoveAp;
+            ActiveTurnState[CurrentTurn.RemainingMoves] = MaxMoveAp;
+            ActiveTurnState[CurrentTurn.RemainingActions] = ActionPoints - MaxMoveAp;
 
         }
 
@@ -129,12 +129,12 @@ namespace Hexes.Actors
         }
         public void MoveTo(HexPoint moveTo, HexGrid.HexGrid hexGrid)
         {
-            if (CanMoveTo(moveTo, hexGrid) && ActiveTurnState["RemainingMoves"] > 0)//should be checked elsewhere for UI reasons
+            if (CanMoveTo(moveTo, hexGrid) && ActiveTurnState[CurrentTurn.RemainingMoves] > 0)//should be checked elsewhere for UI reasons
             {
                 Location = moveTo;
                 hexGrid.UnHighlightAll();
                 hexGrid.DebugLines = new List<DebugLine>();
-                UseAP(true);
+                UseAp(true);
             }
         }
 
@@ -142,17 +142,17 @@ namespace Hexes.Actors
         /// 
         /// </summary>
         /// <param name="move">True for if for movment, false if for action</param>
-        public void UseAP(bool move)
+        public void UseAp(bool move)
         {
             if (move)
             {
-                ActiveTurnState["RemainingMoves"]--;
+                ActiveTurnState[CurrentTurn.RemainingMoves]--;
             }
             else
             {
-                ActiveTurnState["RemainingActions"]--;
+                ActiveTurnState[CurrentTurn.RemainingActions]--;
             }
-            if (ActiveTurnState["RemainingMoves"] + ActiveTurnState["RemainingActions"] == 0)
+            if (ActiveTurnState[CurrentTurn.RemainingMoves] + ActiveTurnState[CurrentTurn.RemainingActions] == 0)
             {
                 TurnDone = true;
             }

@@ -4,6 +4,10 @@
     <ActorAtrributes
         moveDistance="3"
         defaultHP="5"
+        speed="5"
+        defaultActions="jab,move,rotate"
+        ap="3"
+        maxMoveAp="2"
       />
     <Sprite texture="Content\Actors\scab.png" topLeftY="0" topLeftX="0" bottomrightY="80" bottomrightX="80" />
       

@@ -11,4 +11,10 @@ namespace Hexes.Actors
         public static Dictionary<string, Dictionary<string, string>> ActionsList = new Dictionary<string, Dictionary<string, string>>();
 
     }
+
+    public enum CurrentTurn
+    {
+        RemainingMoves,
+        RemainingActions
+    }
 }

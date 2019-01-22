@@ -20,7 +20,6 @@ namespace Hexes.UI
         public ActorDoActionAction(BasicActor actor, HexGrid.HexGrid hexGrid, string actionName, Dictionary<string, string> actionArgs )
         {
 
-            //:TODO generalize more or make more options, not sufficient
             ElementName = actionName;
             //make some custom one :TODO
             string assetPath = @"Modules\" + actionArgs["moduleName"] + @"\" + actionArgs["texture"];

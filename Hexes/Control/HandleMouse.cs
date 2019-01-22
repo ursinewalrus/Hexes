@@ -157,41 +157,14 @@ namespace Hexes.Control
 
                     if (hexMap.ActiveActor != null && hexMap.ActiveActor.Controllable)
                     {
-                        //sets selected hex, :TODO when get select texture, have that set its own value
                         hexKey.Value.Highlighted = true;
-                        //var moveable = hexMap.ActiveActor.MoveableInMoveRange(hexMap);
-                        //moveable.ForEach(h => hexMap.HexStorage[h].Highlighted = true);
-                        //:TODO lambda this out
-                        //moveable.ForEach((s) =>
-                        //{
-                        //    var insight = hexMap.HexStorage.Where(h => h.Key.Equals(s)).FirstOrDefault();
-                        //    if (insight.Value != null)
-                        //    {
-                        //        insight.Value.Highlighted = true;
-                        //    }
-                        //});
-
-                        //dont highlight but clear fog of war if player or if npc update info :TODO
                         var seeable = hexMap.ActiveActor.CanSee(hexMap);
                         hexMap.HighlightHexes(seeable);
-                        //seeable.ForEach((s) =>
-                        //{
-                        //    var insight = hexMap.HexStorage.Where(h => h.Key.Equals(s)).FirstOrDefault();
-                        //    if(insight.Value != null)
-                        //    {
-                        //        insight.Value.Highlighted = true;
-                        //    }
-                        //});
-
-                        //bundle this all, whatever is being selected, create all UI elements for it, probably metatype property on basicactor 
                         #region create actor UI elements
-                        //or just make this its own list of elements
-                        //UIGridBag -> where do we put it
                         if (hexMap.ActiveActor == actionableActor)
                         {
                             var actorActionsUIBag = new UIGridBag(UIGridBagLocationCordinates.Left, new List<int>() { 1,2,1 });
                             ActiveHexUIElements.AvailibleUIElements.Remove(UIGridBagLocations.Left);
-                                //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
 
                             var moveElement = new ActorMoveAction(hexMap.ActiveActor, hexKey.Key, hexMap);
                             var rotateClockwiseElement = new ActorRotateClockWise(hexMap.ActiveActor);
@@ -199,8 +172,6 @@ namespace Hexes.Control
                             actorActionsUIBag.GridElements.Add(moveElement);
                             actorActionsUIBag.GridElements.Add(rotateClockwiseElement);
                             actorActionsUIBag.GridElements.Add(rotateCounterClockwiseElement);
-                            //var actionElement = new ActorDoActionAction(hexMap.ActiveActor,hexMap);
-                            //actorActionsUIBag.GridElements.Add(actionElement);
                             hexMap.ActiveActor.DefaultActions.ForEach(a => {
                                 var actionElement = new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, ActionHandler.ActionsList[a]);
                                 actorActionsUIBag.GridElements.Add(actionElement);
@@ -209,17 +180,7 @@ namespace Hexes.Control
                         }
 
                         #endregion  
-                        //inMoveDistance.ForEach(h => h.Color = Color.Red ); -> alpha channel?
-                        //we need a custom contains method, too many of these -> override enum thing probs
-
                     }
-                    //if (hexMap.ActiveActor != null)
-                    //{
-                    //    var inMoveDistance = hexMap.AllInRadiusOf(hexMap.ActiveActor.Location, hexMap.ActiveActor.MoveDistance);
-                    //    if (inMoveDistance.Any(h => h.R == selHex.R && h.Q == selHex.Q))
-                    //        //move this somewhere an element onclick can get at it
-                    //        hexMap.ActiveActor.Location = selHex;
-                    //}
                     if (hexMap.ActiveActor == null)
                     {
                         hexMap.ActiveActor = actorKey;
