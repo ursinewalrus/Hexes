@@ -161,25 +161,34 @@ namespace Hexes.Control
                         var seeable = hexMap.ActiveActor.CanSee(hexMap);
                         hexMap.HighlightHexes(seeable);
                         #region create actor UI elements
+                        //UIGridBag -> where do we put it
                         if (hexMap.ActiveActor == actionableActor)
                         {
+                            //:TODO dynamically choose formatting, maybe how many other elements a UI element will let share a line with it
                             var actorActionsUIBag = new UIGridBag(UIGridBagLocationCordinates.Left, new List<int>() { 1,2,1 });
                             ActiveHexUIElements.AvailibleUIElements.Remove(UIGridBagLocations.Left);
+                                //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
 
                             var moveElement = new ActorMoveAction(hexMap.ActiveActor, hexKey.Key, hexMap);
                             var rotateClockwiseElement = new ActorRotateClockWise(hexMap.ActiveActor);
                             var rotateCounterClockwiseElement = new ActorRotateCounterClockWise(hexMap.ActiveActor);
-                            actorActionsUIBag.GridElements.Add(moveElement);
-                            actorActionsUIBag.GridElements.Add(rotateClockwiseElement);
-                            actorActionsUIBag.GridElements.Add(rotateCounterClockwiseElement);
-                            hexMap.ActiveActor.DefaultActions.ForEach(a => {
-                                var actionElement = new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, ActionHandler.ActionsList[a]);
+                            //actorActionsUIBag.GridElements.Add(moveElement);
+                            //actorActionsUIBag.GridElements.Add(rotateClockwiseElement);
+                            //actorActionsUIBag.GridElements.Add(rotateCounterClockwiseElement);
+                            hexMap.ActiveActor.DefaultActions.ForEach(a =>
+                            {
+                                UIDrawable actionElement = null;
+                                actionElement = (ActionHandler.ActionsList.ContainsKey(a)) ? 
+                                    new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, ActionHandler.ActionsList[a]) : 
+                                    new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, null);
                                 actorActionsUIBag.GridElements.Add(actionElement);
+
                             });
                             ActiveHexUIElements.AvailibleUIElements[UIGridBagLocations.Left] = actorActionsUIBag;
                         }
 
                         #endregion  
+
                     }
                     if (hexMap.ActiveActor == null)
                     {

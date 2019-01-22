@@ -22,7 +22,26 @@ namespace Hexes.UI
 
             ElementName = actionName;
             //make some custom one :TODO
-            string assetPath = @"Modules\" + actionArgs["moduleName"] + @"\" + actionArgs["texture"];
+            #region choose texture
+
+            string assetPath = "";
+            switch (actionName)
+            {
+                case "rotateC":
+                    assetPath = @"Content\UIElements\rotateClockWise.png";
+                    break;
+                case "rotateCC":
+                    assetPath = @"Content\UIElements\rotateCounterClockWise.png";
+                    break;
+                case "move":
+                    assetPath= @"Content\UIElements\move.png";
+                    break;
+                default:
+                    assetPath = @"Modules\" + actionArgs["moduleName"] + @"\" + actionArgs["texture"];
+                    break;
+            }
+
+            #endregion
             FileStream fs = new FileStream(assetPath, FileMode.Open);
             Texture = Texture2D.FromStream(GraphicsDevice, fs);
             HexGrid = hexGrid;

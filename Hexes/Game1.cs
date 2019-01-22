@@ -119,9 +119,9 @@ namespace Hexes
             #region load static UI Textures
             Hex.HighlightedTexture = Content.Load<Texture2D>(@"UIElements\yellowTransparentHex");
             Hex.SelectedTexture = Content.Load<Texture2D>(@"UIElements\yellowSelecthex");
-            ActorRotateClockWise.Texture = Content.Load<Texture2D>(@"UIElements\rotateClockWise");
-            ActorRotateCounterClockWise.Texture = Content.Load<Texture2D>(@"UIElements\rotateCounterClockWise");
-            ActorMoveAction.Texture = Content.Load<Texture2D>(@"UIElements\move");
+            //ActorRotateClockWise.Texture = Content.Load<Texture2D>(@"UIElements\rotateClockWise");
+            //ActorRotateCounterClockWise.Texture = Content.Load<Texture2D>(@"UIElements\rotateCounterClockWise");
+            //ActorMoveAction.Texture = Content.Load<Texture2D>(@"UIElements\move");
             #endregion
 
             string ModulesDir = Environment.CurrentDirectory + @"\Modules\";
