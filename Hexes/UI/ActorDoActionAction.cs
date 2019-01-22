@@ -51,7 +51,7 @@ namespace Hexes.UI
 
         public override void OnClick()
         {
-            var eventSend = new ActorDoActionActionEvent("BasicAttackQue",HexGrid, ActionArgs);
+            var eventSend = new ActorDoActionActionEvent(ElementName, HexGrid, ActionArgs);
             eventSend.ActionAction += Actor.DoAction;
             eventSend.OnActionAction();
         }
