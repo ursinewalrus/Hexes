@@ -16,8 +16,8 @@ namespace Hexes.UI
         public Texture2D Texture { get; set; }
         public Color LineColor { get; set; }
         public BasicActor Actor { get; set; }
-        Dictionary<string, string> ActionArgs { get; set; }
-        public ActorDoActionAction(BasicActor actor, HexGrid.HexGrid hexGrid, string actionName, Dictionary<string, string> actionArgs )
+        Dictionary<ActionArgs, string> ActionArgs { get; set; }
+        public ActorDoActionAction(BasicActor actor, HexGrid.HexGrid hexGrid, string actionName, Dictionary<ActionArgs, string> actionArgs )
         {
 
             ElementName = actionName;
@@ -37,13 +37,14 @@ namespace Hexes.UI
                     assetPath= @"Content\UIElements\move.png";
                     break;
                 default:
-                    assetPath = @"Modules\" + actionArgs["moduleName"] + @"\" + actionArgs["texture"];
+                    assetPath = @"Modules\" + actionArgs[Actors.ActionArgs.ModuleName] + @"\" + actionArgs[Actors.ActionArgs.Texture];
                     break;
             }
 
             #endregion
             FileStream fs = new FileStream(assetPath, FileMode.Open);
             Texture = Texture2D.FromStream(GraphicsDevice, fs);
+            fs.Close();
             HexGrid = hexGrid;
             Actor = actor;
             ActionArgs = actionArgs;
@@ -68,8 +69,8 @@ namespace Hexes.UI
         private string Action { get; set; }
         public HexGrid.HexGrid HexGrid { get; set; }
 
-        Dictionary<string, string> ActionArgs { get; set; }
-        public ActorDoActionActionEvent(string action, HexGrid.HexGrid hexGrid, Dictionary<string, string> actionArgs )
+        public Dictionary<ActionArgs, string> ActionArgs { get; set; }
+        public ActorDoActionActionEvent(string action, HexGrid.HexGrid hexGrid, Dictionary<ActionArgs, string> actionArgs )
         {
             Action = action;
             HexGrid = hexGrid;

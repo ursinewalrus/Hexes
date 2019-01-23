@@ -30,7 +30,7 @@ namespace Hexes.Actors
         public int Speed;
         public List<HexPoint> HexesCanSee = new List<HexPoint>();
         public AIController AIController = null;
-        public bool TurnDone = false;
+        public ActorTurnState TurnState = ActorTurnState.WaitingForTurn;
         public ActorFactions Faction;
         public List<string> DefaultActions = new List<string>();
 
@@ -81,6 +81,9 @@ namespace Hexes.Actors
             fs.Dispose();
             SizeX = Convert.ToInt32(actorData["bottomrightX"]);
             SizeY = Convert.ToInt32(actorData["bottomrightY"]);
+            MaxMoveAp = Convert.ToInt32(actorData["maxMoveAp"]);
+            ActionPoints = Convert.ToInt32(actorData["ap"]);
+
             SightRange = 9;
         }
         #endregion
@@ -89,6 +92,7 @@ namespace Hexes.Actors
         {
             ActiveTurnState[CurrentTurn.RemainingMoves] = MaxMoveAp;
             ActiveTurnState[CurrentTurn.RemainingActions] = ActionPoints - MaxMoveAp;
+            TurnState = ActorTurnState.OnTurn;
 
         }
 
@@ -154,7 +158,7 @@ namespace Hexes.Actors
             }
             if (ActiveTurnState[CurrentTurn.RemainingMoves] + ActiveTurnState[CurrentTurn.RemainingActions] == 0)
             {
-                TurnDone = true;
+                TurnState = ActorTurnState.TurnDone;
             }
         }
 
@@ -254,6 +258,22 @@ namespace Hexes.Actors
         public void DoAction(object sender, ActorDoActionActionEvent eventArgs)
         {
             ;
+            switch (eventArgs.ActionArgs[ActionArgs.Type])
+            {
+                case "attack":
+                    //need a function
+                    break;
+                case "move":
+                    MoveTo(eventArgs.HexGrid.ActiveHex.Key, eventArgs.HexGrid);
+                    break;
+                case "rotateC":
+                    Rotate(true);
+                    break;
+                case "rotateCC":
+                    Rotate(false);
+                    break;
+
+            }
         }
 
         public void ActionHandler(string action, List<string> args, bool queued)

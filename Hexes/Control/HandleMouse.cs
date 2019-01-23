@@ -180,7 +180,7 @@ namespace Hexes.Control
                                 UIDrawable actionElement = null;
                                 actionElement = (ActionHandler.ActionsList.ContainsKey(a)) ? 
                                     new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, ActionHandler.ActionsList[a]) : 
-                                    new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, null);
+                                    new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, new Dictionary<ActionArgs, string>{{ActionArgs.Type, a}});
                                 actorActionsUIBag.GridElements.Add(actionElement);
 
                             });

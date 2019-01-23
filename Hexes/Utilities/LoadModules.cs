@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using Hexes.Actors;
 
 namespace Hexes
 {
@@ -13,7 +14,7 @@ namespace Hexes
         public Dictionary<string, Dictionary<string, string>> LoadedBackgroundTiles = new Dictionary<string, Dictionary<string, string>>();
         public Dictionary<string, Dictionary<string, string>> LoadedMaps = new Dictionary<string, Dictionary<string, string>>();
         public Dictionary<string, Dictionary<string, string>> LoadedActors = new Dictionary<string, Dictionary<string, string>>();
-        public Dictionary<string, Dictionary<string, string>> LoadedActions = new Dictionary<string, Dictionary<string, string>>();
+        public Dictionary<string, Dictionary<ActionArgs, string>> LoadedActions = new Dictionary<string, Dictionary<ActionArgs, string>>();
 
 
         private List<string> ModuleFiles = new List<string>();
@@ -55,7 +56,12 @@ namespace Hexes
                         GetElementsAttributes(rootNode).ToList().ForEach(k => LoadedActors[k.Key] = k.Value);
                         break;
                     case "Actions":
-                        GetElementsAttributes(rootNode).ToList().ForEach(k => LoadedActions[k.Key] = k.Value);
+                        GetElementsAttributes(rootNode).ToList().ForEach(k =>
+                        {
+                            var convertedActionsArgs = new Dictionary<ActionArgs, string>();
+                            k.Value.ToList().ForEach(v => convertedActionsArgs[ActionHandler.ConvertActionArg(v.Key)] = v.Value);
+                            LoadedActions[k.Key] = convertedActionsArgs;
+                        });
                         break;
                 }
             }
