@@ -142,7 +142,7 @@ namespace Hexes.HexGrid
                         string actorType = placementKey.Value.Split('-')[0];
                         bool controllable = placementKey.Value.Split('-')[1] == "PC" ? true : false;
                         int rotation = Convert.ToInt32(placementKey.Value.Split('-')[2]);
-                        BasicActor actor = new BasicActor(new HexPoint(hexR, hexQ), actorType, actorData[actorType], rotation, controllable, moduleName);
+                        BasicActor actor = new BasicActor(new HexPoint(hexR, hexQ), actorType, actorData[actorType], rotation, controllable, moduleName, this);
                         //choose the AI
                         if (!actor.Controllable)//other factors
                         {

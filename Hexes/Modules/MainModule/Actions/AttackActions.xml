@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Actions>
+  <!-- shapes, line, cone, detached???? probs need more-->
+  <Action name="jab">
+    <ActionAttributes
+        type="attack"
+        baseDamage="1"
+        blockable="true"
+        effectShape="line"
+        effectRange="1"
+        instant="false"
+        texture="Content\Actions\jabAction.png"
+        moduleName="MainModule"
+      />
+    <!--texture="something"-->
+    <!--queued="true"? how do still not decided -->
+  </Action>
+</Actions>

@@ -28,6 +28,8 @@ namespace Hexes.Actors
                     return ActionArgs.Texture;
                 case "moduleName":
                     return ActionArgs.ModuleName;
+                case "instant":
+                    return ActionArgs.Instant;
                 default:
                     throw new Exception("Invalid XML action parameter " + arg);
             }
@@ -46,6 +48,7 @@ namespace Hexes.Actors
         RemainingActions
     }
 
+
     public enum ActionArgs
     {
         Type,
@@ -54,6 +57,7 @@ namespace Hexes.Actors
         EffectShape,
         EffectRange,
         Texture,
+        Instant,
         ModuleName
     }
 }

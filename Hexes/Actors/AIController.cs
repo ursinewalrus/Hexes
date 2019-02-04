@@ -23,13 +23,13 @@ namespace Hexes.Actors
 
         public void Wander(BasicActor actor)
         {
-            var canMoveTo = actor.MoveableInMoveRange(HexGrid);
+            var canMoveTo = actor.MoveableInMoveRange();
             var chooseMoveTo = Chaos.Next(canMoveTo.Count());
             var newLoc = canMoveTo[chooseMoveTo];
             var moveDiff = new HexPoint(newLoc.R - actor.Location.R, newLoc.Q - actor.Location.Q);
             var rot = RotateToDirectionMoved(moveDiff);
             actor.Rotate(rot);
-            actor.MoveTo(newLoc, HexGrid);
+            actor.MoveTo(newLoc);
         }
 
         public HexPoint MoveToNearestSeenFoe(BasicActor actor)

@@ -32,7 +32,11 @@ namespace Hexes.Actors
         public AIController AIController = null;
         public ActorTurnState TurnState = ActorTurnState.WaitingForTurn;
         public ActorFactions Faction;
+        //maybe this should somehow be made global this is getting silly
+        public HexGrid.HexGrid ActorHexGrid;
+
         public List<string> DefaultActions = new List<string>();
+        public List<Dictionary<ActionArgs, string>> QueuedActions = new List<Dictionary<ActionArgs, string>>();
 
         public int ActionPoints;
         public int MaxMoveAp;
@@ -54,13 +58,14 @@ namespace Hexes.Actors
             {5, new List<Vector2>(){new Vector2(0,-1),new Vector2(-1,1)}}
         };
 
-        public BasicActor(HexPoint location, string name, Dictionary<string, string> actorData, int rotation, bool PC, string moduleName)
+        public BasicActor(HexPoint location, string name, Dictionary<string, string> actorData, int rotation, bool PC, string moduleName, HexGrid.HexGrid hexGrid)
         {
             Name = name;
             Location = location;
             Controllable = PC;
             Rotation = rotation;
             ModuleName = moduleName;
+            ActorHexGrid = hexGrid;
             AsignActorData(actorData);
         }
         public void AsignActorData(Dictionary<string, string> actorData)
@@ -97,7 +102,7 @@ namespace Hexes.Actors
         }
 
         #region move related
-        public List<HexPoint> MoveableInMoveRange(HexGrid.HexGrid hexGrid)
+        public List<HexPoint> MoveableInMoveRange()
         {
             //https://www.redblobgames.com/grids/hexagons/#range
             //var possibleMoves = new List<HexPoint>();
@@ -113,10 +118,10 @@ namespace Hexes.Actors
             {
                 foreach (var h in toVisit[i])
                 {
-                    var neighbors = hexGrid.GetNeighbors(h);
+                    var neighbors = ActorHexGrid.GetNeighbors(h);
                     foreach (var n in neighbors)
                     {
-                        if (!n.Value.BlocksMovment && !visited.Contains(n.Key) && !hexGrid.ActorStorage.Any(a => a.Location.Equals(n.Key)))
+                        if (!n.Value.BlocksMovment && !visited.Contains(n.Key) && !ActorHexGrid.ActorStorage.Any(a => a.Location.Equals(n.Key)))
                         {
                             visited.Add(n.Key);
                             toVisit[i + 1].Add(n.Key);
@@ -129,15 +134,15 @@ namespace Hexes.Actors
 
         public void MoveTo(object sender, ActorMoveActionEvent eventArgs)
         {
-            MoveTo(eventArgs.Location, eventArgs.HexGrid);
+            MoveTo(eventArgs.Location);
         }
-        public void MoveTo(HexPoint moveTo, HexGrid.HexGrid hexGrid)
+        public void MoveTo(HexPoint moveTo)
         {
-            if (CanMoveTo(moveTo, hexGrid) && ActiveTurnState[CurrentTurn.RemainingMoves] > 0)//should be checked elsewhere for UI reasons
+            if (CanMoveTo(moveTo) && ActiveTurnState[CurrentTurn.RemainingMoves] > 0)//should be checked elsewhere for UI reasons
             {
                 Location = moveTo;
-                hexGrid.UnHighlightAll();
-                hexGrid.DebugLines = new List<DebugLine>();
+                ActorHexGrid.UnHighlightAll();
+                ActorHexGrid.DebugLines = new List<DebugLine>();
                 UseAp(true);
             }
         }
@@ -162,11 +167,11 @@ namespace Hexes.Actors
             }
         }
 
-        public Boolean CanMoveTo(HexPoint moveTo, HexGrid.HexGrid hexGrid)
+        public Boolean CanMoveTo(HexPoint moveTo)
         {
             //split for maybe sep messages
             //also cant be straight line, need to pathfind to it
-            if (MoveableInMoveRange(hexGrid).Contains(moveTo))
+            if (MoveableInMoveRange().Contains(moveTo))
             {
                 return true;
             }
@@ -254,17 +259,33 @@ namespace Hexes.Actors
             return HexesCanSee;
         }
 
+        public void DoAttack(Dictionary<ActionArgs,string> attackArgs)
+        {
+            if (Convert.ToBoolean(attackArgs[ActionArgs.Instant]) == false)
+            {
+                QueuedActions.Add(attackArgs);
+            }
+            else
+            {
+                ResolveAction(attackArgs);
+            }
+        }
+
+        public void ResolveAction(Dictionary<ActionArgs, string> attackArgs)
+        {
+            
+        }
+
         #region action handling
         public void DoAction(object sender, ActorDoActionActionEvent eventArgs)
         {
-            ;
             switch (eventArgs.ActionArgs[ActionArgs.Type])
             {
                 case "attack":
-                    //need a function
+                    DoAttack(eventArgs.ActionArgs);
                     break;
                 case "move":
-                    MoveTo(eventArgs.HexGrid.ActiveHex.Key, eventArgs.HexGrid);
+                    MoveTo(ActorHexGrid.ActiveHex.Key);
                     break;
                 case "rotateC":
                     Rotate(true);
@@ -276,16 +297,8 @@ namespace Hexes.Actors
             }
         }
 
-        public void ActionHandler(string action, List<string> args, bool queued)
-        {
-            switch (action)
-            {
-                case "attack":
-                    
-                    break;
-            }
-        }
         #endregion
+       
         #region AIControll related
 
         public void SetAIController(HexGrid.HexGrid grid)
