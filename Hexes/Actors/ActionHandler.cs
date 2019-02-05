@@ -48,6 +48,14 @@ namespace Hexes.Actors
         RemainingActions
     }
 
+    public enum APUseType
+    {
+        Movement,
+        Rotation,
+        Attack,
+        Defend
+    }
+
 
     public enum ActionArgs
     {
@@ -58,6 +66,10 @@ namespace Hexes.Actors
         EffectRange,
         Texture,
         Instant,
-        ModuleName
+        ModuleName,
+        /// <summary>
+        /// The hex cord target
+        /// </summary>
+        TargetHexCord
     }
 }

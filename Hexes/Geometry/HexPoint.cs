@@ -26,6 +26,31 @@ namespace Hexes.Geometry
             return (otherPoint.Q == Q && otherPoint.R == R);
         }
 
+        /// <summary>
+        /// Return format cords "R-Q"
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return R + "-" + Q;
+        }
+
+
+        /// <summary>
+        /// Converts string to hexpoint
+        /// </summary>
+        /// <param name="hexString">"R-Q" format</param>
+        /// <returns></returns>
+        public static HexPoint StringToHexPoint(string hexString)
+        {
+            var cords = hexString.Split('-');
+            if (cords.Length != 2)
+            {
+                throw new Exception("Wrong string format");
+            }
+            return new HexPoint(Int32.Parse(cords[0]), Int32.Parse(cords[1]));
+        }
+
         public override int GetHashCode()
         {
             unchecked

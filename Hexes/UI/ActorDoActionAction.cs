@@ -52,6 +52,10 @@ namespace Hexes.UI
 
         public override void OnClick()
         {
+            if (ActionArgs.ContainsKey(Actors.ActionArgs.Type) && ActionArgs[Actors.ActionArgs.Type] == "attack")
+            {
+                ActionArgs[Actors.ActionArgs.TargetHexCord] = HexGrid.ActiveHex.Key.ToString();
+            }
             var eventSend = new ActorDoActionActionEvent(ElementName, HexGrid, ActionArgs);
             eventSend.ActionAction += Actor.DoAction;
             eventSend.OnActionAction();

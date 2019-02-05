@@ -34,7 +34,7 @@ namespace Hexes.Actors
 
         public HexPoint MoveToNearestSeenFoe(BasicActor actor)
         {
-            var canSee = actor.CanSee(HexGrid);
+            var canSee = actor.CanSee();
             return new HexPoint(0,0);   
         }
         public int RotateToDirectionMoved(HexPoint dir)

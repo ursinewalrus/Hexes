@@ -14,7 +14,7 @@ namespace Hexes.Actors
 
         Boolean CanMoveTo(HexPoint moveTo);
 
-        List<HexPoint> CanSee(HexGrid.HexGrid hexGrid);
+        List<HexPoint> CanSee(int coneArmLength);
 
         void MoveTo(HexPoint moveTo);
 

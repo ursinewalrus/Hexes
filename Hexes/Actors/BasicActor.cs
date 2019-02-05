@@ -38,6 +38,7 @@ namespace Hexes.Actors
         public List<string> DefaultActions = new List<string>();
         public List<Dictionary<ActionArgs, string>> QueuedActions = new List<Dictionary<ActionArgs, string>>();
 
+        //make dif for attack and def?
         public int ActionPoints;
         public int MaxMoveAp;
         //:TODO maybe enum the values, but where
@@ -143,21 +144,18 @@ namespace Hexes.Actors
                 Location = moveTo;
                 ActorHexGrid.UnHighlightAll();
                 ActorHexGrid.DebugLines = new List<DebugLine>();
-                UseAp(true);
+                UseAp(APUseType.Movement);
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="move">True for if for movment, false if for action</param>
-        public void UseAp(bool move)
+        //make another type for def
+        public void UseAp(APUseType actionType)
         {
-            if (move)
+            if (actionType == APUseType.Movement)
             {
                 ActiveTurnState[CurrentTurn.RemainingMoves]--;
             }
-            else
+            else if(actionType == APUseType.Attack)
             {
                 ActiveTurnState[CurrentTurn.RemainingActions]--;
             }
@@ -196,19 +194,27 @@ namespace Hexes.Actors
         }
         #endregion
 
-        //https://www.redblobgames.com/grids/hexagons/#field-of-view
-        //this could probably be redone once it starts working
-        public List<HexPoint> CanSee(HexGrid.HexGrid hexGrid)
+        /// <summary>
+        /// If no param for coneArmLength given, what can be seen given sightrange, otherwise what in cone of given arm length
+        /// </summary>
+        /// <param name="hexGrid"></param>
+        /// <param name="coneArmLength"></param>
+        /// <returns></returns>
+        public List<HexPoint> CanSee(int coneArmLength = -1)
         {
+            if (coneArmLength == -1)
+            {
+                coneArmLength = SightRange;
+            }
             HexesCanSee = new List<HexPoint>();
             //invent hexes for ones that dont exist for the purpose of our calculations
             var lookDirArms = FoVArms[Rotation];
 
-            var lArmR = Location.R + (int)lookDirArms[0].X * SightRange;
-            var lArmQ = Location.Q + (int)lookDirArms[0].Y * SightRange;
+            var lArmR = Location.R + (int)lookDirArms[0].X * coneArmLength;
+            var lArmQ = Location.Q + (int)lookDirArms[0].Y * coneArmLength;
 
-            var rArmR = Location.R + (int)lookDirArms[1].X * SightRange;
-            var rArmQ = Location.Q + (int)lookDirArms[1].Y * SightRange;
+            var rArmR = Location.R + (int)lookDirArms[1].X * coneArmLength;
+            var rArmQ = Location.Q + (int)lookDirArms[1].Y * coneArmLength;
 
             var leftArmCord = new HexPoint(lArmR, lArmQ);
             var rightArmCord = new HexPoint(rArmR, rArmQ);
@@ -219,8 +225,8 @@ namespace Hexes.Actors
             {
                 var ray = HexGrid.HexGrid.LineBetweenTwoPoints(Location, hexPoint);
                 //:TODO REMOVE after testing
-                var startLinePointHex = hexGrid.HexStorage.First(h => h.Key.Equals(ray[0])).Value;
-                var endLinePoint = hexGrid.HexStorage.First(h => h.Key.Equals(ray[0])).Value;
+                var startLinePointHex = ActorHexGrid.HexStorage.First(h => h.Key.Equals(ray[0])).Value;
+                var endLinePoint = ActorHexGrid.HexStorage.First(h => h.Key.Equals(ray[0])).Value;
                 //
                 var debugLine = new DebugLine();
 
@@ -231,9 +237,9 @@ namespace Hexes.Actors
                 {
                     if (!blocked)
                     {
-                        if (hexGrid.HexStorage.ContainsKey((rayPoint)))
+                        if (ActorHexGrid.HexStorage.ContainsKey((rayPoint)))
                         {
-                            var hex = hexGrid.HexStorage.First(h => h.Key.Equals(rayPoint));
+                            var hex = ActorHexGrid.HexStorage.First(h => h.Key.Equals(rayPoint));
                             if (!hex.Value.BlocksVision)
                             {
                                 debugLine.DebugStrings[hex.Value.Center] = hex.Key.R + " " + hex.Key.Q;
@@ -254,13 +260,23 @@ namespace Hexes.Actors
                 var debugLineLine = new Line(startLinePointHex.Center.X, startLinePointHex.Center.Y,
                     endLinePoint.Center.X, endLinePoint.Center.Y, 3f, Color.Black);
                 debugLine.Line = debugLineLine;
-                hexGrid.DebugLines.Add(debugLine);
+                ActorHexGrid.DebugLines.Add(debugLine);
             }
             return HexesCanSee;
         }
 
         public void DoAttack(Dictionary<ActionArgs,string> attackArgs)
         {
+            //
+            //do validitiy check, if invalid just exit
+            var targetable = CanSee(Int32.Parse(attackArgs[ActionArgs.EffectRange]));
+            if (!targetable.Any(h => h.Equals(HexPoint.StringToHexPoint(attackArgs[ActionArgs.TargetHexCord]))) 
+                || !CanSee().Any(h => h.Equals(HexPoint.StringToHexPoint(attackArgs[ActionArgs.TargetHexCord]))))
+            {
+                return;
+            }
+            //
+            //attackArgs[ActionArgs.TargetHexCord] = hexPoint.ToString();
             if (Convert.ToBoolean(attackArgs[ActionArgs.Instant]) == false)
             {
                 QueuedActions.Add(attackArgs);
@@ -273,7 +289,9 @@ namespace Hexes.Actors
 
         public void ResolveAction(Dictionary<ActionArgs, string> attackArgs)
         {
-            
+            //assume any checks are done by now for if something is a valid target
+            var hexPointTarget = HexPoint.StringToHexPoint(attackArgs[ActionArgs.TargetHexCord]);
+
         }
 
         #region action handling
