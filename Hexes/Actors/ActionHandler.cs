@@ -42,18 +42,15 @@ namespace Hexes.Actors
         OnTurn,
         TurnDone
     }
-    public enum CurrentTurn
-    {
-        RemainingMoves,
-        RemainingActions
-    }
 
     public enum APUseType
     {
+        TotalAp,
         Movement,
-        Rotation,
         Attack,
-        Defend
+        Defend,
+        Rotation,
+        Idle
     }
 
 

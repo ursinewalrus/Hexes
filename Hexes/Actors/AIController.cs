@@ -30,6 +30,11 @@ namespace Hexes.Actors
             var rot = RotateToDirectionMoved(moveDiff);
             actor.Rotate(rot);
             actor.MoveTo(newLoc);
+            //burn the rest
+            while(actor.ActiveTurnState[APUseType.TotalAp] > 0)
+            {
+                actor.UseAp(APUseType.Idle);
+            }
         }
 
         public HexPoint MoveToNearestSeenFoe(BasicActor actor)

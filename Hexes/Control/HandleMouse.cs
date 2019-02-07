@@ -158,7 +158,7 @@ namespace Hexes.Control
                     if (hexMap.ActiveActor != null && hexMap.ActiveActor.Controllable)
                     {
                         hexKey.Value.Highlighted = true;
-                        var seeable = hexMap.ActiveActor.CanSee(hexMap);
+                        var seeable = hexMap.ActiveActor.CanSee();
                         hexMap.HighlightHexes(seeable);
                         #region create actor UI elements
                         //UIGridBag -> where do we put it

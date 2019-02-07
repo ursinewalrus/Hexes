@@ -241,6 +241,13 @@ namespace Hexes.HexGrid
         }
         //https://www.redblobgames.com/grids/hexagons/#line-drawing
 
+            /// <summary>
+            /// Inclusive on both ends
+            /// </summary>
+            /// <param name="p1">Oftentimes an actors location, if so should typically be excluded from restuls</param>
+            /// <param name="p2"></param>
+            /// <param name="shiftRight"></param>
+            /// <returns></returns>
         public static List<HexPoint> LineBetweenTwoPoints(HexPoint p1, HexPoint p2, bool shiftRight = false)
         {
             //totally0

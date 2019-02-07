@@ -32,7 +32,7 @@ namespace Hexes.Geometry
         /// <returns></returns>
         public override string ToString()
         {
-            return R + "-" + Q;
+            return R + ":" + Q;
         }
 
 
@@ -43,7 +43,7 @@ namespace Hexes.Geometry
         /// <returns></returns>
         public static HexPoint StringToHexPoint(string hexString)
         {
-            var cords = hexString.Split('-');
+            var cords = hexString.Split(':');
             if (cords.Length != 2)
             {
                 throw new Exception("Wrong string format");

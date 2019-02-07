@@ -39,13 +39,17 @@ namespace Hexes.Actors
         public List<Dictionary<ActionArgs, string>> QueuedActions = new List<Dictionary<ActionArgs, string>>();
 
         //make dif for attack and def?
-        public int ActionPoints;
-        public int MaxMoveAp;
+        public Dictionary<APUseType, int> ActionPointAllotment = new Dictionary<APUseType, int>();
+
         //:TODO maybe enum the values, but where
-        public Dictionary<CurrentTurn, int> ActiveTurnState = new Dictionary<CurrentTurn, int>()
+        public Dictionary<APUseType, int> ActiveTurnState = new Dictionary<APUseType, int>()
         {
-            {CurrentTurn.RemainingMoves, 0},
-            {CurrentTurn.RemainingActions, 0 }
+            {APUseType.TotalAp, 0 },
+            {APUseType.Movement, 0},
+            {APUseType.Attack, 0 },
+            {APUseType.Defend, 0 },
+            {APUseType.Rotation, 0 }
+
         };
 
         public static Dictionary<int, List<Vector2>> FoVArms = new Dictionary<int, List<Vector2>>()
@@ -57,6 +61,17 @@ namespace Hexes.Actors
             {3, new List<Vector2>(){new Vector2(1,0),new Vector2(0,-1)}},
             {4, new List<Vector2>(){new Vector2(1,-1),new Vector2(-1,0)}},
             {5, new List<Vector2>(){new Vector2(0,-1),new Vector2(-1,1)}}
+        };
+
+        public static Dictionary<int, Vector2> RotationVector = new Dictionary<int, Vector2>()
+        {
+            //vector out from face
+            {0, new Vector2(-1,1)},
+            {1, new Vector2(0,1)},
+            {2, new Vector2(1,0)},
+            {3, new Vector2(1,-1)},
+            {4, new Vector2(0,-1)},
+            {5, new Vector2(-1,0)}
         };
 
         public BasicActor(HexPoint location, string name, Dictionary<string, string> actorData, int rotation, bool PC, string moduleName, HexGrid.HexGrid hexGrid)
@@ -87,20 +102,60 @@ namespace Hexes.Actors
             fs.Dispose();
             SizeX = Convert.ToInt32(actorData["bottomrightX"]);
             SizeY = Convert.ToInt32(actorData["bottomrightY"]);
-            MaxMoveAp = Convert.ToInt32(actorData["maxMoveAp"]);
-            ActionPoints = Convert.ToInt32(actorData["ap"]);
+            ActionPointAllotment[APUseType.TotalAp] = Convert.ToInt32(actorData["ap"]);
+            ActionPointAllotment[APUseType.Movement] = Convert.ToInt32(actorData["maxMoveAp"]);
+            ActionPointAllotment[APUseType.Attack] = Convert.ToInt32(actorData["attackMax"]);
+            ActionPointAllotment[APUseType.Defend] = Convert.ToInt32(actorData["defenseMax"]);
+            ActionPointAllotment[APUseType.Movement] = Convert.ToInt32(actorData["rotationMax"]);
+
 
             SightRange = 9;
         }
         #endregion
 
+
+        #region ap related
         public void StartTurn()
         {
-            ActiveTurnState[CurrentTurn.RemainingMoves] = MaxMoveAp;
-            ActiveTurnState[CurrentTurn.RemainingActions] = ActionPoints - MaxMoveAp;
-            TurnState = ActorTurnState.OnTurn;
+            ActiveTurnState[APUseType.TotalAp] = ActionPointAllotment[APUseType.TotalAp];
+            ActiveTurnState[APUseType.Movement] = ActionPointAllotment[APUseType.Movement];
+            ActiveTurnState[APUseType.Attack] = ActionPointAllotment[APUseType.Attack];
+            ActiveTurnState[APUseType.Defend] = ActionPointAllotment[APUseType.Defend];
+            ActiveTurnState[APUseType.Rotation] = ActionPointAllotment[APUseType.Rotation];
 
+            TurnState = ActorTurnState.OnTurn;
         }
+
+        public void UseAp(APUseType actionType)
+        {
+            switch (actionType)
+            {
+                case APUseType.Movement:
+                    ActiveTurnState[APUseType.Movement]--;
+                    ActiveTurnState[APUseType.TotalAp]--;
+                    break;
+                case APUseType.Attack:
+                    ActiveTurnState[APUseType.Attack]--;
+                    ActiveTurnState[APUseType.TotalAp]--;
+                    break;
+                case APUseType.Defend:
+                    ActiveTurnState[APUseType.Defend]--;
+                    ActiveTurnState[APUseType.TotalAp]--;
+                    break;
+                case APUseType.Rotation://maybe this should be moved since it works by different rules
+                    ActiveTurnState[APUseType.Rotation]--;
+                    break;
+                default://e.g. Idle
+                    ActiveTurnState[APUseType.TotalAp]--;
+                    break;
+            }
+
+            if (ActiveTurnState[APUseType.TotalAp] <= 0)
+            {
+                TurnState = ActorTurnState.TurnDone;
+            }
+        }
+        #endregion
 
         #region move related
         public List<HexPoint> MoveableInMoveRange()
@@ -139,7 +194,7 @@ namespace Hexes.Actors
         }
         public void MoveTo(HexPoint moveTo)
         {
-            if (CanMoveTo(moveTo) && ActiveTurnState[CurrentTurn.RemainingMoves] > 0)//should be checked elsewhere for UI reasons
+            if (CanMoveTo(moveTo) && ActiveTurnState[APUseType.Movement] > 0 && ActiveTurnState[APUseType.TotalAp] > 0)//should be checked elsewhere for UI reasons
             {
                 Location = moveTo;
                 ActorHexGrid.UnHighlightAll();
@@ -149,21 +204,6 @@ namespace Hexes.Actors
         }
 
         //make another type for def
-        public void UseAp(APUseType actionType)
-        {
-            if (actionType == APUseType.Movement)
-            {
-                ActiveTurnState[CurrentTurn.RemainingMoves]--;
-            }
-            else if(actionType == APUseType.Attack)
-            {
-                ActiveTurnState[CurrentTurn.RemainingActions]--;
-            }
-            if (ActiveTurnState[CurrentTurn.RemainingMoves] + ActiveTurnState[CurrentTurn.RemainingActions] == 0)
-            {
-                TurnState = ActorTurnState.TurnDone;
-            }
-        }
 
         public Boolean CanMoveTo(HexPoint moveTo)
         {
@@ -277,7 +317,7 @@ namespace Hexes.Actors
             }
             //
             //attackArgs[ActionArgs.TargetHexCord] = hexPoint.ToString();
-            if (Convert.ToBoolean(attackArgs[ActionArgs.Instant]) == false)
+            if (Convert.ToBoolean(attackArgs[ActionArgs.Instant]) == false && false)//testing
             {
                 QueuedActions.Add(attackArgs);
             }
@@ -289,8 +329,56 @@ namespace Hexes.Actors
 
         public void ResolveAction(Dictionary<ActionArgs, string> attackArgs)
         {
-            //assume any checks are done by now for if something is a valid target
-            var hexPointTarget = HexPoint.StringToHexPoint(attackArgs[ActionArgs.TargetHexCord]);
+            //start location
+            var hexPointTargetCord = HexPoint.StringToHexPoint(attackArgs[ActionArgs.TargetHexCord]);
+            //get effected hexes
+            //also an enum?
+            List<HexPoint> effectedHexes = new List<HexPoint>();
+            #region lineattacks hexpoints
+            if (attackArgs[ActionArgs.EffectShape] == "line")
+            {
+                //check relative rotation, Q/R switched because we are getting it backwards...yeah
+                var offsetDir = new Vector2(hexPointTargetCord.R - Location.R, hexPointTargetCord.Q - Location.Q);
+                //simplify it down if hex more than one away
+                if (Math.Abs(offsetDir.X) > 1)
+                {
+                    offsetDir.X = offsetDir.X / Math.Abs((offsetDir.X));
+                }
+                if (Math.Abs(offsetDir.Y) > 1)
+                {
+                    offsetDir.Y = offsetDir.Y / Math.Abs((offsetDir.Y));
+                }
+                //we should have the direction now 
+                
+                //probs dont need this i already have the vector
+                //var relativeRotation =
+                  //  RotationVector.FirstOrDefault(k => k.Value.X == offsetDir.X && k.Value.Y == offsetDir.Y);   
+
+
+                var rangeEnd = offsetDir*Convert.ToInt32(attackArgs[ActionArgs.EffectRange]);
+                rangeEnd.X += Location.R;
+                rangeEnd.Y += Location.Q;
+                //first one is self
+                effectedHexes = HexGrid.HexGrid.LineBetweenTwoPoints(Location, new HexPoint((int)rangeEnd.X, (int)rangeEnd.Y));
+                //effectedHexes.RemoveAt(0);
+                ;
+            }
+            #endregion
+            effectedHexes.ForEach(h =>   
+            {
+                var effectedActor = ActorHexGrid.ActorStorage.FirstOrDefault(a => a.Location.Equals(h));
+                if (effectedActor != null)
+                {
+                    //apply effects
+                }
+                else
+                {
+                    
+                    //effect?
+                }
+            });
+            ;
+            //var actionTarget = ActorHexGrid.ActorStorage.FirstOrDefault(a => a.Location.Equals(hexPointTargetCord));
 
         }
 

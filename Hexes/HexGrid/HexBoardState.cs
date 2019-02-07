@@ -29,6 +29,7 @@ namespace Hexes.HexGrid
             SetNextActorControl();
             //need to, while moving, lock it
             //if someone is moving dont execute below
+            //this needs to be futzed with the AP thing isnt quiiiite working
             ActiveBoard.HighlightHex(ActiveActor.Location);
             if (ActiveActor.Controllable)
             {
