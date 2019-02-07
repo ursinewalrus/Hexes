@@ -225,6 +225,7 @@ namespace Hexes.Actors
         {
             var dir = clockwise ? 1 : -1;
             Rotation = (Rotation + dir + 6) % 6;
+            UseAp(APUseType.Rotation);
         }
 
         public void Rotate(int dir)
