@@ -169,12 +169,7 @@ namespace Hexes.Control
                             ActiveHexUIElements.AvailibleUIElements.Remove(UIGridBagLocations.Left);
                                 //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
 
-                            var moveElement = new ActorMoveAction(hexMap.ActiveActor, hexKey.Key, hexMap);
-                            var rotateClockwiseElement = new ActorRotateClockWise(hexMap.ActiveActor);
-                            var rotateCounterClockwiseElement = new ActorRotateCounterClockWise(hexMap.ActiveActor);
-                            //actorActionsUIBag.GridElements.Add(moveElement);
-                            //actorActionsUIBag.GridElements.Add(rotateClockwiseElement);
-                            //actorActionsUIBag.GridElements.Add(rotateCounterClockwiseElement);
+                            var placedElementCount = 0;
                             hexMap.ActiveActor.DefaultActions.ForEach(a =>
                             {
                                 UIDrawable actionElement = null;
@@ -182,8 +177,14 @@ namespace Hexes.Control
                                     new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, ActionHandler.ActionsList[a]) : 
                                     new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, new Dictionary<ActionArgs, string>{{ActionArgs.Type, a}});
                                 actorActionsUIBag.GridElements.Add(actionElement);
-
+                                //:TODO dubious
+                                if (actorActionsUIBag.PerRow.Sum() <= placedElementCount)
+                                {
+                                    actorActionsUIBag.PerRow.Add(1);
+                                }
+                                placedElementCount++;
                             });
+                            actorActionsUIBag.GridElements.Add(new TextUIElement(hexMap.ActiveActor, TextUIStatics.ActorStats.CurrentHP));
                             ActiveHexUIElements.AvailibleUIElements[UIGridBagLocations.Left] = actorActionsUIBag;
                         }
 

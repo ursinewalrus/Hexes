@@ -12,6 +12,7 @@
         texture="Content\Actions\jabAction.png"
         moduleName="MainModule"
       />
+    <!--        tooltip="A simple jab"-->
     <!--texture="something"-->
     <!--queued="true"? how do still not decided -->
   </Action>

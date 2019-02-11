@@ -27,5 +27,10 @@ namespace Hexes.Utilities
             Sb.DrawString(Font, logMsg, cord, Color.Black);
         }
 
+        public static void Log(string logMsg, Vector2 cord, SpriteFont font)
+        {
+            Sb.DrawString(font, logMsg, cord, Color.Black);
+        }
+
     }
 }

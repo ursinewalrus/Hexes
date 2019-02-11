@@ -189,10 +189,7 @@ namespace Hexes.Actors
             return visited;
         }
 
-        public void MoveTo(object sender, ActorMoveActionEvent eventArgs)
-        {
-            MoveTo(eventArgs.Location);
-        }
+      
         public void MoveTo(HexPoint moveTo)
         {
             if (CanMoveTo(moveTo) && ActiveTurnState[APUseType.Movement] > 0 && ActiveTurnState[APUseType.TotalAp] > 0)//should be checked elsewhere for UI reasons
@@ -217,10 +214,6 @@ namespace Hexes.Actors
             return false;
         }
 
-        public void Rotate(object sender, ActorRotateActionEvent eventArgs)
-        {
-            Rotate(eventArgs.ClockWise);
-        }
 
         public void Rotate(bool clockwise)
         {

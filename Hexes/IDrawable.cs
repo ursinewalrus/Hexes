@@ -53,10 +53,12 @@ namespace Hexes
         public abstract void OnClick();
         public HexGrid.HexGrid HexGrid { get; set; }
         public string ElementName { get; protected set; }
+        //property for how many elements will share line with, counting self?
+        //public int ShareLine { get; set; }
 
-        protected UIDrawable(HexPoint hexPoint, HexGrid.HexGrid hexGrid)
+        protected UIDrawable(HexGrid.HexGrid hexGrid)
         {
-            
+            HexGrid = hexGrid;
         }
 
         protected UIDrawable()
@@ -73,6 +75,13 @@ namespace Hexes
                     color: Color.White
                 // origin: new Vector2(Size.X / 2, Size.Y / 2)
                 );
+        }
+
+        public void Draw(string uiText, SpriteFont uiFont, int uiSize, Color uiColor)
+        {
+            var v2 = Vector2.Transform(StartV, Matrix.Invert(Camera.Transform));
+            //Sb.DrawString(Font, logMsg, cord, Color.Black);
+            Sb.DrawString(uiFont,uiText,v2,uiColor);
         }
     }
 }
