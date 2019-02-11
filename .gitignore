@@ -1,4 +1,5 @@
 bin/*
+Hexes/bin/*
 .exe
 .pdb
 *.lock

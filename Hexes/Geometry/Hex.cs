@@ -78,7 +78,12 @@ namespace Hexes.Geometry
             BlocksMovment = Convert.ToBoolean(hexData["blocksMovment"].Trim());
             BlocksVision = Convert.ToBoolean(hexData["blocksVision"].Trim());
             //bump this up maybe, so only need to load once for each indev sprite
-            string assetPath = @"Modules\" + ModuleName + @"\" + hexData["texture"];
+            DirectoryInfo spriteDir = new DirectoryInfo(@"Modules\" + ModuleName + @"\");
+            FileInfo[] spriteFiles = spriteDir.GetFiles(hexData["texture"] + "*");
+            var rand = new Random();
+
+            var assetPath = spriteFiles[rand.Next(0, spriteFiles.Count())].FullName;
+           // string assetPath = @"Modules\" + ModuleName + @"\" + hexData["texture"];
             FileStream fs = new FileStream(assetPath, FileMode.Open);
             Texture = Texture2D.FromStream(GraphicsDevice, fs);
             fs.Dispose();

@@ -23,6 +23,7 @@ namespace Hexes.Actors
         public int SightRange;
         public Texture2D Texture;
         public int HP { get; set; }
+        public int DamageTaken { get; set; }
         public string ModuleName;
         public static float SizeX;
         public static float SizeY;
@@ -106,7 +107,7 @@ namespace Hexes.Actors
             ActionPointAllotment[APUseType.Movement] = Convert.ToInt32(actorData["maxMoveAp"]);
             ActionPointAllotment[APUseType.Attack] = Convert.ToInt32(actorData["attackMax"]);
             ActionPointAllotment[APUseType.Defend] = Convert.ToInt32(actorData["defenseMax"]);
-            ActionPointAllotment[APUseType.Movement] = Convert.ToInt32(actorData["rotationMax"]);
+            ActionPointAllotment[APUseType.Rotation] = Convert.ToInt32(actorData["rotationMax"]);
 
 
             SightRange = 9;
@@ -223,15 +224,23 @@ namespace Hexes.Actors
 
         public void Rotate(bool clockwise)
         {
-            var dir = clockwise ? 1 : -1;
-            Rotation = (Rotation + dir + 6) % 6;
-            UseAp(APUseType.Rotation);
+            if (ActiveTurnState[APUseType.Rotation] > 0)
+            {
+                var dir = clockwise ? 1 : -1;
+                Rotation = (Rotation + dir + 6) % 6;
+                UseAp(APUseType.Rotation);
+            }
         }
 
         public void Rotate(int dir)
         {
             //cap on this if rotation costs
-            Rotation = dir;
+            if (Math.Abs(Rotation - dir) % 6 <= ActiveTurnState[APUseType.Rotation])
+            {
+                Rotation = dir;
+                UseAp(APUseType.Rotation);
+            }
+
         }
         #endregion
 
@@ -326,6 +335,7 @@ namespace Hexes.Actors
             {
                 ResolveAction(attackArgs);
             }
+            UseAp(APUseType.Attack);
         }
 
         public void ResolveAction(Dictionary<ActionArgs, string> attackArgs)
@@ -361,26 +371,42 @@ namespace Hexes.Actors
                 rangeEnd.Y += Location.Q;
                 //first one is self
                 effectedHexes = HexGrid.HexGrid.LineBetweenTwoPoints(Location, new HexPoint((int)rangeEnd.X, (int)rangeEnd.Y));
-                //effectedHexes.RemoveAt(0);
+                effectedHexes.RemoveAt(0);
                 ;
             }
+            ;
             #endregion
             effectedHexes.ForEach(h =>   
             {
                 var effectedActor = ActorHexGrid.ActorStorage.FirstOrDefault(a => a.Location.Equals(h));
                 if (effectedActor != null)
                 {
-                    //apply effects
+                    //apply effects, including if defended against
+                    effectedActor.DamageTaken += Convert.ToInt32(attackArgs[ActionArgs.BaseDamage]);
+
+                    if (effectedActor.DamageTaken >= effectedActor.HP)
+                    {
+                        BasicActor.Die(effectedActor);
+                    }
                 }
                 else
                 {
-                    
                     //effect?
                 }
+                
             });
             ;
             //var actionTarget = ActorHexGrid.ActorStorage.FirstOrDefault(a => a.Location.Equals(hexPointTargetCord));
 
+        }
+
+        public static void Die(BasicActor actor)
+        {
+            //do animation or whatever
+            //tick up counter or whatever
+            //apply whatever
+            //now
+            actor.ActorHexGrid.ActorStorage.Remove(actor);
         }
 
         #region action handling

@@ -42,13 +42,15 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Actors\BasicHumanoid1.cs" />
-    <Compile Include="Actors\IActor.cs" />
+    <Compile Include="Actors\ActionHandler.cs" />
+    <Compile Include="Actors\ActorFactions.cs" />
+    <Compile Include="Actors\AIController.cs" />
     <Compile Include="Control\Camera.cs" />
     <Compile Include="Control\CardinalDirections.cs" />
     <Compile Include="Actors\BasicActor.cs" />
     <Compile Include="Actors\IMovable.cs" />
     <Compile Include="Geometry\HexPoint.cs" />
+    <Compile Include="HexGrid\HexBoardState.cs" />
     <Compile Include="IDrawable.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Geometry\FloatPoint.cs" />
@@ -56,18 +58,17 @@
     <Compile Include="Control\HandleMouse.cs" />
     <Compile Include="Geometry\Hex.cs" />
     <Compile Include="HexGrid\HexGrid.cs" />
-    <Compile Include="ModuleHandling\LoadModules.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\ActiveHexUIElements.cs" />
+    <Compile Include="UI\ActorDoActionAction.cs" />
     <Compile Include="UI\ActorRotateActions.cs" />
     <Compile Include="UI\ActorMoveAction.cs" />
     <Compile Include="UI\IUIActions.cs" />
+    <Compile Include="UI\StaticUIElements.cs" />
     <Compile Include="UI\UIGridBag.cs" />
     <Compile Include="Utilities\Debugger.cs" />
     <Compile Include="Utilities\DebugLine.cs" />
+    <Compile Include="Utilities\LoadModules.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -130,19 +131,88 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="app.manifest" />
+    <None Include="Content\bin\DesktopGL\Content\General.xnb" />
+    <None Include="Content\bin\DesktopGL\Content\UIElements\move.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\bin\DesktopGL\Content\UIElements\rotateClockWise.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\bin\DesktopGL\Content\UIElements\rotateCounterClockWise.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\bin\DesktopGL\Content\UIElements\yellowSelecthex.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Content\bin\DesktopGL\Content\UIElements\yellowTransparentHex.xnb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="BehaviorsLicense.txt" />
-    <Content Include="Content\UIElements\rotateClockWise.png" />
-    <Content Include="Content\UIElements\rotateCounterClockWise.png" />
+    <Content Include="Content\UIElements\move.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\UIElements\rotateClockWise.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\UIElements\rotateCounterClockWise.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\UIElements\yellowTransparentHex.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="license.txt" />
+    <Content Include="Modules\MainModule\Actions\AttackActions.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Modules\MainModule\Actors\Actors.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Modules\MainModule\Content\Actions\jabAction.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Modules\MainModule\Content\Backgrounds\blackhex.png" />
     <Content Include="Modules\MainModule\Content\Backgrounds\bluehex.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Boulder-0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Boulder-1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Boulder-2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Boulder-3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Boulder-4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Boulder-5.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\capturedHex.png" />
+    <Content Include="Modules\MainModule\Content\Backgrounds\Grass-0.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Grass-1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Grass-2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Grass-3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Grass-4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Grass-5.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Modules\MainModule\Content\Backgrounds\grayhex.png">
@@ -163,11 +233,13 @@
     <Content Include="Content\UIElements\yellowSelecthex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\yellowTransparentHex.png" />
     <Content Include="Modules\MainModule\Maps\Maps.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="shaders\DirectionalBlurShader.fx" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

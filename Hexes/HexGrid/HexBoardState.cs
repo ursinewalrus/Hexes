@@ -41,6 +41,7 @@ namespace Hexes.HexGrid
             }
             else
             {
+                ActiveActor.StartTurn();
                 ActiveActor.UseAIMoveAction();
             }
         }
@@ -49,7 +50,7 @@ namespace Hexes.HexGrid
         {
             if(!ActiveBoard.ActorStorage.Any())
             {
-               //no ones on the board? 
+               //no ones on the board??
             }
             ActiveActor = ActiveBoard.ActorStorage.FirstOrDefault(a => (a.TurnState == ActorTurnState.WaitingForTurn || a.TurnState == ActorTurnState.OnTurn));
             if (ActiveActor == null)

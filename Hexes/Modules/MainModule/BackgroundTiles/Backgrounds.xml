@@ -2,12 +2,12 @@
 <BackgroundTiles>
   
   <BackgroundTile name="grass">
-    <Sprite texture="Content\Backgrounds\greenhex.png" topLeftY="0" topLeftX="0" bottomrightY="100" bottomrightX="100" selectedTexture="Content\Backgrounds\yellowSelecthex.png"/>
+    <Sprite texture="Content\Backgrounds\Grass" topLeftY="0" topLeftX="0" bottomrightY="100" bottomrightX="100" selectedTexture="Content\Backgrounds\yellowSelecthex.png"/>
     <BackgroundOptions blocksMovment="false" blocksVision="false" />
   </BackgroundTile>
 
   <BackgroundTile name="boulder">
-    <Sprite texture="Content\Backgrounds\grayhex.png" topLeftY="0" topLeftX="0" bottomrightY="100" bottomrightX="100" selectedTexture="Content\Backgrounds\yellowSelecthex.png"/>
+    <Sprite texture="Content\Backgrounds\Boulder" topLeftY="0" topLeftX="0" bottomrightY="100" bottomrightX="100" selectedTexture="Content\Backgrounds\yellowSelecthex.png"/>
     <BackgroundOptions blocksMovment="true" blocksVision="true" />
   </BackgroundTile>
 
