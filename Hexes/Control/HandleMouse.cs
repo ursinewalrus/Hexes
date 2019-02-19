@@ -161,34 +161,14 @@ namespace Hexes.Control
                         var seeable = hexMap.ActiveActor.CanSee();
                         hexMap.HighlightHexes(seeable);
                         #region create actor UI elements
+
+
                         //UIGridBag -> where do we put it
-                        if (hexMap.ActiveActor == actionableActor)
-                        {
-                            //:TODO dynamically choose formatting, maybe how many other elements a UI element will let share a line with it
-                            var actorActionsUIBag = new UIGridBag(UIGridBagLocationCordinates.Left, new List<int>() { 1,2,1 });
-                            ActiveHexUIElements.AvailibleUIElements.Remove(UIGridBagLocations.Left);
-                                //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
+                        //show some text ui stats if not actionable :TODO
+                        CreateActiveActorUIElements(hexMap,actionableActor);
+                        CreateTextUIElements(hexMap, actionableActor);
 
-                            var placedElementCount = 0;
-                            hexMap.ActiveActor.DefaultActions.ForEach(a =>
-                            {
-                                UIDrawable actionElement = null;
-                                actionElement = (ActionHandler.ActionsList.ContainsKey(a)) ? 
-                                    new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, ActionHandler.ActionsList[a]) : 
-                                    new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, new Dictionary<ActionArgs, string>{{ActionArgs.Type, a}});
-                                actorActionsUIBag.GridElements.Add(actionElement);
-                                //:TODO dubious
-                                if (actorActionsUIBag.PerRow.Sum() <= placedElementCount)
-                                {
-                                    actorActionsUIBag.PerRow.Add(1);
-                                }
-                                placedElementCount++;
-                            });
-                            actorActionsUIBag.GridElements.Add(new TextUIElement(hexMap.ActiveActor, TextUIStatics.ActorStats.CurrentHP));
-                            ActiveHexUIElements.AvailibleUIElements[UIGridBagLocations.Left] = actorActionsUIBag;
-                        }
-
-                        #endregion  
+                        #endregion
 
                     }
                     if (hexMap.ActiveActor == null)
@@ -206,6 +186,47 @@ namespace Hexes.Control
                 hexMap.UnHighlightAll();
 
             }
+        }
+
+        public static void CreateActiveActorUIElements(HexGrid.HexGrid hexMap, BasicActor actionableActor)
+        {
+            if (hexMap.ActiveActor == actionableActor)
+            {
+                //:TODO dynamically choose formatting, maybe how many other elements a UI element will let share a line with it
+                UIGridBag actorActionsUIBag = new UIGridBag(UIGridBagLocationCordinates.Left, new List<int>() { 1, 2, 1 });
+                ActiveHexUIElements.AvailibleUIElements.Remove(UIGridBagLocations.Left);
+                //maybe just loop through, remove all actor related ones, get list first, remove second :TODO
+
+                var placedElementCount = 0;
+                hexMap.ActiveActor.DefaultActions.ForEach(a =>
+                {
+                    UIDrawable actionElement = (ActionHandler.ActionsList.ContainsKey(a)) ?
+                        new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, ActionHandler.ActionsList[a]) :
+                        new ActorDoActionAction(hexMap.ActiveActor, hexMap, a, new Dictionary<ActionArgs, string> { { ActionArgs.Type, a } });
+                    actorActionsUIBag.GridElements.Add(actionElement);
+                    //:TODO dubious
+                    if (actorActionsUIBag.PerRow.Sum() <= placedElementCount)
+                    {
+                        actorActionsUIBag.PerRow.Add(1);
+                    }
+                    placedElementCount++;
+                });
+                ActiveHexUIElements.AvailibleUIElements[UIGridBagLocations.Left] = actorActionsUIBag;
+
+            }
+        }
+        //any? specific for if selecting non active actor?
+        //should also have textures around them 
+        //also harcoding, bad :TODO
+        public static void CreateTextUIElements(HexGrid.HexGrid hexMap, BasicActor actionableActor)
+        {
+            if (ActiveHexUIElements.AvailibleUIElements[UIGridBagLocations.Left] == null)
+            {
+                UIGridBag actorActionsUIBag = new UIGridBag(UIGridBagLocationCordinates.Left, new List<int>());
+                ActiveHexUIElements.AvailibleUIElements[UIGridBagLocations.Left] = actorActionsUIBag;
+            }
+            ActiveHexUIElements.AvailibleUIElements[UIGridBagLocations.Left].GridElements.Add(new TextUIElement(hexMap.ActiveActor, TextUIStatics.ActorStats.CurrentHP));
+            ActiveHexUIElements.AvailibleUIElements[UIGridBagLocations.Left].PerRow.Add(1);
         }
     }
 }

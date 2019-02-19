@@ -17,7 +17,7 @@ namespace Hexes.UI
         public Color UIFontColor { get; set; }
         public BasicActor Actor { get; set; }
         public TextUIStatics.ActorStats ActorStatType { get; set; }
-
+        //:TODO should have a texture property
         public TextUIElement(BasicActor actor, TextUIStatics.ActorStats actorStatType, string defaultText = null)
         {
             Actor = actor;
@@ -34,7 +34,7 @@ namespace Hexes.UI
         {
             //should have some kind of update function to account for changing state
             UIText = UpdateText();
-            base.Draw(UIText,UIFont,UITextSize,UIFontColor);
+            base.Draw(UIText,Font,(int)Size.X,Color.Black);
         }
         //https://stackoverflow.com/questions/1196991/get-property-value-from-string-using-reflection-in-c-sharp
         public string UpdateText()
