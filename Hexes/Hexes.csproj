@@ -197,6 +197,24 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Modules\MainModule\Content\Backgrounds\capturedHex.png" />
+    <Content Include="Modules\MainModule\Content\Backgrounds\Fog-1.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Fog-2.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Fog-3.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Fog-4.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Fog-5.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Modules\MainModule\Content\Backgrounds\Fog-6.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Modules\MainModule\Content\Backgrounds\Grass-0.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

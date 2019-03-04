@@ -214,7 +214,7 @@ namespace Hexes
 
             SpriteBatch.Begin(transformMatrix: GameCamera.Transform, sortMode: SpriteSortMode.Deferred);
 
-            GraphicsDevice.Clear(Color.LawnGreen);
+            GraphicsDevice.Clear(Color.DarkBlue);
             BoardState.ActiveBoard.Draw();
             #region ray test
             //if (BoardState.ActiveBoard.DebugLines.Any())

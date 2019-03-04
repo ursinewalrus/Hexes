@@ -4,11 +4,11 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/jkerxhalli/Desktop/golf/Hexes/Hexes/Content/File.spritefont</File>
-    <File>C:/Users/jkerxhalli/Desktop/golf/Hexes/Hexes/Content/UIElements/move.png</File>
-    <File>C:/Users/jkerxhalli/Desktop/golf/Hexes/Hexes/Content/UIElements/rotateClockWise.png</File>
-    <File>C:/Users/jkerxhalli/Desktop/golf/Hexes/Hexes/Content/UIElements/rotateCounterClockWise.png</File>
-    <File>C:/Users/jkerxhalli/Desktop/golf/Hexes/Hexes/Content/UIElements/yellowSelecthex.png</File>
+    <File>C:/Users/kk/Desktop/Hexes/Hexes/Content/File.spritefont</File>
+    <File>C:/Users/kk/Desktop/Hexes/Hexes/Content/UIElements/move.png</File>
+    <File>C:/Users/kk/Desktop/Hexes/Hexes/Content/UIElements/rotateClockWise.png</File>
+    <File>C:/Users/kk/Desktop/Hexes/Hexes/Content/UIElements/rotateCounterClockWise.png</File>
+    <File>C:/Users/kk/Desktop/Hexes/Hexes/Content/UIElements/yellowSelecthex.png</File>
   </SourceFiles>
   <DestFiles>
     <File>General.spritefont</File>

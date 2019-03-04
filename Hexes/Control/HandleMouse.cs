@@ -215,6 +215,11 @@ namespace Hexes.Control
 
             }
         }
+        public static void CreateGenericActorUIElements(HexGrid.HexGrid hexMap, BasicActor actionableActor)
+        {
+
+        }
+
         //any? specific for if selecting non active actor?
         //should also have textures around them 
         //also harcoding, bad :TODO

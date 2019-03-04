@@ -171,14 +171,24 @@ namespace Hexes.HexGrid
 
         public void Draw()
         {
+            //check for if seen
+            var pcActors = ActorStorage.Where(a => a.Controllable).ToList();
+            var visibleHexes = new List<HexPoint>();
+            pcActors.ForEach(a => visibleHexes.AddRange(a.CanSee()));
+            
+            //primitive, just draw what PC  can see, dont know what but something more here might be needed
+
             foreach(HexPoint hex in HexStorage.Keys)
             {
-                HexStorage[hex].Draw();
+                if (visibleHexes.Any(h => h.Equals(hex)))
+                    HexStorage[hex].Draw();
+                else if (HexStorage[hex].Discovered)
+                    HexStorage[hex].Draw();
             }
             foreach (BasicActor actor in ActorStorage)
             {
                 var onHex = HexStorage.Where(h => h.Key.Equals(new HexPoint(actor.Location.R, actor.Location.Q))).FirstOrDefault();
-                if(onHex.Key != null)
+                if(onHex.Key != null && visibleHexes.Any(h => h.Equals(actor.Location)))
                     actor.Draw(onHex.Value.Center);
             }
         }

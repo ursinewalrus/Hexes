@@ -282,7 +282,10 @@ namespace Hexes.Actors
                     {
                         if (ActorHexGrid.HexStorage.ContainsKey((rayPoint)))
                         {
+
                             var hex = ActorHexGrid.HexStorage.First(h => h.Key.Equals(rayPoint));
+                            hex.Value.Discovered = true;
+
                             if (!hex.Value.BlocksVision)
                             {
                                 debugLine.DebugStrings[hex.Value.Center] = hex.Key.R + " " + hex.Key.Q;
@@ -291,6 +294,7 @@ namespace Hexes.Actors
                             }
                             else
                             {
+                                HexesCanSee.Add(hex.Key);
                                 blocked = true;
                             }
                         }

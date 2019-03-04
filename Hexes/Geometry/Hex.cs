@@ -14,7 +14,7 @@ namespace Hexes.Geometry
     {
         #region properties
         public string Name;
-
+        
         HexPoint HexPoint;
 
         public bool BlocksMovment;
@@ -36,8 +36,9 @@ namespace Hexes.Geometry
         private List<Line> Edges = new List<Line>();
         private Texture2D Texture;
         public static Texture2D HighlightedTexture;
+        public Texture2D FogTexture;
         public bool Hovered = false;
-
+        public bool Discovered = false;
 
         public static double[] HexOrientation = 
             {
@@ -87,6 +88,15 @@ namespace Hexes.Geometry
             FileStream fs = new FileStream(assetPath, FileMode.Open);
             Texture = Texture2D.FromStream(GraphicsDevice, fs);
             fs.Dispose();
+
+            //fog texture, all texture stuff should be a new method at this point :TODO, also, spritesheets
+            //FileInfo[] fogSpriteFiles = spriteDir.GetFiles("Fog" + "*");
+
+            //var fogAssetPath = spriteFiles[rand.Next(0, fogSpriteFiles.Count())].FullName;
+            //// string assetPath = @"Modules\" + ModuleName + @"\" + hexData["texture"];
+            //FileStream fogFs = new FileStream(fogAssetPath, FileMode.Open);
+            //FogTexture = Texture2D.FromStream(GraphicsDevice, fogFs);
+            //fogFs.Dispose();
 
 
         }
@@ -187,18 +197,18 @@ namespace Hexes.Geometry
                     //effects: SpriteEffects.None,
                     //layerDepth: 0.0f
                     );
-            }
-            foreach (Line line in Edges)
-            {
-                //if (Hovered)
-                //{
-                //    line.Draw(Color.Yellow);
-                //}
-                //else
-                //{
-                //    line.Draw(Color.Black);
-                //}
-                line.Draw();
+                foreach (Line line in Edges)
+                {
+                    //if (Hovered)
+                    //{
+                    //    line.Draw(Color.Yellow);
+                    //}
+                    //else
+                    //{
+                    //    line.Draw(Color.Black);
+                    //}
+                    // line.Draw();
+                }
             }
         }
 
