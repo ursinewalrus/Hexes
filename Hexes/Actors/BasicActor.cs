@@ -150,6 +150,7 @@ namespace Hexes.Actors
                     ActiveTurnState[APUseType.TotalAp]--;
                     break;
             }
+            ActorHexGrid.UnHighlightAll();
 
             if (ActiveTurnState[APUseType.TotalAp] <= 0)
             {

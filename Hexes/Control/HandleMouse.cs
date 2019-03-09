@@ -117,7 +117,7 @@ namespace Hexes.Control
             //:TODO also annoying
             if (selHex != null)
             {
-                Debugger.Log("Hover Hex " + selHex.R + ", " + selHex.Q);
+                Debugger.Log("Hover Hex " + selHex.R + ", " + selHex.Q + " " + hexMap.HexStorage[selHex].Discovered.ToString());
 
                 // :TODO this is annoying to do
                 hexMap.HexStorage.Where(h => h.Key.Equals(selHex)).First().Value.Hovered = true;
@@ -145,7 +145,9 @@ namespace Hexes.Control
                
                 if (selHex != null)
                 {
+                    hexMap.HexStorage.Where(h => h.Value.Selected = true).ToList().ForEach((p) => { hexMap.HexStorage[p.Key].Selected = false; }); ;
 
+                    hexMap.HexStorage[selHex].Selected = true;
                     var hexKey =
                         hexMap.HexStorage.FirstOrDefault(h => h.Key.Equals(selHex));
                     var actorKey =
@@ -176,10 +178,13 @@ namespace Hexes.Control
                         hexMap.ActiveActor = actorKey;
                     }
                 }
+
             }
+            
             //temp, not all conditions for UI in, remove :TODO
             if (MouseState.RightButton == ButtonState.Pressed)
             {
+                hexMap.HexStorage.Where(h => h.Value.Selected = true).ToList().ForEach((p) => { hexMap.HexStorage[p.Key].Selected = false; }); ;
                 hexMap.ActiveHex = new KeyValuePair<HexPoint, Hex>();
                 hexMap.ActiveActor = null;
                 ActiveHexUIElements.AvailibleUIElements.Remove(UIGridBagLocations.Left);

@@ -53,5 +53,23 @@ namespace Hexes.Geometry
             );
         }
 
+        public void Draw(Color setColor)
+        {
+            Vector2 edge = EndV - StartV;
+            float angle = (float)Math.Atan2(edge.Y, edge.X);
+            //float drawPosZ = Color.Yellow == lineColor ? 0f : 0.01f;
+
+            Sb.Draw(Texture,
+                StartV,
+                null,
+                setColor,
+                (float)Math.Atan2(EndV.Y - StartV.Y, EndV.X - StartV.X),
+                new Vector2(0f, (float)Texture.Height / 2),
+                new Vector2(Vector2.Distance(StartV, EndV), WidthMultiplier * 10), //float for width
+                SpriteEffects.None,
+                0f
+            );
+        }
+
     }
 }

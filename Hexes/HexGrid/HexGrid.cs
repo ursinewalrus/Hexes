@@ -183,7 +183,7 @@ namespace Hexes.HexGrid
                 if (visibleHexes.Any(h => h.Equals(hex)))
                     HexStorage[hex].Draw();
                 else if (HexStorage[hex].Discovered)
-                    HexStorage[hex].Draw();
+                    HexStorage[hex].Draw(true);
             }
             foreach (BasicActor actor in ActorStorage)
             {
@@ -218,6 +218,11 @@ namespace Hexes.HexGrid
             {
                 HexStorage[hexPoint].Highlighted = true;
             }
+        }
+
+        public void HighlightHexes(HexPoint hexPoint)
+        {
+            HexStorage[hexPoint].Highlighted = true;
         }
 
         public void HighlightHex(HexPoint hexPoint)

@@ -21,7 +21,8 @@ namespace Hexes.Geometry
         public bool BlocksVision;
         public Color Color = Color.White;
         public bool Highlighted { get; set; }
-        public static Texture2D SelectedTexture {get; set;}
+        public bool Selected = false;
+
 
         public List<FloatPoint> HexCorners;
         public static float SizeX = 100;
@@ -90,13 +91,13 @@ namespace Hexes.Geometry
             fs.Dispose();
 
             //fog texture, all texture stuff should be a new method at this point :TODO, also, spritesheets
-            //FileInfo[] fogSpriteFiles = spriteDir.GetFiles("Fog" + "*");
+            FileInfo[] fogSpriteFiles = spriteDir.GetFiles(@"Content\Backgrounds\Fog" + "*");
 
-            //var fogAssetPath = spriteFiles[rand.Next(0, fogSpriteFiles.Count())].FullName;
+            var fogAssetPath = fogSpriteFiles[rand.Next(0, fogSpriteFiles.Count())].FullName;
             //// string assetPath = @"Modules\" + ModuleName + @"\" + hexData["texture"];
-            //FileStream fogFs = new FileStream(fogAssetPath, FileMode.Open);
-            //FogTexture = Texture2D.FromStream(GraphicsDevice, fogFs);
-            //fogFs.Dispose();
+            FileStream fogFs = new FileStream(fogAssetPath, FileMode.Open);
+            FogTexture = Texture2D.FromStream(GraphicsDevice, fogFs);
+            fogFs.Dispose();
 
 
         }
@@ -163,7 +164,7 @@ namespace Hexes.Geometry
 
         #region draw hex texture+geometry
        
-        public void Draw()
+        public void Draw(bool fogged = false)
         {
             //https://www.codeproject.com/Articles/1119973/Part-I-Creating-a-Digital-Hexagonal-Tile-Map
             //public void Draw(Texture2D texture, Vector2 position, Rectangle? sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth);
@@ -178,36 +179,42 @@ namespace Hexes.Geometry
             Sb.Draw(texture: Texture,
                     destinationRectangle: new Rectangle((int)Center.X, (int)Center.Y, (int)SizeX * 2, (int)SizeY * 2),
                     //this is inconsistent -> maybe not anymore
-                    sourceRectangle: new Rectangle(ResizeLeft, 0,ResizeRight, (int)SizeY),
+                    sourceRectangle: new Rectangle(ResizeLeft, 0, ResizeRight, (int)SizeY),
                     color: Color,
                     origin: new Vector2(SizeX / 2, SizeY / 2)
                     //scale: new Vector2(9000,0.5f),
                     //effects: Effect
                     //layerDepth: 0.0f
                     );
-            if (Highlighted)
+            if (fogged)
             {
-                Sb.Draw(texture: HighlightedTexture,
+                Sb.Draw(texture: FogTexture,
                     destinationRectangle: new Rectangle((int)Center.X, (int)Center.Y, (int)SizeX * 2, (int)SizeY * 2),
                     //this is inconsistent -> maybe not anymore
                     sourceRectangle: new Rectangle(ResizeLeft, 0, ResizeRight, (int)SizeY),
                     color: Color,
                     origin: new Vector2(SizeX / 2, SizeY / 2)
                     //scale: new Vector2(9000,0.5f),
-                    //effects: SpriteEffects.None,
+                    //effects: Effect
                     //layerDepth: 0.0f
                     );
+            }
+            if (Selected)
+            {
+                //Sb.Draw(texture: HighlightedTexture,
+                //    destinationRectangle: new Rectangle((int)Center.X, (int)Center.Y, (int)SizeX * 2, (int)SizeY * 2),
+                //    //this is inconsistent -> maybe not anymore
+                //    sourceRectangle: new Rectangle(ResizeLeft, 0, ResizeRight, (int)SizeY),
+                //    color: Color,
+                //    origin: new Vector2(SizeX / 2, SizeY / 2)
+                //    //scale: new Vector2(9000,0.5f),
+                //    //effects: SpriteEffects.None,
+                //    //layerDepth: 0.0f
+                //    );
                 foreach (Line line in Edges)
                 {
-                    //if (Hovered)
-                    //{
-                    //    line.Draw(Color.Yellow);
-                    //}
-                    //else
-                    //{
-                    //    line.Draw(Color.Black);
-                    //}
-                    // line.Draw();
+                    line.Draw(Color.Yellow);
+                    //line.Draw();
                 }
             }
         }
