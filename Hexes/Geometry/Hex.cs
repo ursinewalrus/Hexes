@@ -91,7 +91,7 @@ namespace Hexes.Geometry
             fs.Dispose();
 
             //fog texture, all texture stuff should be a new method at this point :TODO, also, spritesheets
-            FileInfo[] fogSpriteFiles = spriteDir.GetFiles(@"Content\Backgrounds\Fog" + "*");
+            FileInfo[] fogSpriteFiles = spriteDir.GetFiles(@"Content\Backgrounds\blackhex" + "*");
 
             var fogAssetPath = fogSpriteFiles[rand.Next(0, fogSpriteFiles.Count())].FullName;
             //// string assetPath = @"Modules\" + ModuleName + @"\" + hexData["texture"];
@@ -192,10 +192,10 @@ namespace Hexes.Geometry
                     destinationRectangle: new Rectangle((int)Center.X, (int)Center.Y, (int)SizeX * 2, (int)SizeY * 2),
                     //this is inconsistent -> maybe not anymore
                     sourceRectangle: new Rectangle(ResizeLeft, 0, ResizeRight, (int)SizeY),
-                    color: Color,
+                    color: Color.White * .5f,
                     origin: new Vector2(SizeX / 2, SizeY / 2)
                     //scale: new Vector2(9000,0.5f),
-                    //effects: Effect
+                    //effects: 
                     //layerDepth: 0.0f
                     );
             }

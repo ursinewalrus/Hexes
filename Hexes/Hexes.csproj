@@ -174,7 +174,9 @@
     <Content Include="Modules\MainModule\Content\Actions\jabAction.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Modules\MainModule\Content\Backgrounds\blackhex.png" />
+    <Content Include="Modules\MainModule\Content\Backgrounds\blackhex.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Modules\MainModule\Content\Backgrounds\bluehex.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
