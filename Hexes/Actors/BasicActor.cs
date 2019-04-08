@@ -95,7 +95,10 @@ namespace Hexes.Actors
             if (Controllable)
                 Faction = ActorFactions.Player;
             else
+            { //more data for ai type
                 Faction = ActorFactions.Enemy1;
+                AIController = new AIController(ActorHexGrid);
+            }
 
             string assetPath = @"Modules\" + ModuleName + @"\" + actorData["texture"];
             FileStream fs = new FileStream(assetPath, FileMode.Open);
@@ -427,10 +430,6 @@ namespace Hexes.Actors
        
         #region AIControll related
 
-        public void SetAIController(HexGrid.HexGrid grid)
-        {
-            AIController = new AIController(grid);
-        }
 
         public void UseAIMoveAction()
         {

@@ -144,10 +144,7 @@ namespace Hexes.HexGrid
                         int rotation = Convert.ToInt32(placementKey.Value.Split('-')[2]);
                         BasicActor actor = new BasicActor(new HexPoint(hexR, hexQ), actorType, actorData[actorType], rotation, controllable, moduleName, this);
                         //choose the AI
-                        if (!actor.Controllable)//other factors
-                        {
-                            actor.SetAIController(this);
-                        }
+
                         ActorStorage.Add(actor);
                     }
                 }
